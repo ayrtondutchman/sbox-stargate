@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Sandbox;
 
-[Library( "ent_stargate_brick_ramp", Title = "Brick Ramp", Spawnable = true, Group = "Stargate" )]
+[Spawnable]
+[Library( "ent_stargate_brick_ramp", Title = "Brick Ramp", Group = "Stargate" )]
 public partial class BrickRamp : ModelEntity, IStargateRamp, IGateSpawner
 {
 
@@ -41,7 +42,7 @@ public partial class BrickRamp : ModelEntity, IStargateRamp, IGateSpawner
 	{
 		return new JsonModel()
 		{
-			EntityName = ClassInfo.Name,
+			EntityName = ClassName,
 			Position = Position,
 			Rotation = Rotation
 		};

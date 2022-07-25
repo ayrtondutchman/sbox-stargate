@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-[Library( "ent_stargate_pegasus", Title = "Stargate (Pegasus)", Spawnable = true, Group = "Stargate.Stargate" )]
+[Spawnable]
+[Library( "ent_stargate_pegasus", Title = "Stargate (Pegasus)", Group = "Stargate.Stargate" )]
 public partial class StargatePegasus : Stargate
 {
 	public StargateRingPegasus Ring;

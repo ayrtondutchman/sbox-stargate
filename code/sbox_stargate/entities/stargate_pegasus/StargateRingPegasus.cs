@@ -311,7 +311,7 @@ public partial class StargateRingPegasus : ModelEntity
 			var rotAng = ang.WithRoll( ang.roll - (i * deg) - deg);
 			var newRot = rotAng.ToRotation();
 			var pos = Position + newRot.Forward * 4 + newRot.Up * 117.5f;
-			DebugOverlay.Text( pos, i.ToString(), Color.Yellow );
+			DebugOverlay.Text( i.ToString(), pos, Color.Yellow );
 		}
 	}
 

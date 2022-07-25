@@ -234,7 +234,9 @@ public class StargateMenuV2 : Panel
 		// table.Rows.DeleteChildren(true);
 		table.Rows.Clear();
 		table.Rows.Layout.Columns = 1;
-		table.Rows.Layout.ItemSize = new Vector2( -1, 40 );
+		//table.Rows.Layout.ItemSize = new Vector2( -1, 40 );
+		table.Rows.Layout.ItemWidth = -1;
+		table.Rows.Layout.ItemHeight = 40;
 		table.Rows.OnCreateCell = ( cell, data ) =>
 		{
 			var gate = (Stargate)data;

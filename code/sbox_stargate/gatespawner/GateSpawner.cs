@@ -44,7 +44,7 @@ public partial class GateSpawner
 		foreach ( JsonElement o in data.Entities )
 		{
 			string entityName = o.GetProperty( "EntityName" ).ToString();
-			Entity e = Library.Create<Entity>( entityName, false );
+			Entity e = TypeLibrary.Create<Entity>( entityName, false );
 			if ( e is null || !e.IsValid() )
 				continue;
 
@@ -63,7 +63,7 @@ public partial class GateSpawner
 		GateSpawnerEntites.Clear();
 	}
 
-	[ServerCmd( "gatespawner" )]
+	[ConCmd.Server( "gatespawner" )]
 	public static void GateSpawnerCmd( string action )
 	{
 		switch ( action )

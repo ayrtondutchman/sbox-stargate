@@ -26,7 +26,7 @@
 					previewModel.RelativeToNormal = false;
 					previewModel.OffsetBounds = false;
 					previewModel.PositionOffset = new Vector3( 0, 0, 90 );
-					previewModel.RotationOffset = new Angles( 0, Owner.EyeRot.Angles().yaw + 180, 0 ).ToRotation();
+					previewModel.RotationOffset = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 				}
 
 			}
@@ -49,7 +49,7 @@
 				if ( !preview.IsValid() || !Owner.IsValid() )
 					continue;
 
-				preview.RotationOffset = new Angles( 0, Owner.EyeRot.Angles().yaw + 180, 0 ).ToRotation();
+				preview.RotationOffset = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 
 			}
 		}
@@ -61,10 +61,10 @@
 
 			using ( Prediction.Off() )
 			{
-				if ( Input.Pressed( InputButton.Attack1 ) )
+				if ( Input.Pressed( InputButton.PrimaryAttack ) )
 				{
-					var startPos = Owner.EyePos;
-					var dir = Owner.EyeRot.Forward;
+					var startPos = Owner.EyePosition;
+					var dir = Owner.EyeRotation.Forward;
 					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
 						.Ignore( Owner )
 						.Run();
@@ -75,15 +75,15 @@
 					if ( tr.Entity is Stargate gate )
 					{
 						Stargate.AddIris(gate, Owner).Close();
-						CreateHitEffects( tr.EndPos );
+						CreateHitEffects( tr.EndPosition );
 					}
 
 				}
 
 				if ( Input.Pressed( InputButton.Reload ) )
 				{
-					var startPos = Owner.EyePos;
-					var dir = Owner.EyeRot.Forward;
+					var startPos = Owner.EyePosition;
+					var dir = Owner.EyeRotation.Forward;
 					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
 						.Ignore( Owner )
 						.Run();
@@ -93,16 +93,16 @@
 					if ( tr.Entity is Stargate gate && gate.Iris.IsValid())
 					{
 						gate.Iris.Toggle();
-						CreateHitEffects( tr.EndPos );
+						CreateHitEffects( tr.EndPosition );
 					}
 
 				}
 
 
-				if ( Input.Pressed( InputButton.Attack2 ) )
+				if ( Input.Pressed( InputButton.SecondaryAttack ) )
 				{
-					var startPos = Owner.EyePos;
-					var dir = Owner.EyeRot.Forward;
+					var startPos = Owner.EyePosition;
+					var dir = Owner.EyeRotation.Forward;
 					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
 						.Ignore( Owner )
 						.Run();
@@ -113,7 +113,7 @@
 					if ( tr.Entity is Stargate gate )
 					{
 						Stargate.RemoveIris( gate );
-						CreateHitEffects( tr.EndPos );
+						CreateHitEffects( tr.EndPosition );
 					}
 
 				}

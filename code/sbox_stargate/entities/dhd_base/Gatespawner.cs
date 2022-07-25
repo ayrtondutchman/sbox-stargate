@@ -11,7 +11,7 @@ public partial class Dhd : IGateSpawner
 	public virtual object ToJson()
 	{
 		return new JsonModel {
-			EntityName = ClassInfo.Name,
+			EntityName = ClassName,
 			Position = Position,
 			Rotation = Rotation
 		};

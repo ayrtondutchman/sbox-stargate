@@ -41,8 +41,8 @@ public partial class RingPanelButton : AnimatedEntity, IUse
 
 	private void DrawButtonActions() // doing anything with world panels is fucking trash, cant position stuff properly, keep debugoverlay for now
 	{
-		var pos = Transform.PointToWorld( GetModel().RenderBounds.Center );
-		DebugOverlay.Text( pos, Action, Color.White, 0, 86 );
+		var pos = Transform.PointToWorld( Model.RenderBounds.Center );
+		DebugOverlay.Text( Action, pos, Color.White, 0, 86 );
 	}
 
 	[Event.Frame]

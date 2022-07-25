@@ -52,8 +52,8 @@ public partial class StargateRingMilkyWay : PlatformEntity
 		Transmit = TransmitType.Always;
 
 		SetModel( "models/sbox_stargate/gate_sg1/ring_sg1.vmdl" );
-
-		SpawnSettings = Flags.LoopMovement;
+		
+		LoopMovement = true;
 		MoveDirType = PlatformMoveType.RotatingContinious;
 		MoveDirIsLocal = true;
 		MoveDir = Rotation.Up.EulerAngles;
@@ -312,11 +312,11 @@ public partial class StargateRingMilkyWay : PlatformEntity
 			var rotAng = ang.WithRoll( ang.roll - (i * deg) );
 			var newRot = rotAng.ToRotation();
 			var pos = Position + newRot.Forward * 4 + newRot.Up * 117.5f;
-			DebugOverlay.Text( pos, sym.ToString(), sym == CurDialingSymbol ? Color.Green : Color.Yellow );
+			DebugOverlay.Text( sym.ToString(), pos, sym == CurDialingSymbol ? Color.Green : Color.Yellow );
 			i++;
 		}
 
-		DebugOverlay.Text( Position, CurRingSymbol, Color.White, 0, 512 );
+		DebugOverlay.Text( CurRingSymbol, Position, Color.White, 0, 512 );
 	}
 
 	[Event.Frame]

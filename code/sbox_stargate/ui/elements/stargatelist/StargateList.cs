@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [Library(Title = "Stargate Addon")]
-public partial class StargateList : Panel, ILeftSpawnMenuTab
+public partial class StargateList : Panel
 {
 	VirtualScrollPanel Canvas;
 
@@ -30,7 +30,9 @@ public partial class StargateList : Panel, ILeftSpawnMenuTab
 			var can = AddChild<VirtualScrollPanel>("canvas");
 
 			can.Layout.AutoColumns = true;
-			can.Layout.ItemSize = new Vector2( 120, 120 );
+			//can.Layout.ItemSize = new Vector2( 120, 120 );
+			can.Layout.ItemWidth = 120;
+			can.Layout.ItemHeight = 120;
 			can.OnCreateCell = ( cell, data ) =>
 			{
 				var entry = (LibraryAttribute)data;
@@ -38,16 +40,18 @@ public partial class StargateList : Panel, ILeftSpawnMenuTab
 				var btn = cell.Add.Button( entry.Title );
 				btn.AddClass( "icon" );
 				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
-				btn.Style.Background = new PanelBackground
-				{
-					Texture = Texture.Load( $"/entity/sbox_stargate/{entry.Name}.png", false )
-				};
+				//btn.Style.Background = new PanelBackground
+				//{
+				//	Texture = Texture.Load( $"/entity/sbox_stargate/{entry.Name}.png", false )
+				//};
+
+				btn.Style.BackgroundImage = Texture.Load( $"/entity/sbox_stargate/{entry.Name}.png", false );
 			};
 
 			CategoriesCanvas.Add(cat, can);
 		}
 
-		var ents = Library.GetAllAttributes<Entity>().Where( x => x.Spawnable && x.Group != null && x.Group.StartsWith("Stargate") ).OrderBy( x => x.Title ).ToArray();
+		var ents = TypeLibrary.GetDescriptions<Entity>().Where( x => x.HasTag( "spawnable" ) && x.Group != null && x.Group.StartsWith("Stargate") ).OrderBy( x => x.Title ).ToArray();
 
 		foreach ( var entry in ents )
 		{

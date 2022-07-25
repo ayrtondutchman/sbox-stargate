@@ -459,7 +459,7 @@ public abstract partial class Stargate : Prop, IUse
 		Event.Run("stargate.refreshgateinformation");
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void RequestDial(DialType type, string address, int gate) {
 		if (FindByIndex( gate ) is Stargate g && g.IsValid()) {
 			switch ( type ) {
@@ -478,7 +478,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void RequestClose(int gateID) {
 		if (FindByIndex( gateID ) is Stargate g && g.IsValid()) {
 			if ( g.Busy || ((g.Open || g.Active || g.Dialing) && g.Inbound) )
@@ -490,7 +490,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void ToggleIris(int gateID, int state) {
 		if (FindByIndex( gateID ) is Stargate g && g.IsValid()) {
 			if (g.Iris.IsValid()) {
@@ -506,7 +506,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void RequestAddressChange(int gateID, string address) {
 		if (FindByIndex( gateID ) is Stargate g && g.IsValid()) {
 			if (g.GateAddress == address || !IsValidAddressOnly( address ))
@@ -518,7 +518,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void RequestGroupChange( int gateID, string group )
 	{
 		if ( FindByIndex( gateID ) is Stargate g && g.IsValid() )
@@ -532,7 +532,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void RequestNameChange(int gateID, string name) {
 		if (FindByIndex( gateID ) is Stargate g && g.IsValid()) {
 			if (g.GateName == name)
@@ -544,7 +544,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void SetAutoClose(int gateID, bool state) {
 		if (FindByIndex( gateID ) is Stargate g && g.IsValid()) {
 			if (g.AutoClose == state)
@@ -556,7 +556,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void SetGatePrivate(int gateID, bool state) {
 		if (FindByIndex( gateID ) is Stargate g && g.IsValid()) {
 			if (g.GatePrivate == state)
@@ -568,7 +568,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public static void SetGateLocal( int gateID, bool state )
 	{
 		if ( FindByIndex( gateID ) is Stargate g && g.IsValid() )

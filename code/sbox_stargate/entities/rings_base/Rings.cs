@@ -130,7 +130,7 @@ public partial class Rings : AnimatedEntity, IUse
 		return false;
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public void DialClosest()
 	{
 		if ( IsClient )
@@ -140,7 +140,7 @@ public partial class Rings : AnimatedEntity, IUse
 			DialRing( ring );
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public void DialAddress( string address )
 	{
 		if ( IsClient ) return;
@@ -150,7 +150,7 @@ public partial class Rings : AnimatedEntity, IUse
 			DialRing( other );
 	}
 
-	[ServerCmd]
+	[ConCmd.Server]
 	public void DialRing( Rings ring )
 	{
 		if ( IsClient ) return;
@@ -300,8 +300,8 @@ public partial class Rings : AnimatedEntity, IUse
 		for ( int i = 0; i < 5; i++ )
 		{
 
-			var endPos = hitGround ? tr.EndPos - (Rotation.Up * 110) + (Rotation.Up * 20) * (i + 1) : Position + (Rotation.Up * 20) * (i + 1);
-			var endPos2 = hitGround ? tr.EndPos - Rotation.Up * 50 : Position + (Rotation.Up * 50);
+			var endPos = hitGround ? tr.EndPosition - (Rotation.Up * 110) + (Rotation.Up * 20) * (i + 1) : Position + (Rotation.Up * 20) * (i + 1);
+			var endPos2 = hitGround ? tr.EndPosition - Rotation.Up * 50 : Position + (Rotation.Up * 50);
 			EndPos = Transform.PointToLocal( endPos2 );
 
 			RingRing r = new();
@@ -397,9 +397,9 @@ public partial class Rings : AnimatedEntity, IUse
 
 
 		var worldEndPos = Transform.PointToWorld( EndPos );
-		var tempBody = new PhysicsBody();
+		var tempBody = new PhysicsBody( Map.Physics );
 		tempBody.Position = worldEndPos;
-		var tempBody2 = new PhysicsBody();
+		var tempBody2 = new PhysicsBody( Map.Physics );
 		tempBody2.Position = DestinationRings.Transform.PointToWorld( DestinationRings.EndPos );
 		foreach ( Entity e in toDest )
 		{
@@ -463,7 +463,7 @@ public partial class Rings : AnimatedEntity, IUse
 	[Event.Frame]
 	public void OnFrame()
 	{
-		DebugOverlay.Text( Position, $"Address: {this.Address}", Color.White );
+		DebugOverlay.Text( $"Address: {this.Address}", Position, Color.White );
 
 		// return;
 
@@ -472,7 +472,7 @@ public partial class Rings : AnimatedEntity, IUse
 
 		var tr = Trace.Sweep( PhysicsBody, Transform.WithPosition( Position + Rotation.Up * 110 ), Transform.WithPosition( Position + Rotation.Up * 1024 ) ).Ignore( this ).Run();
 		DebugOverlay.TraceResult( tr );
-		DebugOverlay.Text( tr.EndPos - Rotation.Up * 30, tr.Distance.ToString(), Color.Magenta );
+		DebugOverlay.Text( tr.Distance.ToString(), tr.EndPosition - Rotation.Up * 30, Color.Magenta );
 	}
 
 	protected override void OnDestroy()

@@ -23,9 +23,7 @@ public abstract partial class Dhd : Prop
 	//[Net]
 	public DhdData Data { get; set; } = new( 0, 1, "dhd_sg1_press", "dhd_dial" );
 
-	[Net]
-	[Property( Name = "Gate", Group = "Stargate" )]
-	public Stargate Gate { get; set; }
+	[Net] public Stargate Gate { get; set; }
 
 	protected readonly string ButtonSymbols = "ABCDEFGHI0123456789STUVWXYZ@JKLMNO#PQR";
 

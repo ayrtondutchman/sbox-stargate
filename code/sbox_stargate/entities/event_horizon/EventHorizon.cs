@@ -101,7 +101,7 @@ public partial class EventHorizon : AnimatedEntity
 	public bool IsPawnBehindEventHorizon( Entity pawn )
 	{
 		if ( !this.IsValid() || !pawn.IsValid() ) return false;
-		return (pawn.EyePos - Position).Dot( Rotation.Forward ) < 0;
+		return (pawn.EyePosition - Position).Dot( Rotation.Forward ) < 0;
 	}
 
 	// CLIENT ANIM CONTROL
@@ -140,7 +140,8 @@ public partial class EventHorizon : AnimatedEntity
 		if ( shouldBeOn && !isOn )
 		{
 			curFrame = MathX.Approach( curFrame, maxFrame, Time.Delta * 30 );
-			SceneObject.SetValue( "frame", curFrame.FloorToInt() );
+			//SceneObject.SetValue( "frame", curFrame.FloorToInt() );
+			//SceneObject.Attributes.Set( "frame", curFrame.FloorToInt() ); // TODO check this
 
 			if ( curFrame == maxFrame )
 			{
@@ -156,20 +157,20 @@ public partial class EventHorizon : AnimatedEntity
 		if ( shouldBeOff && !isOff )
 		{
 			curFrame = MathX.Approach( curFrame, minFrame, Time.Delta * 30 );
-			SceneObject.SetValue( "frame", curFrame.FloorToInt() );
+			//SceneObject.SetValue( "frame", curFrame.FloorToInt() );
 			if ( curFrame == minFrame ) isOff = true;
 		}
 
 		if ( shouldEstablish && !isEstablished )
 		{
-			SceneObject.SetValue( "illumbrightness", curBrightness );
+			//SceneObject.SetValue( "illumbrightness", curBrightness );
 			curBrightness = MathX.Approach( curBrightness, minBrightness, Time.Delta * 5 );
 			if ( curBrightness == minBrightness ) isEstablished = true;
 		}
 
 		if ( shouldCollapse && !isCollapsed )
 		{
-			SceneObject.SetValue( "illumbrightness", curBrightness );
+			//SceneObject.SetValue( "illumbrightness", curBrightness );
 			curBrightness = MathX.Approach( curBrightness, maxBrightness, Time.Delta * 5 );
 
 			if ( curBrightness == maxBrightness )
@@ -233,8 +234,8 @@ public partial class EventHorizon : AnimatedEntity
 
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
 
-			ply.EyeRot = Rotation.From( ply.EyeRot.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) );
-			ply.Rotation = ply.EyeRot;
+			ply.EyeRotation = Rotation.From( ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) );
+			ply.Rotation = ply.EyeRotation;
 
 			await GameTask.NextPhysicsFrame();
 

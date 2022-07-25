@@ -26,7 +26,7 @@
 					previewModel.RelativeToNormal = false;
 					previewModel.OffsetBounds = false;
 					previewModel.PositionOffset = new Vector3( 0, 0, -5 );
-					previewModel.RotationOffset = new Angles( 15, Owner.EyeRot.Angles().yaw + 180, 0 ).ToRotation();
+					previewModel.RotationOffset = new Angles( 15, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 				}
 
 			}
@@ -49,7 +49,7 @@
 				if ( !preview.IsValid() || !Owner.IsValid() )
 					continue;
 
-				preview.RotationOffset = new Angles( 15, Owner.EyeRot.Angles().yaw + 180, 0 ).ToRotation();
+				preview.RotationOffset = new Angles( 15, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 
 			}
 		}
@@ -61,10 +61,10 @@
 
 			using ( Prediction.Off() )
 			{
-				if ( Input.Pressed( InputButton.Attack1 ) )
+				if ( Input.Pressed( InputButton.PrimaryAttack ) )
 				{
-					var startPos = Owner.EyePos;
-					var dir = Owner.EyeRot.Forward;
+					var startPos = Owner.EyePosition;
+					var dir = Owner.EyeRotation.Forward;
 
 					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
 						.Ignore( Owner )
@@ -73,18 +73,18 @@
 					if ( !tr.Hit || !tr.Entity.IsValid() )
 						return;
 
-					CreateHitEffects( tr.EndPos );
+					CreateHitEffects( tr.EndPosition );
 
 					var dhd = new DhdMilkyWay();
-					dhd.Position = tr.EndPos + new Vector3(0, 0, -5);
-					dhd.Rotation = new Angles( 15, Owner.EyeRot.Angles().yaw + 180, 0 ).ToRotation();
+					dhd.Position = tr.EndPosition + new Vector3(0, 0, -5);
+					dhd.Rotation = new Angles( 15, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 
 					dhd.Owner = Owner;
 				}
-				else if ( Input.Pressed( InputButton.Attack2 ) )
+				else if ( Input.Pressed( InputButton.SecondaryAttack ) )
 				{
-					var startPos = Owner.EyePos;
-					var dir = Owner.EyeRot.Forward;
+					var startPos = Owner.EyePosition;
+					var dir = Owner.EyeRotation.Forward;
 
 					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
 						.Ignore( Owner )
@@ -95,7 +95,7 @@
 
 					if (tr.Entity is Dhd dhd)
 					{
-						CreateHitEffects( tr.EndPos );
+						CreateHitEffects( tr.EndPosition );
 
 						dhd.Gate = Stargate.FindNearestGate( dhd );
 					}

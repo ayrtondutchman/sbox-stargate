@@ -10,7 +10,7 @@ public partial class EventHorizonController : BasePlayerController
 {
 	public override void BuildInput( InputBuilder input )
 	{
-		input.ViewAngles = EyeRot.Angles();
+		input.ViewAngles = EyeRotation.Angles();
 		input.StopProcessing = true;
 	}
 

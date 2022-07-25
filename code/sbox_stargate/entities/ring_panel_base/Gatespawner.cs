@@ -12,7 +12,7 @@ public partial class RingPanel : IGateSpawner
 	{
 		return new JsonModel
 		{
-			EntityName = ClassInfo.Name,
+			EntityName = ClassName,
 			Position = Position,
 			Rotation = Rotation,
 		};

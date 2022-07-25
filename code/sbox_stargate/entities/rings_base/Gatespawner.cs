@@ -19,7 +19,7 @@ public partial class Rings : IGateSpawner
 	{
 		return new RingsBaseJsonModel
 		{
-			EntityName = ClassInfo.Name,
+			EntityName = ClassName,
 			Position = Position,
 			Rotation = Rotation,
 			Address = Address

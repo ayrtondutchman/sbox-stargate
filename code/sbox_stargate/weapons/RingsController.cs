@@ -1,7 +1,8 @@
 using Sandbox;
 using System.Linq;
 
-[Library( "weapon_stargate_ringscontroller", Title = "Rings Controller", Description = "", Spawnable = true, Group = "Stargate.Weapons" )]
+[Spawnable]
+[Library( "weapon_stargate_ringscontroller", Title = "Rings Controller", Description = "", Group = "Stargate.Weapons" )]
 public partial class StargateRingsController : Weapon
 {
 	//later add a hand model
@@ -16,7 +17,7 @@ public partial class StargateRingsController : Weapon
 
 	public override bool CanPrimaryAttack()
 	{
-		return base.CanPrimaryAttack() && Input.Pressed( InputButton.Attack1 );
+		return base.CanPrimaryAttack() && Input.Pressed( InputButton.PrimaryAttack );
 	}
 
 	public override void AttackPrimary()
@@ -26,7 +27,7 @@ public partial class StargateRingsController : Weapon
 		using (Prediction.Off()) {
 			Rings ring;
 
-			var tr = Trace.Ray(Owner.EyePos, Owner.EyePos + Owner.EyeRot.Forward * 500f).Ignore(Owner).Run();
+			var tr = Trace.Ray(Owner.EyePosition, Owner.EyePosition + Owner.EyeRotation.Forward * 500f).Ignore(Owner).Run();
 
 			if (tr.Hit && tr.Entity is Rings)
 				ring = tr.Entity as Rings;

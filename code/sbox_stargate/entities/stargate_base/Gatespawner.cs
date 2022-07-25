@@ -20,7 +20,7 @@ public partial class Stargate : IGateSpawner
 	{
 		return new StargateJsonModel
 		{
-			EntityName = ClassInfo.Name,
+			EntityName = ClassName,
 			Position = Position,
 			Rotation = Rotation,
 			Name = GateName,

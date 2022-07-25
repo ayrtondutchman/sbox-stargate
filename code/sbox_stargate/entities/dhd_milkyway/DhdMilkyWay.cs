@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System;
 using Sandbox;
 
-[Library( "ent_dhd_milkyway", Title = "DHD (Milky Way)", Spawnable = true, Group = "Stargate.Stargate" )]
+[Spawnable]
+[Library( "ent_dhd_milkyway", Title = "DHD (Milky Way)", Group = "Stargate.Stargate" )]
 public partial class DhdMilkyWay : Dhd
 {
 	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, -5 );

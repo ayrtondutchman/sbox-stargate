@@ -55,8 +55,8 @@ public partial class DhdButtonTrigger : AnimatedEntity, IUse
 	{
 		if ( Action.Length > 0 )
 		{
-			var pos = Transform.PointToWorld( GetModel().RenderBounds.Center );
-			DebugOverlay.Text( pos, Action, Color.Green, 0, 100 );
+			var pos = Transform.PointToWorld( Model.RenderBounds.Center );
+			DebugOverlay.Text( Action, pos, Color.Green, 0, 100 );
 		}
 	}
 
