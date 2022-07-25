@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Sandbox;
 
-public partial class Rings : AnimEntity, IUse
+public partial class Rings : AnimatedEntity, IUse
 {
 
 	public static readonly float MAX_RING_RANGE = 1024f;

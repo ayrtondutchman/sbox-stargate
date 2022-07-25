@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-public partial class Chevron : AnimEntity
+public partial class Chevron : AnimatedEntity
 {
 	public bool On = false;
 	public bool Open = false;

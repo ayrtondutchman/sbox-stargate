@@ -1,6 +1,6 @@
 using Sandbox;
 
-public partial class RingPanelButton : AnimEntity, IUse
+public partial class RingPanelButton : AnimatedEntity, IUse
 {
 	public RingPanel RingPanel { get; set; } = null;
 

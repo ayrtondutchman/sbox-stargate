@@ -1,7 +1,7 @@
 using System;
 using Sandbox;
 
-public partial class StargateIris : AnimEntity
+public partial class StargateIris : AnimatedEntity
 {
 	public Stargate Gate;
 	public bool Closed = false;

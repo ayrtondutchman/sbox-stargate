@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-public partial class EventHorizon : AnimEntity
+public partial class EventHorizon : AnimatedEntity
 {
 	public Stargate Gate;
 	public bool IsFullyFormed = false;

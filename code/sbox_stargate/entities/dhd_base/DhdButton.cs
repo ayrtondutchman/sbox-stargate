@@ -1,6 +1,6 @@
 using Sandbox;
 
-public partial class DhdButton : AnimEntity
+public partial class DhdButton : AnimatedEntity
 {
 	[Net]
 	public string Action { get; set; } = "";
