@@ -8,8 +8,7 @@ using Sandbox;
 
 public abstract partial class Stargate : Prop, IUse
 {
-	[Net]
-	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 90 );
+	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 90 );
 
 	public List<Chevron> Chevrons = new();
 
@@ -30,30 +29,28 @@ public abstract partial class Stargate : Prop, IUse
 		{ "dial_fail_noclose", "baseValue" },
 	};
 
+	[Net] public string GateAddress { get; set; } = "";
+
+	private string _GateGroup;
 	[Net]
-	public string GateAddress { get; set; } = "";
-	[Net]
-	public string GateGroup { get { return GateGroup; } set { if ( value.Length != GateGroupLength ) return; GateGroup = value; } }
-	[Net]
-	public int GateGroupLength { get; set; } = 2;
-	[Net]
-	public string GateName { get; set; } = "";
-	[Net]
-	public bool AutoClose { get; set; } = true;
-	[Net]
-	public bool GatePrivate { get; set; } = false;
-	[Net]
-	public bool GateLocal { get; set; } = false;
-	[Net]
-	public GlyphType GateGlyphType { get; protected set; } = GlyphType.MILKYWAY;
-	[Net]
-	public bool EarthPointOfOrigin { get; protected set; } = false;
+	public string GateGroup
+	{
+		get => _GateGroup;
+		set => _GateGroup = value.Length == GateGroupLength ? value : _GateGroup;
+	}
+
+	[Net] public int GateGroupLength { get; set; } = 2;
+	[Net] public string GateName { get; set; } = "";
+	[Net] public bool AutoClose { get; set; } = true;
+	[Net] public bool GatePrivate { get; set; } = false;
+	[Net] public bool GateLocal { get; set; } = false;
+	[Net] public GlyphType GateGlyphType { get; protected set; } = GlyphType.MILKYWAY;
+	[Net] public bool EarthPointOfOrigin { get; protected set; } = false;
 
 	public bool Busy { get; set; } = false; // this is pretty much used anytime the gate is busy to do anything (usually during animations/transitions)
 	public bool Inbound { get; set; } = false;
 
-	[Net]
-	public bool ShouldStopDialing { get; set; } = false;
+	[Net] public bool ShouldStopDialing { get; set; } = false;
 	public GateState CurGateState { get; set; } = GateState.IDLE;
 	public DialType CurDialType { get; set; } = DialType.FAST;
 

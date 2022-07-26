@@ -11,7 +11,7 @@ public partial class RingsGoauld : Rings {
 		Transmit = TransmitType.Always;
 		SetModel( "models/sbox_stargate/rings_ancient/ring_ancient.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
-		PhysicsBody.BodyType = PhysicsBodyType.Static;
+		//PhysicsBody.BodyType = PhysicsBodyType.Static;
 	}
 
 	protected override void HideBase() {}
