@@ -22,7 +22,7 @@ public partial class StargateRingMilkyWay : PlatformEntity
 	public string CurRingSymbol { get; private set; } = "";
 	public float TargetRingAngle { get; private set; } = 0.0f;
 
-	private float RingCurSpeed = 0f;
+	public float RingCurSpeed = 50f;
 	protected float RingMaxSpeed = 50f;
 	protected float RingAccelStep = 1f;
 	protected float RingDeccelStep = 0.75f;
@@ -277,9 +277,8 @@ public partial class StargateRingMilkyWay : PlatformEntity
 			}
 		}
 
-		SetSpeed( RingCurSpeed ); // TODO figure out why this shit doesnt work, worked fine a year ago (seems like changing speed isnt possible while moving anymore)
-		Log.Info( $"CodeSpeed={RingCurSpeed},RealSpeed={Speed}" );
-		
+		SetSpeed( RingCurSpeed ); // TODO figure out why this shit doesnt work, worked fine a year ago
+		// seems like changing speed in a tick hook/event whatever does not affect the platform entity, the parameters do change but it doesnt affect it
 
 		if ( ShouldStopAtAngle && IsMoving )
 		{
@@ -296,7 +295,7 @@ public partial class StargateRingMilkyWay : PlatformEntity
 		RingAngle = CurrentRotation;
 		RingDirection = IsMovingForwards ? -1 : 1;
 
-		//Log.Info( $"Ang={RingAngle}, Speed={Speed}, Mov={IsMoving},Acc={ShouldAcc},Decc={ShouldDecc}" );
+		Log.Info( $"Moving={IsMoving}, Acc={ShouldAcc}, Decc={ShouldDecc}, PlatformSpeed={Speed}, RingCurSpeed={RingCurSpeed}, Ang={RingAngle}" );
 	}
 
 	[Event.Tick.Server]

@@ -5,11 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
+[Spawnable]
 public partial class TestPlatformEntity : PlatformEntity
 {
-	// ring variables
-
-	
 
 	public override void Spawn()
 	{
@@ -27,6 +25,8 @@ public partial class TestPlatformEntity : PlatformEntity
 		base.Spawn();
 
 		EnableAllCollisions = true;
+		EnableTraceAndQueries = true;
+		PhysicsEnabled = true;
 	}
 
 	protected override void OnDestroy()
