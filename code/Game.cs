@@ -60,8 +60,9 @@ partial class SandboxGame : Game
 		{
 			Position = tr.EndPosition + Vector3.Down * model.PhysicsBounds.Mins.z,
 			Rotation = modelRotation,
-			Model = model
-		};
+			Model = model,
+			Owner = owner
+	};
 
 		// Let's make sure physics are ready to go instead of waiting
 		ent.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
@@ -123,6 +124,7 @@ partial class SandboxGame : Game
 
 		ent.Position = tr.EndPosition;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRotation.Angles().yaw, 0 ) );
+		ent.Owner = owner;
 
 		//Log.Info( $"ent: {ent}" );
 	}
@@ -154,6 +156,22 @@ partial class SandboxGame : Game
 	public override void OnKilledMessage( long leftid, string left, long rightid, string right, string method )
 	{
 		KillFeed.Current?.AddEntry( leftid, left, rightid, right, method );
+	}
+
+	[ConCmd.Server( "undo" )]
+	public static void OnUndoCommand()
+	{
+		Client caller = ConsoleSystem.Caller;
+
+		if ( !caller.IsValid() ) return;
+
+		Entity ent = All.LastOrDefault( x => x.Owner == caller.Pawn && (x is not BaseCarriable) );
+
+		if ( ent.IsValid() )
+		{
+			ent.Owner.PlaySound( "balloon_pop_cute" );
+			ent.Delete();
+		}
 	}
 
 }

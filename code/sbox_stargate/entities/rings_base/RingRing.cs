@@ -20,7 +20,7 @@ public partial class RingRing : Prop {
 
 	public override void Spawn() {
 		base.Spawn();
-		Tags.Add( "no_rings_teleport" );
+		//Tags.Add( "no_rings_teleport" );
 
 		EnableHitboxes = false;
 		PhysicsEnabled = false;

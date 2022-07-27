@@ -58,6 +58,7 @@ public partial class StargateRingMilkyWay : PlatformEntity
 		MoveDirIsLocal = true;
 		MoveDir = Rotation.Up.EulerAngles;
 		MoveDistance = 360;
+		StartsMoving = false;
 
 		base.Spawn();
 
@@ -276,7 +277,9 @@ public partial class StargateRingMilkyWay : PlatformEntity
 			}
 		}
 
-		SetSpeed( RingCurSpeed );
+		SetSpeed( RingCurSpeed ); // TODO figure out why this shit doesnt work, worked fine a year ago (seems like changing speed isnt possible while moving anymore)
+		Log.Info( $"CodeSpeed={RingCurSpeed},RealSpeed={Speed}" );
+		
 
 		if ( ShouldStopAtAngle && IsMoving )
 		{
@@ -292,6 +295,8 @@ public partial class StargateRingMilkyWay : PlatformEntity
 
 		RingAngle = CurrentRotation;
 		RingDirection = IsMovingForwards ? -1 : 1;
+
+		//Log.Info( $"Ang={RingAngle}, Speed={Speed}, Mov={IsMoving},Acc={ShouldAcc},Decc={ShouldDecc}" );
 	}
 
 	[Event.Tick.Server]

@@ -114,7 +114,7 @@ public partial class Rings : AnimatedEntity, IUse
 
 	public override void Spawn()
 	{
-		Tags.Add( "no_rings_teleport" );
+		//Tags.Add( "no_rings_teleport" );
 
 		this.Address = GenerateRandomAddress();
 	}
