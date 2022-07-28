@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-public partial class StargateRingMilkyWay : PlatformEntity
+public partial class StargateRingMilkyWay : StargatePlatformEntity
 {
 	// ring variables
 
@@ -277,8 +277,7 @@ public partial class StargateRingMilkyWay : PlatformEntity
 			}
 		}
 
-		SetSpeed( RingCurSpeed ); // TODO figure out why this shit doesnt work, worked fine a year ago
-		// seems like changing speed in a tick hook/event whatever does not affect the platform entity, the parameters do change but it doesnt affect it
+		SetSpeed( RingCurSpeed );
 
 		if ( ShouldStopAtAngle && IsMoving )
 		{
