@@ -284,7 +284,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 			if ( !ShouldAcc && !ShouldDecc )
 			{
 				var angDiff = MathF.Abs( CurrentRotation - CurStopAtAngle );
-				Log.Info( $"RingAng={RingAngle}, AngDiff={angDiff}" );
+				//Log.Info( $"RingAng={RingAngle}, AngDiff={angDiff}" );
 				if ( angDiff < 1f ) // if the angle difference is smal enough, start spindown
 				{
 					SpinDown();
