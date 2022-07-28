@@ -22,7 +22,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	public string CurRingSymbol { get; private set; } = "";
 	public float TargetRingAngle { get; private set; } = 0.0f;
 
-	public float RingCurSpeed = 50f;
+	private float RingCurSpeed = 0f;
 	protected float RingMaxSpeed = 50f;
 	protected float RingAccelStep = 1f;
 	protected float RingDeccelStep = 0.75f;
@@ -283,7 +283,9 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		{
 			if ( !ShouldAcc && !ShouldDecc )
 			{
-				if ( MathF.Abs( CurrentRotation - CurStopAtAngle ) < 1f ) // if the angle difference is smal enough, start spindown
+				var angDiff = MathF.Abs( CurrentRotation - CurStopAtAngle );
+				Log.Info( $"RingAng={RingAngle}, AngDiff={angDiff}" );
+				if ( angDiff < 1f ) // if the angle difference is smal enough, start spindown
 				{
 					SpinDown();
 					ShouldStopAtAngle = false;
@@ -292,9 +294,9 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		}
 
 		RingAngle = CurrentRotation;
-		RingDirection = IsMovingForwards ? -1 : 1;
+		RingDirection = IsMovingForwards ? 1 : -1;
 
-		Log.Info( $"Moving={IsMoving}, Acc={ShouldAcc}, Decc={ShouldDecc}, PlatformSpeed={Speed}, RingCurSpeed={RingCurSpeed}, Ang={RingAngle}" );
+		//Log.Info( $"Speed={RingCurSpeed}, Ang={RingAngle}" );
 	}
 
 	[Event.Tick.Server]

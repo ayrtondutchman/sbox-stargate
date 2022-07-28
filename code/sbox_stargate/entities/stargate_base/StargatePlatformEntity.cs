@@ -233,6 +233,12 @@ public partial class StargatePlatformEntity : KeyframeEntity
 			if ( moveDist == 0 ) moveDist = 360.0f;
 			if ( !IsMovingForwards ) moveDist = -moveDist;
 
+			// If speed is negative, allow going backwards
+			if ( Speed < 0 )
+			{
+				moveDist = -moveDist;
+			}
+
 			var initialRotation = CurrentRotation - (CurrentRotation % moveDist);
 
 			// TODO: Move the platform via MoveWithVelocity( Angles, timeToTake )
