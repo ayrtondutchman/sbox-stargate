@@ -3,9 +3,6 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-
-[Spawnable]
-[Library( "ent_stargate_platformentity", Title = "Stargate PlatformEntity", Group = "Stargate.Stargate" )]
 public partial class StargatePlatformEntity : KeyframeEntity
 {
 	/// <summary>

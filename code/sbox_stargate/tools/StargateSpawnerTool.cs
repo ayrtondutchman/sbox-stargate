@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Sandbox.Tools
 {
-	[Library( "tool_stargate_spawner", Title = "Stargate", Description = "Use wormholes to transport matter\n\nMOUSE1 - Spawn Milky Way gate\nE + MOUSE1 - Spawn Movie gate\nR - copy gate address\n\nMOUSE2 - Close gate/Stop dialling/Fast dial copied address\nSHIFT + MOUSE2 - Slow dial copied address\nCTRL + MOUSE2 - Instant dial copied address\n", Group = "construction" )]
+	[Library( "tool_stargate_spawner", Title = "Stargate", Description = "Use wormholes to transport matter\n\nMOUSE1 - Spawn gate\nE + MOUSE1 - Cycle gate types\nR - copy gate address\n\nMOUSE2 - Close gate/Stop dialling/Fast dial copied address\nSHIFT + MOUSE2 - Slow dial copied address\nCTRL + MOUSE2 - Instant dial copied address\n", Group = "construction" )]
 	public partial class StargateSpawnerTool : BaseTool
 	{
 		PreviewEntity previewModel;
 
 		static Stargate CopiedGate = null;
 
-		private string Model => "models/sbox_stargate/gate_sg1/gate_sg1.vmdl";
+		[Net] private string Model { get; set; } = "models/sbox_stargate/gate_sg1/gate_sg1.vmdl";
+		[Net] private int CurGateType { get; set; } = 0;
+
+		private List<string> GateTypes = new() { "StargateMilkyWay", "StargateMovie", "StargatePegasus", "StargateUniverse" };
+		private List<string> GateModels = new() { "models/sbox_stargate/gate_sg1/gate_sg1.vmdl", "models/sbox_stargate/gate_sg1/gate_sg1.vmdl", "models/sbox_stargate/gate_atlantis/gate_atlantis.vmdl", "models/sbox_stargate/gate_universe/gate_universe.vmdl" };
 
 		protected override bool IsPreviewTraceValid( TraceResult tr )
 		{
@@ -55,7 +60,7 @@ namespace Sandbox.Tools
 					continue;
 
 				preview.RotationOffset = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
-
+				preview.SetModel( Model );
 			}
 		}
 
@@ -68,6 +73,16 @@ namespace Sandbox.Tools
 			{
 				if ( Input.Pressed( InputButton.PrimaryAttack ) )
 				{
+
+					if (Input.Down(InputButton.Use))
+					{
+						CurGateType++;
+						if ( CurGateType >= GateTypes.Count ) CurGateType = 0;
+						Model = GateModels[CurGateType];
+						Log.Info( $"{Model}  |  {CurGateType}" );
+						return;
+					}
+
 					var startPos = Owner.EyePosition;
 					var dir = Owner.EyeRotation.Forward;
 
@@ -87,8 +102,10 @@ namespace Sandbox.Tools
 						return;
 					}
 
-					var gate = (Input.Down( InputButton.Use )) ? new StargateMovie() : new StargateMilkyWay();
+					var gateType = TypeLibrary.GetTypeByName<Entity>( GateTypes[CurGateType] );
+					if ( gateType == null ) return;
 
+					var gate = TypeLibrary.Create<Entity>( gateType ) as Stargate;
 					gate.Position = tr.EndPosition + gate.SpawnOffset;
 					gate.Rotation = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 					gate.Owner = Owner;
