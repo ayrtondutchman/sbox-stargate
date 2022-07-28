@@ -142,8 +142,7 @@ public partial class EventHorizon : AnimatedEntity
 		if ( shouldBeOn && !isOn )
 		{
 			curFrame = MathX.Approach( curFrame, maxFrame, Time.Delta * 30 );
-			//SceneObject.SetValue( "frame", curFrame.FloorToInt() );
-			//SceneObject.Attributes.Set( "frame", curFrame.FloorToInt() ); // TODO check this
+			SceneObject.Attributes.Set( "frame", curFrame.FloorToInt() ); // TODO check this
 
 			if ( curFrame == maxFrame )
 			{
@@ -159,20 +158,20 @@ public partial class EventHorizon : AnimatedEntity
 		if ( shouldBeOff && !isOff )
 		{
 			curFrame = MathX.Approach( curFrame, minFrame, Time.Delta * 30 );
-			//SceneObject.SetValue( "frame", curFrame.FloorToInt() );
+			SceneObject.Attributes.Set( "frame", curFrame.FloorToInt() );
 			if ( curFrame == minFrame ) isOff = true;
 		}
 
 		if ( shouldEstablish && !isEstablished )
 		{
-			//SceneObject.SetValue( "illumbrightness", curBrightness );
+			SceneObject.Attributes.Set( "illumbrightness", curBrightness );
 			curBrightness = MathX.Approach( curBrightness, minBrightness, Time.Delta * 5 );
 			if ( curBrightness == minBrightness ) isEstablished = true;
 		}
 
 		if ( shouldCollapse && !isCollapsed )
 		{
-			//SceneObject.SetValue( "illumbrightness", curBrightness );
+			SceneObject.Attributes.Set( "illumbrightness", curBrightness );
 			curBrightness = MathX.Approach( curBrightness, maxBrightness, Time.Delta * 5 );
 
 			if ( curBrightness == maxBrightness )
