@@ -29,7 +29,8 @@
         "water": "Trigger",
         "debris": "Unset",
         "player": "Unset",
-        "glass": "Unset"
+        "glass": "Unset",
+        "eventhorizon": "Trigger"
       },
       "Pairs": [
         {
@@ -99,6 +100,10 @@
         {
           "a": "water",
           "b": "glass"
+        },
+        {
+          "a": "player",
+          "b": "eventhorizon"
         }
       ]
     },
@@ -106,6 +111,7 @@
       "RootNamespace": "Sandbox",
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
       "NoWarn": "1701;1702;1591;"
-    }
+    },
+    "GameCategory": "None"
   }
 }

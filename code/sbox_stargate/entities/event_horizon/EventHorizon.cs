@@ -52,6 +52,8 @@ public partial class EventHorizon : AnimatedEntity
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 		EnableShadowCasting = false;
 
+		Tags.Add( "eventhorizon" );
+
 		EnableAllCollisions = false;
 		EnableTouch = true;
 	}
