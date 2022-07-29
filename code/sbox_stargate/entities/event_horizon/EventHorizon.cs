@@ -70,7 +70,7 @@ public partial class EventHorizon : AnimatedEntity
 		await Task.DelaySeconds( 1.5f );
 		if ( !this.IsValid() ) return;
 
-		WormholeLoop = Sound.FromEntity( "wormhole_loop", this );
+		WormholeLoop = Sound.FromEntity( "stargate.event_horizon.loop", this );
 	}
 
 	public async void Collapse()
@@ -90,7 +90,7 @@ public partial class EventHorizon : AnimatedEntity
 		if ( lastSoundTime + 0.1f < Time.Now ) // delay for playing sounds to avoid constant spam
 		{
 			lastSoundTime = Time.Now;
-			Sound.FromEntity( "teleport", this );
+			Sound.FromEntity( "stargate.event_horizon.enter", this );
 		}
 	}
 
