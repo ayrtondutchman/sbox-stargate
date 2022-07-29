@@ -29,8 +29,7 @@
         "water": "Trigger",
         "debris": "Unset",
         "player": "Unset",
-        "glass": "Unset",
-        "eventhorizon": "Trigger"
+        "glass": "Unset"
       },
       "Pairs": [
         {
@@ -100,10 +99,6 @@
         {
           "a": "water",
           "b": "glass"
-        },
-        {
-          "a": "player",
-          "b": "eventhorizon"
         }
       ]
     },
