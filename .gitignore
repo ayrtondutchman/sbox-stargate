@@ -12,3 +12,5 @@ tools_thumbnail_cache.bin
 maps/editor/_bakeresourcecache/toolscene_default_baked/*
 .vs/*
 *.generated.*
+*.sound_c
+*.vsnd_c
