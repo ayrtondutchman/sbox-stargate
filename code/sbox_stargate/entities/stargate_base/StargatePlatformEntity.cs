@@ -20,21 +20,17 @@ public partial class StargatePlatformEntity : KeyframeEntity
 	// The values correspond to DoorHelper.
 	public enum PlatformMoveType
 	{
-		//Moving = 0 // Moving with Distance=Lip
-		Moving = 3, // StartPos + Dir * Distance
 		Rotating = 1,
-		RotatingContinious = 4, // Rotating without reversing
-								//NotMoving = 2,
+		RotatingContinious = 4
 	}
 
 	/// <summary>
 	/// Movement type of the platform.<br/>
-	/// <b>Moving</b>: Moving linearly and reversing direction at final position if Looping is enabled.<br/>
 	/// <b>Rotating</b>: Rotating and reversing direction at final rotation if Looping is enabled.<br/>
 	/// <b>Rotating Continious</b>: Rotating continiously past Move Distance. OnReached outputs are fired every Move Distance degrees.<br/>
 	/// </summary>
 	[Property( "movedir_type", Title = "Movement Type" )]
-	public PlatformMoveType MoveDirType { get; set; } = PlatformMoveType.Moving;
+	public PlatformMoveType MoveDirType { get; set; } = PlatformMoveType.RotatingContinious;
 
 	/// <summary>
 	/// How much to move in the move direction, or rotate around the axis for rotating move type.
@@ -93,12 +89,9 @@ public partial class StargatePlatformEntity : KeyframeEntity
 	public string MovingSound { get; set; }
 
 
-
 	public bool IsMoving { get; protected set; }
 	public bool IsMovingForwards { get; protected set; }
 
-	Vector3 PositionA;
-	Vector3 PositionB;
 	Rotation RotationA;
 
 	public override void Spawn()
@@ -106,18 +99,6 @@ public partial class StargatePlatformEntity : KeyframeEntity
 		base.Spawn();
 
 		SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
-
-		// PlatformMoveType.Moving
-		{
-			PositionA = LocalPosition;
-			PositionB = PositionA + MoveDir.Direction * MoveDistance;
-
-			if ( MoveDirIsLocal )
-			{
-				var dir_world = Transform.NormalToWorld( MoveDir.Direction );
-				PositionB = PositionA + dir_world * MoveDistance;
-			}
-		}
 
 		// PlatformMoveType.Rotating
 		{
@@ -158,37 +139,9 @@ public partial class StargatePlatformEntity : KeyframeEntity
 	}
 
 	/// <summary>
-	/// Fired when the platform reaches its beginning location
-	/// </summary>
-	protected Output OnReachedStart { get; set; }
-
-	/// <summary>
-	/// Fired when the platform reaches its end location (startPos + dir * distance)
-	/// </summary>
-	protected Output OnReachedEnd { get; set; }
-
-	/// <summary>
 	/// Contains the current rotation of the platform in degrees.
 	/// </summary>
 	public float CurrentRotation { get; protected set; } = 0;
-
-	[Event.Tick.Server]
-	void DebugOverlayTick()
-	{
-		if ( !DebugFlags.HasFlag( EntityDebugFlags.Text ) ) return;
-
-		if ( MoveDirType == PlatformMoveType.Moving )
-		{
-			DebugOverlay.Box( Parent != null ? Parent.Transform.PointToWorld( PositionA ) : PositionA, Rotation, CollisionBounds.Mins, CollisionBounds.Maxs, Color.Green );
-			DebugOverlay.Box( Parent != null ? Parent.Transform.PointToWorld( PositionB ) : PositionB, Rotation, CollisionBounds.Mins, CollisionBounds.Maxs, Color.Red );
-		}
-		else
-		{
-			DebugOverlay.Line( Position, Position + Transform.NormalToWorld( GetRotationAxis() ) * 5, Color.Green, 0, false );
-			DebugOverlay.Line( Position, Position + LocalRotation.Forward * 20, Color.Cyan, 0, false );
-			DebugOverlay.Line( Position, Position + LocalRotation.Up * 10, Color.Yellow, 0, false );
-		}
-	}
 
 	public override void MoveFinished()
 	{
@@ -211,20 +164,7 @@ public partial class StargatePlatformEntity : KeyframeEntity
 			MoveSoundInstance = PlaySound( MovingSound );
 		}
 
-		if ( MoveDirType == PlatformMoveType.Moving )
-		{
-			var position = IsMovingForwards ? PositionB : PositionA;
-
-			var distance = Vector3.DistanceBetween( LocalPosition, position );
-			var timeToTake = distance / Math.Max( Speed, 0.1f );
-
-			await LocalKeyframeTo( position, timeToTake );
-			if ( moveId != movement || !this.IsValid() ) return;
-
-			LocalPosition = position;
-			LocalVelocity = Vector3.Zero;
-		}
-		else if ( MoveDirType == PlatformMoveType.RotatingContinious || MoveDirType == PlatformMoveType.Rotating )
+		if ( MoveDirType == PlatformMoveType.RotatingContinious || MoveDirType == PlatformMoveType.Rotating )
 		{
 			var moveDist = MoveDistance;
 			if ( moveDist == 0 ) moveDist = 360.0f;
@@ -265,15 +205,6 @@ public partial class StargatePlatformEntity : KeyframeEntity
 		else { Log.Warning( $"{this}: Unknown platform move type {MoveDirType}!" ); await Task.Delay( 100 ); }
 
 		if ( moveId != movement || !this.IsValid() ) return;
-
-		if ( IsMovingForwards )
-		{
-			_ = OnReachedEnd.Fire( this );
-		}
-		else
-		{
-			_ = OnReachedStart.Fire( this );
-		}
 
 		if ( MoveDirType != PlatformMoveType.RotatingContinious || TimeToHold > 0 )
 		{
@@ -317,15 +248,8 @@ public partial class StargatePlatformEntity : KeyframeEntity
 	{
 		progress = Math.Clamp( progress, 0.0f, 1.0f );
 
-		if ( MoveDirType == PlatformMoveType.Moving )
-		{
-			LocalPosition = Vector3.Lerp( PositionA, PositionB, progress );
-		}
-		else
-		{
-			LocalRotation = Rotation.Lerp( RotationA, RotationA.RotateAroundAxis( GetRotationAxis(), MoveDistance != 0 ? MoveDistance : 360.0f ), progress );
-			CurrentRotation = 0.0f.LerpTo( MoveDistance != 0 ? MoveDistance : 360.0f, progress );
-		}
+		LocalRotation = Rotation.Lerp( RotationA, RotationA.RotateAroundAxis( GetRotationAxis(), MoveDistance != 0 ? MoveDistance : 360.0f ), progress );
+		CurrentRotation = 0.0f.LerpTo( MoveDistance != 0 ? MoveDistance : 360.0f, progress );
 	}
 
 	/// <summary>
