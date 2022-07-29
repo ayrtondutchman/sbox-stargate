@@ -14,3 +14,7 @@ maps/editor/_bakeresourcecache/toolscene_default_baked/*
 *.generated.*
 *.sound_c
 *.vsnd_c
+*.vmat_c
+*.vmdl_c
+*.vtex_c
+*.vpcf_c
