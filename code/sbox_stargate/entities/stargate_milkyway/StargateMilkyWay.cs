@@ -18,14 +18,14 @@ public partial class StargateMilkyWay : Stargate
 	{
 		SoundDict = new()
 		{
-			{ "gate_open", "gate_open_sg1" },
-			{ "gate_close", "gate_close" },
-			{ "chevron_open", "chevron_sg1_open" },
-			{ "chevron_close", "chevron_sg1_close" },
-			{ "dial_fail", "dial_fail_sg1" },
-			{ "dial_fail_noclose", "gate_sg1_dial_fail_noclose" },
-			{ "dial_begin_9chev", "gate_universe_9chev_dial_begin" },
-			{ "dial_fail_9chev", "gate_universe_9chev_dial_fail" }
+			{ "gate_open", "stargate.open" },
+			{ "gate_close", "stargate.close" },
+			{ "chevron_open", "stargate.milkyway.chevron_open" },
+			{ "chevron_close", "stargate.milkyway.chevron_close" },
+			{ "dial_fail", "stargate.milkyway.dial_fail" },
+			{ "dial_fail_noclose", "stargate.milkyway.dial_fail_noclose" },
+			{ "dial_begin_9chev", "stargate.universe.dial_begin_9chev" },
+			{ "dial_fail_9chev", "stargate.universe.dial_fail_9chev" }
 		};
 
 		GateGlyphType = GlyphType.MILKYWAY;

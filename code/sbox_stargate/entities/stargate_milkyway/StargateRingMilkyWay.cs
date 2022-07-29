@@ -39,8 +39,8 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	private float StartedAccelAngle = 0f;
 	private float StoppedAccelAngle = 0f;
 
-	public string StartSoundName = "gate_roll_long";
-	public string StopSoundName = "gate_sg1_ring_stop";
+	public string StartSoundName = "stargate.milkyway.ring_start_long";
+	public string StopSoundName = "stargate.milkyway.ring_stop";
 
 	protected Sound? StartSoundInstance;
 	protected Sound? StopSoundInstance;
