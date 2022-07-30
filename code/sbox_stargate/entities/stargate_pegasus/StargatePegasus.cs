@@ -16,18 +16,18 @@ public partial class StargatePegasus : Stargate
 	{
 		SoundDict = new()
 		{
-			{ "gate_open", "gate_atlantis_open" },
-			{ "gate_close", "gate_close" },
-			{ "gate_roll_fast", "gate_atlantis_roll" },
-			{ "gate_roll_slow", "gate_atlantis_roll_slow" },
-			{ "chevron", "chevron_atlantis_roll" },
-			{ "chevron_inbound", "chevron_atlantis_roll_incoming" },
-			{ "chevron_inbound_longer", "chevron_atlantis_roll_incoming_longer" },
-			{ "chevron_inbound_shorter", "chevron_atlantis_roll_incoming_short" },
-			{ "chevron_lock", "chevron_atlantis_lock" },
-			{ "chevron_lock_inbound", "chevron_atlantis_lock_incoming" },
-			{ "chevron_dhd", "chevron_atlantis" },
-			{ "dial_fail", "dial_fail_atlantis" }
+			{ "gate_open", "stargate.atlantis.open" },
+			{ "gate_close", "stargate.milkyway.close" },
+			{ "gate_roll_fast", "stargate.atlantis.roll" },
+			{ "gate_roll_slow", "stargate.atlantis.roll_slow" },
+			{ "chevron", "stargate.atlantis.chevron_roll" },
+			{ "chevron_inbound", "stargate.atlantis.chevron_roll_incoming" },
+			{ "chevron_inbound_longer", "stargate.atlantis.chevron_roll_incoming_long" },
+			{ "chevron_inbound_shorter", "stargate.atlantis.chevron_roll_incoming_short" },
+			{ "chevron_lock", "stargate.atlantis.chevron_lock" },
+			{ "chevron_lock_inbound", "stargate.atlantis.chevron_lock_incoming" },
+			{ "chevron_dhd", "stargate.atlantis.chevron" },
+			{ "dial_fail", "stargate.atlantis.dial_fail" }
 		};
 
 		GateGlyphType = GlyphType.PEGASUS;

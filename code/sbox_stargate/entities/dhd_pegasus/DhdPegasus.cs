@@ -11,7 +11,7 @@ public partial class DhdPegasus : Dhd
 
 	public DhdPegasus()
 	{
-		Data = new( 2, 3, "dhd_press_atlantis", "dhd_dial" );
+		Data = new( 2, 3, "dhd.atlantis.press", "dhd.press_dial" );
 	}
 
 	public override void Spawn()

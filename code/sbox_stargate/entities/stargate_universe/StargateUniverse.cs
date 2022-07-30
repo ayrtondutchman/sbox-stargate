@@ -17,14 +17,14 @@ public partial class StargateUniverse : Stargate
 	{
 		SoundDict = new()
 		{
-			{ "gate_open", "gate_universe_open" },
-			{ "gate_close", "gate_universe_close_2" },
-			{ "gate_roll_fast", "gate_universe_roll_long" },
-			{ "gate_roll_slow", "gate_universe_roll_long" },
-			{ "gate_activate", "gate_universe_activate" },
-			{ "symbol", "gate_universe_symbol_encode" },
-			{ "chevron_dhd", "gate_universe_symbol_encode" },
-			{ "dial_fail", "gate_universe_dial_fail" }
+			{ "gate_open", "stargate.universe.open" },
+			{ "gate_close", "stargate.universe.close_2" },
+			{ "gate_roll_fast", "stargate.universe.roll_long" },
+			{ "gate_roll_slow", "stargate.universe.roll_long" },
+			{ "gate_activate", "stargate.universe.activate" },
+			{ "symbol", "stargate.universe.symbol_encode" },
+			{ "chevron_dhd", "stargate.universe.symbol_encode" },
+			{ "dial_fail", "stargate.universe.dial_fail" }
 		};
 
 		GateGlyphType = GlyphType.UNIVERSE;

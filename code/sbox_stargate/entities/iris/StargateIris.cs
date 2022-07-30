@@ -29,7 +29,7 @@ public partial class StargateIris : AnimatedEntity
 		Closed = true;
 		EnableAllCollisions = true;
 		CurrentSequence.Name = "iris_close";
-		Sound.FromEntity("iris_close", this);
+		Sound.FromEntity("stargate.iris.close", this);
 
 		await Task.DelaySeconds( OpenCloseDleay );
 		Busy = false;
@@ -43,7 +43,7 @@ public partial class StargateIris : AnimatedEntity
 		Closed = false;
 		EnableAllCollisions = false;
 		CurrentSequence.Name = "iris_open";
-		Sound.FromEntity("iris_open", this);
+		Sound.FromEntity( "stargate.iris.open", this);
 
 		await Task.DelaySeconds( OpenCloseDleay );
 		Busy = false;
@@ -57,7 +57,7 @@ public partial class StargateIris : AnimatedEntity
 	}
 
 	public void PlayHitSound() {
-		Sound.FromEntity( "iris_hit", this );
+		Sound.FromEntity( "stargate.iris.hit", this );
 	}
 
 	protected override void OnDestroy()

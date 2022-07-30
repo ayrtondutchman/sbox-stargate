@@ -15,8 +15,8 @@ public partial class StargateRingUniverse : StargateRingMilkyWay
 	{
 		StopSoundOnSpinDown = false;
 
-		StartSoundName = "gate_universe_roll_long";
-		StopSoundName = "gate_universe_roll_stop";
+		StartSoundName = "stargate.universe.roll_long";
+		StopSoundName = "stargate.universe.roll_stop";
 
 		RingSymbols = " ZB9J QNLM@VKO6 DCWY #RTS 8APU F7H5X4IG0 12E3";
 

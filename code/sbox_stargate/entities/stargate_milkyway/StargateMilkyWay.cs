@@ -18,11 +18,11 @@ public partial class StargateMilkyWay : Stargate
 	{
 		SoundDict = new()
 		{
-			{ "gate_open", "stargate.open" },
-			{ "gate_close", "stargate.close" },
+			{ "gate_open", "stargate.milkyway.open" },
+			{ "gate_close", "stargate.milkyway.close" },
 			{ "chevron_open", "stargate.milkyway.chevron_open" },
 			{ "chevron_close", "stargate.milkyway.chevron_close" },
-			{ "dial_fail", "stargate.milkyway.dial_fail" },
+			{ "dial_fail", "stargate.milkyway.dial_fail_noclose" },
 			{ "dial_fail_noclose", "stargate.milkyway.dial_fail_noclose" },
 			{ "dial_begin_9chev", "stargate.universe.dial_begin_9chev" },
 			{ "dial_fail_9chev", "stargate.universe.dial_fail_9chev" }

@@ -14,14 +14,14 @@ public partial class StargateMovie : StargateMilkyWay
 	{
 		SoundDict = new()
 		{
-			{ "gate_open", "gate_movie_open" },
-			{ "gate_close", "gate_movie_close" },
-			{ "chevron_open", "chevron_movie_open" },
-			{ "chevron_close", "chevron_movie_close" },
-			{ "dial_fail", "dial_fail_sg1" },
-			{ "dial_fail_noclose", "gate_sg1_dial_fail_noclose" },
-			{ "dial_begin_9chev", "gate_universe_9chev_dial_begin" },
-			{ "dial_fail_9chev", "gate_universe_9chev_dial_fail" }
+			{ "gate_open", "stargate.movie.open" },
+			{ "gate_close", "stargate.movie.close" },
+			{ "chevron_open", "stargate.movie.chevron_open" },
+			{ "chevron_close", "stargate.movie.chevron_close" },
+			{ "dial_fail", "stargate.milkyway.dial_fail_noclose" },
+			{ "dial_fail_noclose", "stargate.milkyway.dial_fail_noclose" },
+			{ "dial_begin_9chev", "stargate.universe.dial_begin_9chev" },
+			{ "dial_fail_9chev", "stargate.universe.dial_fail_9chev" }
 		};
 
 		GateGlyphType = GlyphType.MILKYWAY;
@@ -38,7 +38,7 @@ public partial class StargateMovie : StargateMilkyWay
 		base.Spawn();
 		SetBodyGroup( 0, 1 );
 
-		Ring.StartSoundName = "gate_movie_ring_roll";
+		Ring.StartSoundName = "stargate.movie.ring_roll";
 		Ring.StopSoundName = "";
 		Ring.StopSoundOnSpinDown = true;
 

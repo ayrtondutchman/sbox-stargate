@@ -278,7 +278,7 @@ public partial class Rings : AnimatedEntity, IUse
 
 		// Make the base entity static to prevent droping under the map ...
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
-		PlaySound( "ring_transporter2" );
+		PlaySound( "ringtransporter.part1" );
 
 		// Playing the animation
 		HideBase();
@@ -438,7 +438,7 @@ public partial class Rings : AnimatedEntity, IUse
 	public async virtual void RetractRings()
 	{
 
-		PlaySound( "ring_transporter3" );
+		PlaySound( "ringtransporter.part2" );
 
 		int[] times = { 400, 200, 300, 500, 200 };
 

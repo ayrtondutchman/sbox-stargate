@@ -21,7 +21,7 @@ public abstract partial class Dhd : Prop
 	}
 
 	//[Net]
-	public DhdData Data { get; set; } = new( 0, 1, "dhd_sg1_press", "dhd_dial" );
+	public DhdData Data { get; set; } = new( 0, 1, "dhd.milkyway.press", "dhd.press_dial" );
 
 	[Net] public Stargate Gate { get; set; }
 
