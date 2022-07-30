@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Sandbox;
 
-public partial class RingRing : Prop {
+public partial class RingRing : KeyframeEntity {
 
 	public Rings RingParent;
 
@@ -52,8 +52,20 @@ public partial class RingRing : Prop {
 		Move();
 	}
 
-	public void Move() {
-		MoveTo(Retract ? RingParent.Position : RingParent.Transform.PointToWorld(desiredPos), 0.2f);
+	public async void Move() {
+		var targetPos = Retract ? RingParent.Position : RingParent.Transform.PointToWorld( desiredPos );
+
+		//Log.Info( $"BasePos = {RingParent.Position}, TargetPos = {targetPos}" );
+
+		var newTransform = new Transform( targetPos );
+
+		var moveDone = await KeyframeTo( newTransform, 0.2f);
+
+		if ( moveDone )
+		{
+			MoveFinished();
+		}
+
 	}
 
 	public void Refract() {
