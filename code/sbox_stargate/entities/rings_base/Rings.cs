@@ -114,9 +114,10 @@ public partial class Rings : AnimatedEntity, IUse
 
 	public override void Spawn()
 	{
-		//Tags.Add( "no_rings_teleport" );
+		base.Spawn();
 
-		this.Address = GenerateRandomAddress();
+		Address = GenerateRandomAddress();
+		Tags.Add( "solid", "no_rings_teleport" );
 	}
 
 	public virtual bool IsUsable( Entity user )

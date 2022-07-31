@@ -20,14 +20,15 @@ public partial class RingRing : KeyframeEntity {
 
 	public override void Spawn() {
 		base.Spawn();
-		//Tags.Add( "no_rings_teleport" );
-
-		EnableHitboxes = false;
-		PhysicsEnabled = false;
-		RenderColor = RenderColor.WithAlpha(0);
+		Tags.Add( "solid", "no_rings_teleport" );
 
 		Transmit = TransmitType.Always;
 		SetModel( "models/sbox_stargate/rings_ancient/ring_ancient.vmdl" );
+
+		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
+		PhysicsBody.BodyType = PhysicsBodyType.Static;
+		EnableAllCollisions = true;
+		RenderColor = RenderColor.WithAlpha( 0 );
 	}
 
 	public override void MoveFinished() {
