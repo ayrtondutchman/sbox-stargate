@@ -58,9 +58,9 @@ public partial class RingRing : KeyframeEntity {
 
 		//Log.Info( $"BasePos = {RingParent.Position}, TargetPos = {targetPos}" );
 
-		var newTransform = new Transform( targetPos );
+		var newTransform = new Transform( targetPos, Rotation );
 
-		var moveDone = await KeyframeTo( newTransform, 0.2f);
+		var moveDone = await KeyframeTo( newTransform, 0.3f, Easing.QuadraticInOut);
 
 		if ( moveDone )
 		{
