@@ -35,7 +35,7 @@ partial class SandboxGame : Game
 		if ( ConsoleSystem.Caller == null )
 			return;
 
-		var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 500 )
+		var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 4096 )
 			.UseHitboxes()
 			.Ignore( owner )
 			.Run();
@@ -109,7 +109,7 @@ partial class SandboxGame : Game
 			if ( !TypeLibrary.Has<SpawnableAttribute>( entityType ) )
 				return;
 
-		var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 200 )
+		var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 4096 )
 			.UseHitboxes()
 			.Ignore( owner )
 			.Size( 2 )
@@ -125,6 +125,33 @@ partial class SandboxGame : Game
 		ent.Position = tr.EndPosition;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRotation.Angles().yaw, 0 ) );
 		ent.Owner = owner;
+
+
+		
+
+		// Stargate Stuffs
+		var hasSpawnOffsetProperty = ent.GetType().GetProperty( "SpawnOffset" ) != null;
+		if ( hasSpawnOffsetProperty ) // spawn offsets for Stargate stuff
+		{
+			var type = ent.GetType();
+			var property_spawnoffset = type.GetProperty( "SpawnOffset" );
+			if ( property_spawnoffset != null ) ent.Position += (Vector3)property_spawnoffset.GetValue( ent );
+
+
+			var property_spawnoffset_ang = type.GetProperty( "SpawnOffsetAng" );
+			if ( property_spawnoffset_ang != null )
+			{
+				var ang = (Angles)property_spawnoffset_ang.GetValue( ent );
+				var newRot = (ent.Rotation.Angles() + ang).ToRotation();
+				ent.Rotation = newRot;
+			}
+
+		}
+
+		if ( ent is Stargate gate ) // gate ramps
+		{
+			if ( tr.Entity is IStargateRamp ramp ) Stargate.PutGateOnRamp( gate, ramp );
+		}
 
 		//Log.Info( $"ent: {ent}" );
 	}
