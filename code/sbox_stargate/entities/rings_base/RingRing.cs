@@ -16,7 +16,7 @@ public partial class RingRing : KeyframeEntity {
 	}
 	public Vector3 desiredPos;
 
-	public bool Retract = false;
+	public bool ShouldRetract = false;
 
 	public override void Spawn() {
 		base.Spawn();
@@ -33,7 +33,7 @@ public partial class RingRing : KeyframeEntity {
 	public override void MoveFinished() {
 		reachedPos = true;
 
-		if (Retract) {
+		if (ShouldRetract) {
 			RingParent.OnRingReturn();
 			Delete();
 		}
@@ -48,12 +48,12 @@ public partial class RingRing : KeyframeEntity {
 
 	public void MoveUp() {
 		RenderColor = RenderColor.WithAlpha(1);
-		Retract = false;
+		ShouldRetract = false;
 		Move();
 	}
 
 	public async void Move() {
-		var targetPos = Retract ? RingParent.Position : RingParent.Transform.PointToWorld( desiredPos );
+		var targetPos = ShouldRetract ? RingParent.Position : RingParent.Transform.PointToWorld( desiredPos );
 
 		//Log.Info( $"BasePos = {RingParent.Position}, TargetPos = {targetPos}" );
 
@@ -68,8 +68,8 @@ public partial class RingRing : KeyframeEntity {
 
 	}
 
-	public void Refract() {
-		Retract = true;
+	public void Retract() {
+		ShouldRetract = true;
 		Move();
 	}
 

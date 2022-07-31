@@ -452,7 +452,7 @@ public partial class Rings : AnimatedEntity, IUse
 
 			r.desiredPos = LocalPosition.z;
 
-			r.Refract();
+			r.Retract();
 
 			i++;
 		}
