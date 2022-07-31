@@ -49,7 +49,7 @@
 				if ( !preview.IsValid() || !Owner.IsValid() )
 					continue;
 
-				preview.RotationOffset = new Angles( 15, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
+				preview.Rotation = new Angles( 15, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 
 			}
 		}

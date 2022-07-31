@@ -59,7 +59,7 @@ namespace Sandbox.Tools
 				if ( !preview.IsValid() || !Owner.IsValid() )
 					continue;
 
-				preview.RotationOffset = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
+				preview.Rotation = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
 				preview.SetModel( Model );
 			}
 		}
