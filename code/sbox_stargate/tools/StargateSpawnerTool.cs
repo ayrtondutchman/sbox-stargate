@@ -14,7 +14,7 @@ namespace Sandbox.Tools
 		[Net] private int CurGateType { get; set; } = 0;
 
 		private List<string> GateTypes = new() { "StargateMilkyWay", "StargateMovie", "StargatePegasus", "StargateUniverse" };
-		private List<string> GateModels = new() { "models/sbox_stargate/gate_sg1/gate_sg1.vmdl", "models/sbox_stargate/gate_sg1/gate_sg1.vmdl", "models/sbox_stargate/gate_atlantis/gate_atlantis.vmdl", "models/sbox_stargate/gate_universe/gate_universe.vmdl" };
+		private List<string> GateModels = new() { "models/sbox_stargate/gate_sg1/gate_sg1.vmdl", "models/sbox_stargate/gate_sg1/ring_sg1.vmdl", "models/sbox_stargate/gate_atlantis/gate_atlantis.vmdl", "models/sbox_stargate/gate_universe/gate_universe.vmdl" };
 
 		protected override bool IsPreviewTraceValid( TraceResult tr )
 		{
