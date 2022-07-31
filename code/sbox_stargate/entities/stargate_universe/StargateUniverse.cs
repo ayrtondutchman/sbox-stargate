@@ -18,7 +18,7 @@ public partial class StargateUniverse : Stargate
 		SoundDict = new()
 		{
 			{ "gate_open", "stargate.universe.open" },
-			{ "gate_close", "stargate.universe.close_2" },
+			{ "gate_close", "stargate.universe.close" },
 			{ "gate_roll_fast", "stargate.universe.roll_long" },
 			{ "gate_roll_slow", "stargate.universe.roll_long" },
 			{ "gate_activate", "stargate.universe.activate" },
