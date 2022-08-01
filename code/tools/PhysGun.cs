@@ -182,7 +182,7 @@ public partial class PhysGun : Carriable
 			return;
 
 		// Dont allow touching GateSpawner entities
-		if ( body.GetEntity() is IGateSpawner )
+		if ( GateSpawner.GateSpawnerEntites.Contains( body.GetEntity() ) )
 			return;
 
 		// Unfreeze
