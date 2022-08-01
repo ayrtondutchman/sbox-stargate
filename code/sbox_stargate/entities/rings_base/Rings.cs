@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sandbox;
 
+[Category( "Transportation Rings" )]
 public partial class Rings : AnimatedEntity, IUse
 {
 

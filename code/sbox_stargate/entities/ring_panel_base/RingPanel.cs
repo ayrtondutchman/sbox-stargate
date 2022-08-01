@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Sandbox;
 
+[Category( "Transportation Rings" )]
 public partial class RingPanel : ModelEntity
 {
 	public Dictionary<string, RingPanelButton> Buttons { get; protected set; } = new();

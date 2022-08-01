@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
+[Category( "Stargates" )]
 public abstract partial class Stargate : Prop, IUse
 {
 	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 90 );

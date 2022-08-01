@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sandbox;
 
+[Category( "Stargates" )]
 public abstract partial class Dhd : Prop
 {
 	public struct DhdData
