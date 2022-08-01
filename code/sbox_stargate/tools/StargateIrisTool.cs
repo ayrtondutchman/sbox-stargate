@@ -50,14 +50,12 @@
 					continue;
 
 				preview.Rotation = new Angles( 0, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
-
 			}
 		}
 
 		public override void Simulate()
 		{
-			if ( !Host.IsServer )
-				return;
+			if ( !Host.IsServer ) return;
 
 			using ( Prediction.Off() )
 			{
@@ -65,37 +63,32 @@
 				{
 					var startPos = Owner.EyePosition;
 					var dir = Owner.EyeRotation.Forward;
-					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
-						.Ignore( Owner )
-						.Run();
-					if ( !tr.Hit || !tr.Entity.IsValid() )
-						return;
-					
+					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance ).Ignore( Owner ).Run();
+
+					if ( !tr.Hit || !tr.Entity.IsValid() ) return;
 
 					if ( tr.Entity is Stargate gate )
 					{
-						Stargate.AddIris(gate, Owner).Close();
+						var iris = Stargate.AddIris(gate, Owner);
+						iris.Close();
+						iris.Tags.Add( "undoable" );
 						CreateHitEffects( tr.EndPosition );
 					}
-
 				}
 
 				if ( Input.Pressed( InputButton.Reload ) )
 				{
 					var startPos = Owner.EyePosition;
 					var dir = Owner.EyeRotation.Forward;
-					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
-						.Ignore( Owner )
-						.Run();
-					if ( !tr.Hit || !tr.Entity.IsValid() )
-						return;
+					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance ).Ignore( Owner ).Run();
+
+					if ( !tr.Hit || !tr.Entity.IsValid() ) return;
 
 					if ( tr.Entity is Stargate gate && gate.Iris.IsValid())
 					{
 						gate.Iris.Toggle();
 						CreateHitEffects( tr.EndPosition );
 					}
-
 				}
 
 
@@ -103,21 +96,16 @@
 				{
 					var startPos = Owner.EyePosition;
 					var dir = Owner.EyeRotation.Forward;
-					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance )
-						.Ignore( Owner )
-						.Run();
-					if ( !tr.Hit || !tr.Entity.IsValid() )
-						return;
+					var tr = Trace.Ray( startPos, startPos + dir * MaxTraceDistance ).Ignore( Owner ).Run();
 
+					if ( !tr.Hit || !tr.Entity.IsValid() ) return;
 
 					if ( tr.Entity is Stargate gate )
 					{
 						Stargate.RemoveIris( gate );
 						CreateHitEffects( tr.EndPosition );
 					}
-
 				}
-
 
 			}
 		}

@@ -449,7 +449,6 @@ public partial class Stargate : Prop, IUse
 			iris.Scale = gate.Scale;
 			iris.SetParent( gate );
 			iris.Gate = gate;
-			//iris.Owner = owner; -- why the fuck does this break iris anims // its a sbox issue, ofcourse
 			gate.Iris = iris;
 		}
 		return gate.Iris;

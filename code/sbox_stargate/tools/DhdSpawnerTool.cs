@@ -78,8 +78,7 @@
 					var dhd = new DhdMilkyWay();
 					dhd.Position = tr.EndPosition + new Vector3(0, 0, -5);
 					dhd.Rotation = new Angles( 15, Owner.EyeRotation.Angles().yaw + 180, 0 ).ToRotation();
-
-					dhd.Owner = Owner;
+					dhd.Tags.Add( "undoable" );
 				}
 				else if ( Input.Pressed( InputButton.SecondaryAttack ) )
 				{

@@ -19,6 +19,7 @@ public partial class StargateIris : AnimatedEntity
 		SetMaterialGroup(1);
 
 		Transmit = TransmitType.Always;
+		Tags.Add( "solid" );
 	}
 
 	public async void Close() {
