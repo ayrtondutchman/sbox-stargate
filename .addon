@@ -2,7 +2,7 @@
   "Title": "Sandbox Stargate",
   "Type": "game",
   "Org": "katka",
-  "Ident": "sbox-stargate",
+  "Ident": "sbox_stargate",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
