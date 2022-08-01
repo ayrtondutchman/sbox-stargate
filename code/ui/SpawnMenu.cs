@@ -2,6 +2,7 @@
 using Sandbox.Tools;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
+using System.Linq;
 
 
 [Library]
@@ -58,9 +59,9 @@ public partial class SpawnMenu : Panel
 	{
 		toollist.DeleteChildren( true );
 
-		foreach ( var entry in TypeLibrary.GetDescriptions<BaseTool>() )
+		foreach ( var entry in TypeLibrary.GetDescriptions<BaseTool>().OrderBy( o => o.Title ).ToList() )
 		{
-			if ( entry.Title == "BaseTool" )
+			if ( entry.Title == "Base Tool" )
 				continue;
 
 			var button = toollist.Add.Button( entry.Title );
