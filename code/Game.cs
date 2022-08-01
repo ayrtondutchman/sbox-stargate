@@ -63,9 +63,10 @@ partial class SandboxGame : Game
 		{
 			Position = tr.EndPosition + Vector3.Down * model.PhysicsBounds.Mins.z,
 			Rotation = modelRotation,
-			Model = model,
-			Owner = owner
-	};
+			Model = model
+		};
+
+		ent.Tags.Add( "undoable" );
 
 		// Let's make sure physics are ready to go instead of waiting
 		ent.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
