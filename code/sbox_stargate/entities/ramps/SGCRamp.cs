@@ -31,5 +31,7 @@ public partial class SGCRamp : ModelEntity, IStargateRamp
 
 		SetModel("models/sbox_stargate/ramps/sgc_ramp/sgc_ramp.vmdl");
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
+
+		Tags.Add( "solid" );
 	}
 }

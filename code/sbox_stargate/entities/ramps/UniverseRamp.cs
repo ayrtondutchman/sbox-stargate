@@ -28,6 +28,8 @@ public partial class UniverseRamp : ModelEntity, IStargateRamp, IGateSpawner
 
 		SetModel( "models/sbox_stargate/ramps/sgu_ramp/sgu_ramp.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
+
+		Tags.Add( "solid" );
 	}
 
 	public void FromJson( JsonElement data )

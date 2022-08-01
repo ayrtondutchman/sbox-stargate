@@ -28,6 +28,8 @@ public partial class BrickRamp : ModelEntity, IStargateRamp, IGateSpawner
 
 		SetModel( "models/sbox_stargate/ramps/brick/brick.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
+
+		Tags.Add( "solid" );
 	}
 
 	public void FromJson( JsonElement data )
