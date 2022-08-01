@@ -127,10 +127,8 @@ partial class SandboxGame : Game
 
 		ent.Position = tr.EndPosition;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRotation.Angles().yaw, 0 ) );
-		ent.Owner = owner;
 
-
-		
+		ent.Tags.Add( "undoable" ); // cant use Owner, this will need to get reworked at some point, good enough for Singleplayer
 
 		// Stargate Stuffs
 		var hasSpawnOffsetProperty = ent.GetType().GetProperty( "SpawnOffset" ) != null;
@@ -195,11 +193,11 @@ partial class SandboxGame : Game
 
 		if ( !caller.IsValid() ) return;
 
-		Entity ent = All.LastOrDefault( x => x.Owner == caller.Pawn && (x is not BaseCarriable) );
+		Entity ent = All.LastOrDefault( x => x.Tags.Has( "undoable" ) && (x is not BaseCarriable) );
 
 		if ( ent.IsValid() )
 		{
-			ent.Owner.PlaySound( "balloon_pop_cute" );
+			caller.Pawn?.PlaySound( "balloon_pop_cute" );
 			ent.Delete();
 		}
 	}
