@@ -314,7 +314,6 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		var ang = Rotation.Angles();
 		foreach ( char sym in RingSymbols )
 		{
-
 			var rotAng = ang.WithRoll( ang.roll - (i * deg) );
 			var newRot = rotAng.ToRotation();
 			var pos = Position + newRot.Forward * 4 + newRot.Up * 117.5f;
@@ -322,7 +321,6 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 			{
 				DebugOverlay.Text( sym.ToString(), pos, sym == CurDialingSymbol ? Color.Green : Color.Yellow );
 			}
-			
 			i++;
 		}
 

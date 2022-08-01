@@ -10,6 +10,9 @@ partial class SandboxGame : Game
 		{
 			// Create the HUD
 			_ = new SandboxHud();
+
+			// Stargate GateSpawner
+			GateSpawner.LoadGateSpawner();
 		}
 	}
 
