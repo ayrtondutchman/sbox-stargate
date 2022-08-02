@@ -61,7 +61,7 @@ public partial class SpawnMenu : Panel
 
 		foreach ( var entry in TypeLibrary.GetDescriptions<BaseTool>().OrderBy( o => o.Title ).ToList() )
 		{
-			if ( entry.Title == "Base Tool" )
+			if ( entry.Name == "BaseTool" )
 				continue;
 
 			var button = toollist.Add.Button( entry.Title );
