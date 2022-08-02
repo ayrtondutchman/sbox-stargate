@@ -181,6 +181,10 @@ public partial class PhysGun : Carriable
 		if ( body.BodyType == PhysicsBodyType.Keyframed && rootEnt is not Player )
 			return;
 
+		// Dont allow touching GateSpawner entities
+		if ( GateSpawner.GateSpawnerEntites.Contains( body.GetEntity() ) )
+			return;
+
 		// Unfreeze
 		if ( body.BodyType == PhysicsBodyType.Static )
 		{

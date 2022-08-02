@@ -1,0 +1,205 @@
+.stargate-font {
+    &.sg1 {
+        font-family: sbox_stargate/stargate_sg1_edit;
+        font-size: 19px;
+    }
+
+    &.sga {
+        font-family: sbox_stargate/stargate_atlantis;
+        font-size: 23px;
+    }
+
+    &.sgu {
+        font-family: sbox_stargate/stargate_universe;
+        font-size: 60px;
+    }
+}
+
+stargatemenuv2 {
+    width: 800px;
+    height: 450px;
+    background-color: rgba(0, 0, 0, 0.95);
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    pointer-events: all;
+    display: flex;
+    flex-direction: row;
+
+    .panel-title {
+        color: white;
+        margin-top: 5px;
+    }
+
+    .input {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+
+        label.input-label {
+            color: lightgray;
+        }
+
+        textentry {
+            background-color: white;
+            height: 20px;
+            color: black;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            cursor: text;
+        }
+
+        select {
+            background-color: white;
+            height: 20px;
+            width: 100px;
+            color: black;
+            cursor: pointer;
+
+            &.open {
+                background-color: lightgray;
+                color: black;
+            }
+        }
+
+        icon {
+            color: white;
+            font-family: MaterialIcons;
+            font-size: 22px;
+
+            &.red {
+                color: red;
+            }
+
+            &.green {
+                color: green;
+            }
+
+            &.can-click {
+                cursor: pointer;
+
+                &.active {
+                    transform: scale(1.02);
+                }
+            }
+        }
+
+        &.inline {
+            flex-direction: row;
+
+            textentry {
+                width: 100px;
+            }
+        }
+    }
+
+    .options {
+        height: 100%;
+        width: 30%;
+        margin-right: 2.5%;
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+
+        .panel-title {
+            margin-bottom: 10px;
+        }
+    }
+
+    .dialing {
+        height: 100%;
+        width: 67.5%;
+
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+
+        .panel-title {
+            margin-bottom: 20px;
+        }
+
+        .dial {
+            position: absolute;
+            right: 0;
+
+            checkbox {
+                margin-left: 5px;
+            }
+        }
+
+        .table {
+            width: 100%;
+            height: 100%;
+            background-color: lightgray;
+            display: flex;
+            flex-direction: column-reverse;
+
+            .table-head {
+                // position: sticky;
+                top: 0;
+                width: 100%;
+                height: 30px;
+                background-color: lightgray;
+                display: flex;
+                flex-direction: row;
+                border-bottom: 1px solid black;
+
+                .head-column {
+                    background-color: gray;
+                    color: black;
+                    width: 180px;
+                    height: 27px;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 800;
+                    border-right: 1px solid black;
+                    cursor: pointer;
+
+                    &:last-child {
+                        border: 0;
+                    }
+
+                    &:hover {
+                        background-color: darkgray;
+                    }
+                }
+            }
+
+            .table-rows {
+                width: 100%;
+                height: 100%;
+                overflow: scroll;
+
+                .row {
+                    border-bottom: 1px solid black;
+                    width: 100%;
+                    height: 40px;
+                    display: flex;
+                    flex-direction: row;
+                    flex-grow: 1;
+                    cursor: pointer;
+                    font-size: 16px;
+
+                    .td {
+                        width: 180.3px;
+                        height: 100%;
+                        border-right: 1px solid black;
+                        align-items: center;
+                        justify-content: center;
+                        text-align: center;
+
+                        &:last-child {
+                            border-right: 0;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: rgba(0, 0, 0, 0.1);
+                    }
+                }
+            }
+        }
+    }
+}
