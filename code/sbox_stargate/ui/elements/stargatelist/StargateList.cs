@@ -8,7 +8,7 @@ using System.Linq;
 [Library(Title = "Stargate Addon")]
 public partial class StargateList : Panel
 {
-	VirtualScrollPanel Canvas;
+	//VirtualScrollPanel Canvas;
 
 	private string[] categories = {
 		"Stargate",

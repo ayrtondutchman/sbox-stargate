@@ -31,10 +31,8 @@ public abstract partial class Stargate : Prop, IUse
 	};
 
 	[Net] public string GateAddress { get; set; } = "";
-
-	private string _GateGroup;
-	[Net]
-	public string GateGroup
+	[Net] protected string _GateGroup { get; private set; } = "";
+	[Net] public string GateGroup
 	{
 		get => _GateGroup;
 		set => _GateGroup = value.Length == GateGroupLength ? value : _GateGroup;
