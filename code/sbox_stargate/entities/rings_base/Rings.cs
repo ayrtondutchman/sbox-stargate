@@ -233,7 +233,8 @@ public partial class Rings : AnimatedEntity, IUse
 
 	public bool IsAbleToExpand()
 	{
-		TraceResult tr = Trace.Ray( Position + Rotation.Up * 10, Position + Rotation.Up * 150 ).Run();
+		//TraceResult tr = Trace.Ray( Position + Rotation.Up * 10, Position + Rotation.Up * 150 ).Run();
+		var tr = Trace.Sweep( PhysicsBody, Transform.WithPosition( Position + Rotation.Up * 10 ), Transform.WithPosition( Position + Rotation.Up * 110 ) ).WithoutTags("player").Ignore( this ).Run();
 
 		// Object too close, impossible to deploy rings
 		if ( tr.Hit && tr.Distance < 100 ) return false;
@@ -411,14 +412,14 @@ public partial class Rings : AnimatedEntity, IUse
 		ChildRings.Clear();
 	}
 
-	[Event.Frame]
+	//[Event.Frame]
 	public void OnFrame()
 	{
 		DebugOverlay.Text( $"Address: {this.Address}", Position, Color.White );
 
 		if ( !IsUpsideDown ) return;
 
-		var tr = Trace.Sweep( PhysicsBody, Transform.WithPosition( Position + Rotation.Up * 110 ), Transform.WithPosition( Position + Rotation.Up * 1024 ) ).Ignore( this ).Run();
+		var tr = Trace.Sweep( PhysicsBody, Transform.WithPosition( Position + Rotation.Up * 110 ), Transform.WithPosition( Position + Rotation.Up * MAX_RING_RANGE ) ).Ignore( this ).Run();
 		DebugOverlay.TraceResult( tr );
 		DebugOverlay.Text( tr.Distance.ToString(), tr.EndPosition - Rotation.Up * 30, Color.Magenta );
 	}
