@@ -123,7 +123,7 @@ public partial class Rings : AnimatedEntity, IUse
 		return false;
 	}
 
-	[ConCmd.Server]
+	//[ConCmd.Server]
 	public void DialClosest()
 	{
 		if ( IsClient ) return;
@@ -131,7 +131,7 @@ public partial class Rings : AnimatedEntity, IUse
 		if ( ring.IsValid() ) DialRing( ring );
 	}
 
-	[ConCmd.Server]
+	//[ConCmd.Server]
 	public void DialAddress( string address )
 	{
 		if ( IsClient ) return;
@@ -139,24 +139,24 @@ public partial class Rings : AnimatedEntity, IUse
 		if ( other.IsValid() ) DialRing( other );
 	}
 
-	[ConCmd.Server]
+	//[ConCmd.Server]
 	public void DialRing( Rings ring )
 	{
 		if ( IsClient ) return;
 		if ( Busy ) return;
 		if ( ring == this ) return;
 
-		Busy = true;
-		if ( ring.IsValid() && !ring.Busy )
+		if ( ring.IsValid() && !ring.Busy && ring.IsAbleToExpand() )
 		{
+			if ( !IsAbleToExpand() ) return;
+
+			Busy = true;
 			ring.Busy = true;
 			DestinationRings = ring;
 			ring.DestinationRings = this;
 
 			DeployRings( true );
 		}
-		else
-			Busy = false;
 	}
 
 	public virtual void OnRingReturn()
