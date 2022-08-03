@@ -31,13 +31,7 @@ public abstract partial class Stargate : Prop, IUse
 	};
 
 	[Net] public string GateAddress { get; set; } = "";
-	[Net] protected string _GateGroup { get; private set; } = "";
-	[Net] public string GateGroup
-	{
-		get => _GateGroup;
-		set => _GateGroup = value.Length == GateGroupLength ? value : _GateGroup;
-	}
-
+	[Net] public string GateGroup { get; protected set; } = "";
 	[Net] public int GateGroupLength { get; set; } = 2;
 	[Net] public string GateName { get; set; } = "";
 	[Net] public bool AutoClose { get; set; } = true;
@@ -519,7 +513,7 @@ public abstract partial class Stargate : Prop, IUse
 	{
 		if ( FindByIndex( gateID ) is Stargate g && g.IsValid() )
 		{
-			if ( g.GateGroup == group || !IsValidGroup( group ) )
+			if ( g.GateGroup == group || !IsValidGroup( group ) || group.Length != g.GateGroupLength )
 				return;
 
 			g.GateGroup = group;
