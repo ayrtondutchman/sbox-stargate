@@ -3,8 +3,7 @@ using System;
 using Sandbox;
 using System.Collections.Generic;
 
-[Spawnable]
-[Library( "ent_sgc_ramp", Title = "SGC Ramp", Group = "Stargate" )]
+[Title( "SGC Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class SGCRamp : ModelEntity, IStargateRamp
 {
 	[Net]

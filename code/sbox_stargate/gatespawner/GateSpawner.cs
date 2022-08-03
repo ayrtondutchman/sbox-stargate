@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Sandbox;
 
 public partial class GateSpawner
 {
-
 	public static List<Entity> GateSpawnerEntites = new();
 
 	public static void CreateGateSpawner()
@@ -23,9 +23,11 @@ public partial class GateSpawner
 		FileSystem.Data.WriteAllText( $"gatespawners/{fileName}.json", JsonSerializer.Serialize( model, new JsonSerializerOptions() { WriteIndented = true } ) );
 	}
 
-	public static void LoadGateSpawner()
+	public static async void LoadGateSpawner()
 	{
 		UnloadGateSpawner(); // unload it before loading, we dont want to have multiple instances of loaded entities
+
+		await Task.Delay( 1000 );
 
 		var filepath = $"{Global.MapName}.json";
 
@@ -79,14 +81,11 @@ public partial class GateSpawner
 				break;
 		}
 	}
-
 }
 
 public class GatespawnerModel
 {
-
 	public string Version { get; set; } = "0.0.1";
 
 	public List<object> Entities { get; set; } = new();
-
 }

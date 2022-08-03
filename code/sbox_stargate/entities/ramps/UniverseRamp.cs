@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Sandbox;
 
-[Spawnable]
-[Library( "ent_stargate_universe_ramp", Title = "Universe Ramp", Group = "Stargate" )]
+[Title( "Universe Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class UniverseRamp : ModelEntity, IStargateRamp, IGateSpawner
 {
 
