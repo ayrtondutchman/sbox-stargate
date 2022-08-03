@@ -25,7 +25,6 @@ public partial class StargateSpawnList : Panel
 				btn.AddClass( "icon" );
 				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", type.ClassName ) );
 				btn.Style.BackgroundImage = Texture.Load( FileSystem.Mounted, $"/entity/sbox_stargate/{type.ClassName}.png", false );
-				Log.Info( $"/entity/sbox_stargate/{type.ClassName}.png" );
 			}
 		};
 
