@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System;
 using Sandbox;
 
-[Spawnable]
-[Library( "ent_dhd_pegasus", Title = "DHD (Pegasus)", Group = "Stargate.Stargate" )]
+[Title( "DHD (Pegasus)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class DhdPegasus : Dhd
 {
 	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, -5 );

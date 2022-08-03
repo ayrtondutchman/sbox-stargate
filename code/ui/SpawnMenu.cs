@@ -32,7 +32,10 @@ public partial class SpawnMenu : Panel
 				tabs.AddButtonActive( "Entities", ( b ) => ents.SetClass( "active", b ) );
 
 				var models = body.AddChild<CloudModelList>();
-				tabs.AddButtonActive( "s&works", ( b ) => models.SetClass( "active", b ) );
+				tabs.AddButtonActive( "asset.party", ( b ) => models.SetClass( "active", b ) );
+
+				var sg = body.AddChild<StargateSpawnList>();
+				tabs.AddButtonActive( "Stargate", ( b ) => sg.SetClass( "active", b ) );
 			}
 		}
 

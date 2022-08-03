@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-[Spawnable]
-[Library( "ent_stargate_universe", Title = "Stargate (Universe)", Group = "Stargate.Stargate" )]
+[Title( "Stargate (Universe)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateUniverse : Stargate
 {
 	public StargateRingUniverse Ring;

@@ -1,7 +1,6 @@
 using Sandbox;
 
-[Spawnable]
-[Library( "ent_rings_panel_goauld", Title = "Rings Panel (Goa'uld)", Group = "Stargate.Rings" )]
+[Title( "Ring Panel (Goauld)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class RingPanelGoauld : RingPanel {
 
 	protected override string[] ButtonsSounds { get; } = { "ringpanel.goauld.button1", "ringpanel.goauld.button2" };

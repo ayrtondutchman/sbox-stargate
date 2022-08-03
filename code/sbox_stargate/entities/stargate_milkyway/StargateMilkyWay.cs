@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sandbox;
 
-[Spawnable]
-[Library( "ent_stargate_milkyway", Title = "Stargate (Milky Way)", Group = "Stargate.Stargate" )]
+[Title( "Stargate (Milky Way)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateMilkyWay : Stargate
 {
 	public StargateRingMilkyWay Ring;
