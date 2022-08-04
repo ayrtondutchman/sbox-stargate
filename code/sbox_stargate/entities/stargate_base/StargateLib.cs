@@ -436,14 +436,14 @@ public partial class Stargate : Prop, IUse
 	}
 
 	/// <summary>
-	/// Adds an Iris on the target Stargate if it does not have one yet.
+	/// Adds an Iris or Atlantis Gate Shield to the target Stargate if it does not have one yet.
 	/// </summary>
 	/// <returns>The just created, or already existing Iris.</returns>
-	public static StargateIris AddIris(Stargate gate, Entity owner = null)
+	public static StargateIris AddIris(Stargate gate, Entity owner = null, bool atlantis = false)
 	{
 		if ( !gate.HasIris() )
 		{
-			var iris = new StargateIris();
+			var iris = atlantis ? new StargateIrisAtlantis() : new StargateIris();
 			iris.Position = gate.Position;
 			iris.Rotation = gate.Rotation;
 			iris.Scale = gate.Scale;

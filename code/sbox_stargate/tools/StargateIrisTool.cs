@@ -1,6 +1,6 @@
 ﻿namespace Sandbox.Tools
 {
-	[Library( "tool_stargate_iris", Title = "Iris", Description = "Used to create the iris on the gate.\n\nMOUSE1 - Spawn iris\nMOUSE2 - Remove iris\nR - toggle iris", Group = "construction" )]
+	[Library( "tool_stargate_iris", Title = "Iris", Description = "Used to create the iris on the gate.\n\nMOUSE1 - Spawn Iris\nE + MOUSE1 - Spawn Atlantis Gate Shield\nMOUSE2 - Remove Iris\nR - Toggle Iris", Group = "construction" )]
 	public partial class StargateIrisTool : BaseTool
 	{
 		PreviewEntity previewModel;
@@ -69,7 +69,7 @@
 
 					if ( tr.Entity is Stargate gate )
 					{
-						var iris = Stargate.AddIris(gate, Owner);
+						var iris = Stargate.AddIris( gate, Owner, Input.Down( InputButton.Use ) );
 						iris.Close();
 						iris.Tags.Add( "undoable" );
 						CreateHitEffects( tr.EndPosition );

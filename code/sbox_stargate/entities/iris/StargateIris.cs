@@ -22,7 +22,7 @@ public partial class StargateIris : AnimatedEntity
 		Tags.Add( "solid" );
 	}
 
-	public async void Close() {
+	public async virtual void Close() {
 		if ( Busy || Closed ) return;
 
 		Busy = true;
@@ -36,7 +36,7 @@ public partial class StargateIris : AnimatedEntity
 		Busy = false;
 	}
 
-	public async void Open() {
+	public async virtual void Open() {
 		if ( Busy || !Closed ) return;
 
 		Busy = true;
@@ -57,7 +57,7 @@ public partial class StargateIris : AnimatedEntity
 		else Close();
 	}
 
-	public void PlayHitSound() {
+	public virtual void PlayHitSound() {
 		Sound.FromEntity( "stargate.iris.hit", this );
 	}
 
