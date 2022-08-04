@@ -29,9 +29,13 @@ public partial class StargateIrisAtlantis : StargateIris
 		Sound.FromEntity("stargate.iris.atlantis.close", this);
 
 		await Task.DelaySeconds( OpenCloseDleay );
+		if ( !this.IsValid() ) return;
+
 		Busy = false;
 
 		await Task.DelaySeconds( 0.6f );
+		if ( !this.IsValid() ) return;
+
 		WormholeLoop = Sound.FromEntity( "stargate.iris.atlantis.loop", this );
 	}
 
@@ -48,6 +52,8 @@ public partial class StargateIrisAtlantis : StargateIris
 		Sound.FromEntity( "stargate.iris.atlantis.open", this);
 
 		await Task.DelaySeconds( OpenCloseDleay );
+		if ( !this.IsValid() ) return;
+
 		Busy = false;
 	}
 

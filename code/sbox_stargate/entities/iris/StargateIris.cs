@@ -33,6 +33,8 @@ public partial class StargateIris : AnimatedEntity
 		Sound.FromEntity("stargate.iris.close", this);
 
 		await Task.DelaySeconds( OpenCloseDleay );
+		if ( !this.IsValid() ) return;
+
 		Busy = false;
 	}
 
@@ -47,6 +49,8 @@ public partial class StargateIris : AnimatedEntity
 		Sound.FromEntity( "stargate.iris.open", this);
 
 		await Task.DelaySeconds( OpenCloseDleay );
+		if ( !this.IsValid() ) return;
+
 		Busy = false;
 	}
 
