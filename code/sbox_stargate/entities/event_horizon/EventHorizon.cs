@@ -184,19 +184,19 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
-	// CLIENT LOGIC
-	[Event.Frame]
-	public void EventHorizonClientTick()
-	{
-		ClientAnimLogic();
-	}
-
-	[Event.Frame]
 	public void ClientAlphaRenderLogic()
 	{
 		// draw the EH at 0.6 alpha when looking at it from behind -- doesnt work in thirdperson at the moment
 		var pawn = Local.Pawn;
 		if ( pawn.IsValid() ) RenderColor = RenderColor.WithAlpha(IsPawnBehindEventHorizon(pawn) ? 0.6f : 1f);
+	}
+
+	// CLIENT LOGIC
+	[Event.Frame]
+	public void EventHorizonClientTick()
+	{
+		ClientAnimLogic();
+		ClientAlphaRenderLogic();
 	}
 
 	// TELEPORT
