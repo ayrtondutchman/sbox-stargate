@@ -17,7 +17,7 @@ Layer0
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[0.784314 0.784314 0.784314 0.000000]"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
 	TextureColor "models/sbox_stargate/gate_sg1/src/tex/chev_sg1.tga"
 
 	//---- Fade ----

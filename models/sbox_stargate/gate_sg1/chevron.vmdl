@@ -26,6 +26,10 @@
 								from = "light_off_sg1.vmat"
 								to = "models/sbox_stargate/gate_sg1/light_front_sg1_off.vmat"
 							},
+							{
+								from = "chev_bottom_sg1.vmat"
+								to = "models/sbox_stargate/gate_sg1/chev_bottom_sg1.vmat"
+							},
 						]
 						use_global_default = false
 						global_default_material = ""
@@ -69,6 +73,10 @@
 								from = "models/sbox_stargate/gate_sg1/light_back_sg1.vmat"
 								to = "models/sbox_stargate/gate_atlantis/light_back_atlantis.vmat"
 							},
+							{
+								from = "models/sbox_stargate/gate_sg1/chev_bottom_sg1.vmat"
+								to = "models/sbox_stargate/gate_atlantis/chev_atlantis_translucent.vmat"
+							},
 						]
 					},
 					{
@@ -87,6 +95,10 @@
 							{
 								from = "models/sbox_stargate/gate_sg1/light_back_sg1.vmat"
 								to = "models/sbox_stargate/gate_atlantis/light_back_atlantis.vmat"
+							},
+							{
+								from = "models/sbox_stargate/gate_sg1/chev_bottom_sg1.vmat"
+								to = "models/sbox_stargate/gate_atlantis/chev_atlantis_translucent.vmat"
 							},
 						]
 					},
@@ -154,6 +166,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -174,6 +187,7 @@
 						start_frame = 30
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -194,6 +208,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -214,6 +229,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -234,6 +250,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -254,6 +271,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 					{
@@ -274,6 +292,7 @@
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
+						take = 0
 						reverse = false
 					},
 				]
@@ -302,7 +321,7 @@
 						_class = "PhysicsHullFromRender"
 						parent_bone = ""
 						surface_prop = "default"
-						collision_prop = "default"
+						collision_tags = "solid"
 						faceMergeAngle = 8.01
 						maxHullVertices = 14
 					},
@@ -340,5 +359,6 @@
 		model_archetype = ""
 		primary_associated_entity = ""
 		anim_graph_name = ""
+		base_model_name = ""
 	}
 }
