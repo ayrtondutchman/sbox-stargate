@@ -4,7 +4,7 @@ using Sandbox;
 public partial class StargateIrisAtlantis : StargateIris
 {
 	private readonly float OpenCloseDleay = 1f;
-	protected Sound WormholeLoop;
+	protected Sound IrisLoop;
 
 	public override void Spawn()
 	{
@@ -36,13 +36,14 @@ public partial class StargateIrisAtlantis : StargateIris
 		await Task.DelaySeconds( 0.6f );
 		if ( !this.IsValid() ) return;
 
-		WormholeLoop = Sound.FromEntity( "stargate.iris.atlantis.loop", this );
+		IrisLoop.Stop();
+		IrisLoop = Sound.FromEntity( "stargate.iris.atlantis.loop", this );
 	}
 
 	public async override void Open() {
 		if ( Busy || !Closed ) return;
 
-		WormholeLoop.Stop();
+		IrisLoop.Stop();
 
 		Busy = true;
 
@@ -65,7 +66,7 @@ public partial class StargateIrisAtlantis : StargateIris
 	{
 		base.OnDestroy();
 
-		WormholeLoop.Stop();
+		IrisLoop.Stop();
 	}
 
 	public override void TakeDamage( DamageInfo info )
