@@ -6,22 +6,24 @@ public class DhdWorldPanel : WorldPanel
 {
 	public Dhd Dhd;
 
-	private Label Button1;
+	private Label Symbol;
+	private Vector3 SymbolPosition;
 
-	public DhdWorldPanel( Dhd dhd)
+	public DhdWorldPanel( Dhd dhd, string symbol, Vector3 symbolPosition )
 	{
 		StyleSheet.Load( "/sbox_stargate/ui/DhdWorldPanel.scss" );
 
-		Dhd = dhd;
+		Symbol = Add.Label( symbol );
 
-		Button1 = Add.Label( "1" );
-
-		float width = 2048;
-		float height = 2048;
+		float width = 64;
+		float height = 64;
 
 		PanelBounds = new Rect( -width / 2, -height / 2, width, height );
 
 		SceneObject.Flags.BloomLayer = false;
+
+		Dhd = dhd;
+		SymbolPosition = symbolPosition;
 	}
 
 	public override void Tick()
@@ -34,15 +36,8 @@ public class DhdWorldPanel : WorldPanel
 			return;
 		}
 
-		Position = Dhd.Position + Dhd.Rotation.Up * 32;
-		var r = Dhd.Rotation;
-		r.RotateAroundAxis( r.Forward, 90 );
-		Rotation = r;
-
-		var player = Local.Pawn;
-		if ( player == null ) return;
-
-
+		Position = Dhd.Position + Dhd.Rotation.Forward * SymbolPosition.x + Dhd.Rotation.Left * SymbolPosition.y + Dhd.Rotation.Up * SymbolPosition.z;
+		Rotation = Dhd.Rotation.RotateAroundAxis(Vector3.Right, 90);
 	}
 
 }

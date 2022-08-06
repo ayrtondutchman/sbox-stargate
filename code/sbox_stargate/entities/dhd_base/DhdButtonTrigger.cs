@@ -60,7 +60,7 @@ public partial class DhdButtonTrigger : AnimatedEntity, IUse
 		}
 	}
 
-	[Event.Frame]
+	//[Event.Frame]
 	public void DhdButtonTriggerThink()
 	{
 		DrawSymbols();
