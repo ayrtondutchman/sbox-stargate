@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
+using Sandbox.UI;
 
 [Category( "Stargates" )]
 public abstract partial class Stargate : Prop, IUse
@@ -62,6 +63,8 @@ public abstract partial class Stargate : Prop, IUse
 	public float DhdDialShutdownTime = 20f;
 
 	public IStargateRamp Ramp = null;
+
+	private StargateWorldPanel WorldPanel;
 
 	// SOUNDS
 	public virtual string GetSound( string key )
@@ -430,6 +433,21 @@ public abstract partial class Stargate : Prop, IUse
 		DhdDialTimerThink();
 	}
 
+	public override void ClientSpawn()
+	{
+		base.ClientSpawn();
+
+		//CreateWorldPanels();
+	}
+
+	[Event.Frame]
+	public void CreateWorldPanels()
+	{
+		if (WorldPanel == null)
+		{
+			WorldPanel = new StargateWorldPanel(this);
+		}
+	}
 
 	// UI Related stuff
 
