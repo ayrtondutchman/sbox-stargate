@@ -433,13 +433,6 @@ public abstract partial class Stargate : Prop, IUse
 		DhdDialTimerThink();
 	}
 
-	public override void ClientSpawn()
-	{
-		base.ClientSpawn();
-
-		//CreateWorldPanels();
-	}
-
 	[Event.Frame]
 	public void CreateWorldPanels()
 	{

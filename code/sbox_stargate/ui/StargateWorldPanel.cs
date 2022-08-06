@@ -8,7 +8,7 @@ public class StargateWorldPanel : WorldPanel
 
 	private Label Address;
 	private Label Group;
-	private Label Local;
+	private Label IsLocal;
 
 	public StargateWorldPanel(Stargate gate)
 	{
@@ -18,7 +18,7 @@ public class StargateWorldPanel : WorldPanel
 
 		Address = Add.Label( "Address" );
 		Group = Add.Label( "Group" );
-		Local = Add.Label( "Local" );
+		IsLocal = Add.Label( "Local" );
 
 		float width = 2048;
 		float height = 2048;
@@ -42,14 +42,21 @@ public class StargateWorldPanel : WorldPanel
 		Rotation = Gate.Rotation;
 
 		UpdateGateInfo();
+
+		var player = Local.Pawn;
+		if ( player == null ) return;
+
+		 //player.Position.DistanceSquared(Gate.Position))
 	}
 
 	private void UpdateGateInfo()
 	{
+		if ( !Gate.IsValid() ) return;
+
 		Address.Text = $"Address: {Gate.GateAddress}";
 		Group.Text = $"Group: {Gate.GateGroup}";
 		var localText = Gate.GateLocal ? "Yes" : "No";
-		Local.Text = $"Local: {localText}";
+		IsLocal.Text = $"Local: {localText}";
 	}
 
 }

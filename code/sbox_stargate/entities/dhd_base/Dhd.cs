@@ -39,6 +39,16 @@ public abstract partial class Dhd : Prop
 	[Net]
 	public List<int> ButtonSkins { get; set; } = new List<int> { 0, 1 };
 
+	private DhdWorldPanel WorldPanel;
+
+	[Event.Frame]
+	public void CreateWorldPanels()
+	{
+		if ( WorldPanel == null )
+		{
+			WorldPanel = new DhdWorldPanel( this );
+		}
+	}
 
 	public override void Spawn()
 	{
