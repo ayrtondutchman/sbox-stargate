@@ -125,7 +125,7 @@ public abstract partial class Dhd : Prop
 		await GameTask.NextPhysicsFrame();
 		if ( !this.IsValid() ) return;
 
-		Gate = Stargate.FindNearestGate( this );
+		Gate = Stargate.FindNearestGate( this, 1024 );
 	}
 
 	public void CreateSingleButtonTrigger(string model, string action) // invisible triggers used for handling the user interaction

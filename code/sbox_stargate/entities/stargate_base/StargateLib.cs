@@ -407,14 +407,18 @@ public partial class Stargate : Prop, IUse
 	/// It finds the nearest gate from the entity. It returns that gate.
 	/// </summary>
 	/// <param name="ent">The entity that will be the first point of remoteness.</param>
+	/// <param name="maxDistance">The maximum distance. No limit by default.</param>
 	/// <returns>A gate that matches the parameter.</returns>
-	public static Stargate FindNearestGate( Entity ent )
+	public static Stargate FindNearestGate( Entity ent, float maxDistance = -1 )
 	{
 		var allGates = All.OfType<Stargate>().ToList();
 		if ( allGates.Count() is 0 ) return null;
 
 		var distances = new float[allGates.Count()];
 		for ( int i = 0; i < allGates.Count(); i++ ) distances[i] = ent.Position.Distance( allGates[i].Position );
+
+		if ( maxDistance > 0 && distances.Min() > maxDistance )
+			return null;
 
 		return allGates[distances.ToList().IndexOf( distances.Min() )];
 	}
@@ -423,16 +427,20 @@ public partial class Stargate : Prop, IUse
 	/// It finds the furthest gate from the entity that is in the argument. It returns that gate.
 	/// </summary>
 	/// <param name="ent">The entity that will be the first point of remoteness.</param>
+	/// <param name="maxDistance">The maximum distance. No limit by default.</param>
 	/// <returns>A gate that matches the parameter.</returns>
-	public static Stargate FindFarthestGate( Entity ent )
+	public static Stargate FindFarthestGate( Entity ent, float maxDistance = -1 )
 	{
 		var allGates = Entity.All.OfType<Stargate>().ToList();
 		if ( allGates.Count() is 0 ) return null;
 
-		var distanceAllGates = new float[allGates.Count()];
-		for ( int i = 0; i < allGates.Count(); i++ ) distanceAllGates[i] = ent.Position.Distance( allGates[i].Position );
+		var distances = new float[allGates.Count()];
+		for ( int i = 0; i < allGates.Count(); i++ ) distances[i] = ent.Position.Distance( allGates[i].Position );
 
-		return allGates[distanceAllGates.ToList().IndexOf( distanceAllGates.Max() )];
+		if ( maxDistance > 0 && distances.Min() > maxDistance )
+			return null;
+
+		return allGates[distances.ToList().IndexOf( distances.Max() )];
 	}
 
 	/// <summary>
