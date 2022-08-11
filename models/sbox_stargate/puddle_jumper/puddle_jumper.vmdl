@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models/sbox_stargate/puddle_jumper/src/jumper_ref.smd"
+						filename = "models/sbox_stargate/puddle_jumper/src/jumper_ref_edit.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -37,47 +37,47 @@
 						[
 							{
 								from = "body.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_body.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_body.vmat"
 							},
 							{
 								from = "bottom.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_bottom.vmat"
 							},
 							{
 								from = "door.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_door.vmat"
 							},
 							{
 								from = "engines.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_engines.vmat"
 							},
 							{
 								from = "floor.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_floor.vmat"
 							},
 							{
 								from = "front.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_front.vmat"
 							},
 							{
 								from = "green_metal.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_metal_green.vmat"
 							},
 							{
 								from = "metal.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_metal.vmat"
 							},
 							{
 								from = "wings_front.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_metal_green.vmat"
 							},
 							{
 								from = "wings.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_metal_green.vmat"
 							},
 							{
 								from = "passengers_chairs.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_metal.vmat"
 							},
 							{
 								from = "glass.vmat"
@@ -85,15 +85,15 @@
 							},
 							{
 								from = "desk.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_metal.vmat"
 							},
 							{
 								from = "chair.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_chair.vmat"
 							},
 							{
 								from = "buttons.vmat"
-								to = "models/sbox_stargate/puddle_jumper/src/tex/jumper_metal_green.vmat"
+								to = "models/sbox_stargate/puddle_jumper/jumper_buttons.vmat"
 							},
 						]
 						use_global_default = false
