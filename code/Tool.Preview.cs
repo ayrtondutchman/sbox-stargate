@@ -76,12 +76,7 @@ namespace Sandbox.Tools
 			if ( !Owner.IsAuthority )
 				return;
 
-			var startPos = Owner.EyePosition;
-			var dir = Owner.EyeRotation.Forward;
-
-			var tr = Trace.Ray( startPos, startPos + dir * 10000.0f )
-				.Ignore( Owner )
-				.Run();
+			var tr = DoTrace();
 
 			foreach ( var preview in Previews )
 			{
