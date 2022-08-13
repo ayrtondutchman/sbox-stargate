@@ -1,12 +1,12 @@
 {
-  "Title": "Sandbox Stargate",
+  "Title": "Sandbox Game",
   "Type": "game",
-  "Org": "katka",
-  "Ident": "sbox_stargate",
+  "Org": "facepunch",
+  "Ident": "sandbox",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": [],
+  "ResourcePaths": null,
   "HasCode": true,
   "CodePath": "code",
   "RootNamespace": "Sandbox",
@@ -102,11 +102,18 @@
         }
       ]
     },
-    "Compiler": {
-      "RootNamespace": "Sandbox",
-      "DefineConstants": "SANDBOX;ADDON;DEBUG",
-      "NoWarn": "1701;1702;1591;"
-    },
-    "GameCategory": "None"
+    "GameCategory": "None",
+    "Physics": {
+      "SubSteps": 4,
+      "TimeScale": 1,
+      "Gravity": "0,0,-800",
+      "AirDensity": 1.2,
+      "SleepingEnabled": true,
+      "SimulationMode": "Continuous",
+      "PositionIterations": 2,
+      "VelocityIterations": 8,
+      "SoftBodyIterations": 1,
+      "SoftBodySubsteps": 1
+    }
   }
 }
