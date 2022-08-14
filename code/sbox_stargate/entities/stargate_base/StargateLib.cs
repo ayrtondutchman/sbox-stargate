@@ -484,6 +484,12 @@ public partial class Stargate : Prop, IUse
 		Sound.FromEntity( name, ent );
 	}
 
+	public static async void PlaySound( Vector3 position, string name, float delay = 0 )
+	{
+		if ( delay > 0 ) await GameTask.DelaySeconds( delay );
+		Sound.FromWorld( name, position );
+	}
+
 	/// <summary>
 	/// Attempts to position a Stargate onto a Ramp.
 	/// </summary>
