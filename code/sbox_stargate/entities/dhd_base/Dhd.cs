@@ -36,6 +36,9 @@ public abstract partial class Dhd : Prop
 
 	public List<string> PressedActions = new();
 
+	protected bool DialIsLock = false;
+	protected bool IsDialLocking = false;
+
 	[Net]
 	public List<int> ButtonSkins { get; set; } = new List<int> { 0, 1 };
 
@@ -98,7 +101,7 @@ public abstract partial class Dhd : Prop
 	}
 
 	//[Event.Frame]
-	public void CreateWorldPanels()
+	public virtual void CreateWorldPanels()
 	{
 		//await Task.Delay( 1000 );
 		//if ( !IsValid ) return;
@@ -277,8 +280,10 @@ public abstract partial class Dhd : Prop
 		}
 	}
 
-	public void TriggerAction( string action, Entity user ) // this gets called from the Button Trigger after pressing it
+	public async void TriggerAction( string action, Entity user, float delay = 0 ) // this gets called from the Button Trigger after pressing it
 	{
+		if ( delay > 0 ) await Task.DelaySeconds( delay );
+
 		if ( !Gate.IsValid() || Gate.Busy || Gate.Inbound ) return; // if we have no gate to control or we are busy, we cant do anything
 
 		if ( Gate.Dialing && Gate.CurDialType is not Stargate.DialType.DHD ) return; // if we are dialing, but not by DHD, cant do anything
@@ -310,7 +315,16 @@ public abstract partial class Dhd : Prop
 				{
 					Gate.DoStargateClose( true );
 					PressedActions.Clear();
+					IsDialLocking = false;
 				}
+				return;
+			}
+
+			if ( DialIsLock && PressedActions.Count >= 6 && !IsDialLocking) // if the DIAL button should also lock the last symbol, do that (Atlantis City DHD)
+			{
+				IsDialLocking = true;
+				TriggerAction( "#", user );
+				TriggerAction( "DIAL", user, 1 );
 				return;
 			}
 
@@ -322,6 +336,7 @@ public abstract partial class Dhd : Prop
 
 					Gate.StopDialing();
 					PressedActions.Clear();
+					IsDialLocking = false;
 				}
 
 				return;
@@ -340,11 +355,13 @@ public abstract partial class Dhd : Prop
 
 					Gate.CurGateState = Stargate.GateState.IDLE; // temporarily make it idle so it can 'begin' dialing
 					Gate.BeginOpenByDHD( sequence );
+					IsDialLocking = false;
 				}
 				else
 				{
 					Gate.StopDialing();
 					PressedActions.Clear();
+					IsDialLocking = false;
 					return;
 				}
 			}
@@ -364,6 +381,8 @@ public abstract partial class Dhd : Prop
 				{
 					Gate.ResetGateVariablesToIdle();
 				}
+
+				IsDialLocking = false;
 
 				PressedActions.Remove( action );
 				PlayButtonPressAnim( button );
@@ -386,7 +405,6 @@ public abstract partial class Dhd : Prop
 				{
 					Gate.DoChevronEncode( symbol );
 				}
-					
 
 				PressedActions.Add( action );
 				PlayButtonPressAnim( button );

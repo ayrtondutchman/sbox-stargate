@@ -15,7 +15,7 @@ public class DhdWorldPanel : WorldPanel
 
 		Symbol = Add.Label( symbol );
 
-		float width = 64;
+		float width = 256;
 		float height = 64;
 
 		PanelBounds = new Rect( -width / 2, -height / 2, width, height );
