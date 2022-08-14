@@ -462,8 +462,7 @@ public partial class StargateUniverse : Stargate
 			CurGateState = GateState.ACTIVE;
 			Inbound = true;
 
-			// turn on chevs here
-
+			DoPreRoll();
 		}
 		catch ( Exception )
 		{
