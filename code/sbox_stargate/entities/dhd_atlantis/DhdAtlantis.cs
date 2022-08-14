@@ -31,7 +31,7 @@ public partial class DhdAtlantis : Dhd
 		["N"] = new Vector3( 3.467f, -8.425f, 37.8f ),
 		["O"] = new Vector3( 3.467f, -4.893f, 37.8f ),
 		["P"] = new Vector3( 3.467f, -1.358f, 37.8f ),
-		["#"] = new Vector3( 3.467f, 2.177f, 37.8f ), // # + Dial button
+		["DIAL"] = new Vector3( 3.467f, 2.177f, 37.8f ), // # + Dial button
 		["Q"] = new Vector3( 3.467f, 5.711f, 37.8f ),
 		["R"] = new Vector3( 3.467f, 9.246f, 37.8f ),
 		["S"] = new Vector3( 3.467f, 12.784f, 37.8f ),
@@ -77,8 +77,8 @@ public partial class DhdAtlantis : Dhd
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
-		CreateButtonTriggers();
-		CreateButtons();
+		//CreateButtonTriggers();
+		//CreateButtons();
 	}
 
 	public override void CreateButtonTriggers()

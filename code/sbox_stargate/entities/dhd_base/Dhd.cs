@@ -284,7 +284,16 @@ public abstract partial class Dhd : Prop
 	{
 		if ( delay > 0 ) await Task.DelaySeconds( delay );
 
-		if ( !Gate.IsValid() || Gate.Busy || Gate.Inbound ) return; // if we have no gate to control or we are busy, we cant do anything
+		if ( !Gate.IsValid() ) return; // if we have no gate to control, cant do much
+
+		if ( action == "IRIS" ) // button for toggling the iris
+		{
+			if ( Gate.HasIris() )
+				Gate.Iris.Toggle();
+			return;
+		}
+
+		if ( Gate.Busy || Gate.Inbound ) return; // if gate is busy, we cant do anything
 
 		if ( Gate.Dialing && Gate.CurDialType is not Stargate.DialType.DHD ) return; // if we are dialing, but not by DHD, cant do anything
 
@@ -424,6 +433,20 @@ public abstract partial class Dhd : Prop
 		{
 			PressedActions.Clear();
 		} 
+	}
+
+	[ConCmd.Server]
+	public static void TriggerActionClient( int ident, string action, float delay = 0 )
+	{
+		var user = ConsoleSystem.Caller?.Pawn;
+		if ( ConsoleSystem.Caller == null )
+			return;
+
+		var dhd = FindByIndex( ident ) as Dhd;
+		if ( !dhd.IsValid() )
+			return;
+
+		dhd.TriggerAction( action, user, delay );
 	}
 
 }
