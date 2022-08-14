@@ -67,6 +67,8 @@ public partial class StargateIrisAtlantis : StargateIris
 		base.OnDestroy();
 
 		IrisLoop.Stop();
+
+		if (Closed) Sound.FromEntity( "stargate.iris.atlantis.open", this );
 	}
 
 	public override void TakeDamage( DamageInfo info )
