@@ -11,6 +11,7 @@
   * Franco D. M. - First (current) Event Horizon help
   * Lukáš Pavelka - Various Stargate library functions
   * A1steaksa - Some Stargate sounds
+  * Facepunch Studios - Sandbox gamemode base code
 
 
 ## The Original Carter's Addon Pack (CAP) project for Garry's Mod credits
