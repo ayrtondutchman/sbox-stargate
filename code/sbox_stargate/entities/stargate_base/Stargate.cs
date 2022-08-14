@@ -58,6 +58,7 @@ public abstract partial class Stargate : Prop, IUse
 
 	public string DialingAddress { get; set; } = "";
 	public int ActiveChevrons = 0;
+	public bool IsLockedInvalid = false;
 
 	public TimeSince TimeSinceDHDAction = 0f;
 	public float DhdDialShutdownTime = 20f;
@@ -83,6 +84,7 @@ public abstract partial class Stargate : Prop, IUse
 		CurDialType = DialType.FAST;
 		DialingAddress = "";
 		ActiveChevrons = 0;
+		IsLockedInvalid = false;
 	}
 
 	// USABILITY
@@ -383,10 +385,15 @@ public abstract partial class Stargate : Prop, IUse
 		Log.Info( $"Encoded {sym}, DialingAddress = '{DialingAddress}'" );
 	}
 
-	public virtual void DoChevronLock(char sym)
+	public virtual void DoChevronLock( char sym )
 	{
 		DialingAddress += sym;
 		Log.Info( $"Locked {sym}, DialingAddress = '{DialingAddress}'" );
+
+		var gate = FindDestinationGateByDialingAddress( this, DialingAddress );
+		var valid = (gate != this && gate.IsValid() && gate.IsStargateReadyForInboundDHD());
+
+		IsLockedInvalid = !valid;
 	}
 
 	public virtual void DoChevronUnlock(char sym)
@@ -395,8 +402,9 @@ public abstract partial class Stargate : Prop, IUse
 		sb.Remove( DialingAddress.IndexOf( sym ), 1 );
 
 		DialingAddress = sb.ToString();
-
 		Log.Info( $"Unlocked {sym}, DialingAddress = '{DialingAddress}'" );
+
+		IsLockedInvalid = false;
 	}
 
 	// THINK

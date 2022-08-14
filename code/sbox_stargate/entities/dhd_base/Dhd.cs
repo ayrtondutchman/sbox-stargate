@@ -349,7 +349,7 @@ public abstract partial class Dhd : Prop
 				PlayButtonPressAnim( button );
 
 				var target = Stargate.FindDestinationGateByDialingAddress( Gate, sequence );
-				if ( target.IsValid() && target != Gate && target.IsStargateReadyForInboundDHD() && Gate.CanStargateOpen() )
+				if ( target.IsValid() && target != Gate && target.IsStargateReadyForInboundDHD() && Gate.CanStargateOpen() && !Gate.IsLockedInvalid )
 				{
 					Stargate.PlaySound( this, Data.DialPressSound );
 
