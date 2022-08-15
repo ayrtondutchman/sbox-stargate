@@ -435,18 +435,4 @@ public abstract partial class Dhd : Prop
 		} 
 	}
 
-	[ConCmd.Server]
-	public static void TriggerActionClient( int ident, string action, float delay = 0 )
-	{
-		var user = ConsoleSystem.Caller?.Pawn;
-		if ( ConsoleSystem.Caller == null )
-			return;
-
-		var dhd = FindByIndex( ident ) as Dhd;
-		if ( !dhd.IsValid() )
-			return;
-
-		dhd.TriggerAction( action, user, delay );
-	}
-
 }

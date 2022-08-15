@@ -2,27 +2,6 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-partial class SandboxPlayer : Player
-{
-	WorldInput WorldInput = new();
-
-	public override void BuildInput( InputBuilder input )
-	{
-		WorldInput.Ray = new Ray( EyePosition, EyeRotation.Forward );
-		WorldInput.MouseLeftPressed = input.Down( InputButton.PrimaryAttack );
-
-		if ( WorldInput.Hovered is DhdWorldPanel panel && input.Pressed( InputButton.Use ) )
-		{
-			//Log.Info( $"{panel.Dhd} | {panel.Symbol}" );
-			input.SuppressButton( InputButton.Use );
-
-			Dhd.TriggerActionClient( panel.Dhd.NetworkIdent, panel.Symbol );
-		}
-
-		base.BuildInput( input );
-	}
-}
-
 public class DhdWorldPanel : WorldPanel
 {
 	public Dhd Dhd;
@@ -37,8 +16,6 @@ public class DhdWorldPanel : WorldPanel
 		Symbol = symbol;
 		var lab = Symbol == "DIAL" ? "#" : Symbol;
 		Add.Label( lab );
-
-		Add.Panel( "testBG" );
 
 		float width = lab.Length == 1 ? 64 : 128;
 		float height = 64;

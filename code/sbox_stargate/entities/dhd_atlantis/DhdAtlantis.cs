@@ -77,8 +77,8 @@ public partial class DhdAtlantis : Dhd
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
-		//CreateButtonTriggers();
-		//CreateButtons();
+		CreateButtonTriggers();
+		CreateButtons();
 	}
 
 	public override void CreateButtonTriggers()
