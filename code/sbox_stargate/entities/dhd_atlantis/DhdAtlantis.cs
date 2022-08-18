@@ -77,32 +77,21 @@ public partial class DhdAtlantis : Dhd
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
-		CreateButtonTriggers();
 		CreateButtons();
-	}
-
-	public override void CreateButtonTriggers()
-	{
-		// SYMBOL BUTTONS
-		for ( var i = 0; i < ButtonSymbols.Length; i++ )
-		{
-			var modelName = $"models/sbox_stargate/dhd_atlantis/trigger_buttons/dhd_trigger_button_{i + 1}.vmdl";
-			var actionName = ButtonSymbols[i].ToString();
-			CreateSingleButtonTrigger( modelName, actionName );
-		}
-
-		// CENTER DIAL BUTTON
-		CreateSingleButtonTrigger( "models/sbox_stargate/dhd_atlantis/trigger_buttons/dhd_trigger_button_37.vmdl", "DIAL" );
 	}
 
 	public override void CreateButtons() // visible models of buttons that turn on/off and animate
 	{
-		var i = 0;
-		foreach ( var trigger in ButtonTriggers )
+		// SYMBOL BUTTONS
+		for ( var i = 0; i < ButtonSymbols.Length; i++ )
 		{
-			// uses a single model that has all buttons as bodygroups, that way animations/matgroups for all buttons can be edited at once
-			CreateSingleButton( "models/sbox_stargate/dhd_atlantis/dhd_atlantis_buttons.vmdl", trigger.Key, trigger.Value, 0, i++ );
+			var modelName = $"models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_{i + 1}.vmdl";
+			var actionName = ButtonSymbols[i].ToString();
+			CreateSingleButton( modelName, actionName );
 		}
+
+		// CENTER DIAL BUTTON
+		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_37.vmdl", "DIAL" );
 	}
 
 	public override void CreateWorldPanels()

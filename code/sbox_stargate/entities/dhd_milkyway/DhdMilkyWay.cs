@@ -17,7 +17,6 @@ public partial class DhdMilkyWay : Dhd
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
-		CreateButtonTriggers();
 		CreateButtons();
 	}
 }

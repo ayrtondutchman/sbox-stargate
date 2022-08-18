@@ -1,12 +1,12 @@
 using Sandbox;
 
-public partial class DhdButton : AnimatedEntity
+public partial class DhdButton : AnimatedEntity, IUse
 {
 	[Net]
-	public string Action { get; set; } = "";
-	[Net]
 	public Dhd DHD { get; set; } = null;
-	public DhdButtonTrigger Trigger;
+
+	[Net]
+	public string Action { get; set; } = "";
 
 	[Net]
 	public bool On { get; set; } = false;
@@ -15,6 +15,31 @@ public partial class DhdButton : AnimatedEntity
 	{
 		base.Spawn();
 		Transmit = TransmitType.Always;
+		Health = 100;
+	}
+
+	public virtual bool OnUse( Entity user )
+	{
+		if ( Time.Now < DHD.lastPressTime + DHD.pressDelay ) return false;
+
+		DHD.lastPressTime = Time.Now;
+		DHD.TriggerAction( Action, user );
+
+		return false;
+	}
+
+	public virtual bool IsUsable( Entity ent )
+	{
+		return true;
+	}
+
+	public override void TakeDamage( DamageInfo info )
+	{
+		base.TakeDamage( info );
+
+		Log.Info( $"{info.Damage} {Health}" );
+
+		if ( Health <= 0 ) Delete();
 	}
 
 	[Event.Frame]

@@ -24,7 +24,6 @@ public partial class DhdPegasus : Dhd
 
 		SetMaterialGroup( 1 );
 
-		CreateButtonTriggers();
 		CreateButtons();
 	}
 }

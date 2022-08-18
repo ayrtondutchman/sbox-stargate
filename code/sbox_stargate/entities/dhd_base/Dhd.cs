@@ -28,7 +28,6 @@ public abstract partial class Dhd : Prop
 
 	protected readonly string ButtonSymbols = "ABCDEFGHI0123456789STUVWXYZ@JKLMNO#PQR";
 
-	public Dictionary<string, DhdButtonTrigger> ButtonTriggers { get; protected set; } = new();
 	public Dictionary<string, DhdButton> Buttons { get; protected set; } = new();
 
 	public float lastPressTime = 0;
@@ -100,19 +99,14 @@ public abstract partial class Dhd : Prop
 		CreateWorldPanels();
 	}
 
-	//[Event.Frame]
 	public virtual void CreateWorldPanels()
 	{
-		//await Task.Delay( 1000 );
-		//if ( !IsValid ) return;
-
 		foreach (var item in ButtonPositions)
 		{
 			var sym = item.Key;
 			var pos = item.Value - ButtonPositionsOffset;
 
-			var p = new DhdWorldPanel( this, sym, pos );
-			//WorldPanels.Add( p );
+			_ = new DhdWorldPanel( this, sym, pos );
 		}
 	}
 
@@ -131,49 +125,15 @@ public abstract partial class Dhd : Prop
 		Gate = Stargate.FindNearestGate( this, 1024 );
 	}
 
-	public void CreateSingleButtonTrigger(string model, string action) // invisible triggers used for handling the user interaction
-	{
-		var buttonTrigger = new DhdButtonTrigger();
-		buttonTrigger.SetModel( model );
-
-		buttonTrigger.SetupPhysicsFromModel( PhysicsMotionType.Static, true ); // needs to have physics for traces
-		buttonTrigger.PhysicsBody.BodyType = PhysicsBodyType.Static;
-		buttonTrigger.EnableAllCollisions = false; // no collissions needed
-		buttonTrigger.EnableTraceAndQueries = true; // needed for Use
-		buttonTrigger.EnableDrawing = false; // it should have an invisible material, but lets be safe and dont render it anyway
-
-		buttonTrigger.Position = Position;
-		buttonTrigger.Rotation = Rotation;
-		buttonTrigger.Scale = Scale;
-		buttonTrigger.SetParent( this );
-
-		buttonTrigger.DHD = this;
-		buttonTrigger.Action = action;
-		ButtonTriggers.Add( action, buttonTrigger );
-	}
-
-	public virtual void CreateButtonTriggers()
-	{
-		// SYMBOL BUTTONS
-		for ( var i = 0; i < ButtonSymbols.Length; i++ )
-		{
-			var modelName = $"models/sbox_stargate/dhd/trigger_buttons/dhd_trigger_button_{i + 1}.vmdl";
-			var actionName = ButtonSymbols[i].ToString();
-			CreateSingleButtonTrigger( modelName, actionName );
-		}
-
-		// CENTER DIAL BUTTON
-		CreateSingleButtonTrigger( "models/sbox_stargate/dhd/trigger_buttons/dhd_trigger_button_39.vmdl", "DIAL" );
-	}
-
-	public virtual void CreateSingleButton(string model, string action, DhdButtonTrigger buttonTrigger, int bodygroup, int subgroup) // visible model of buttons that turn on/off and animate
+	public virtual void CreateSingleButton(string model, string action) // visible model of buttons that turn on/off and animate
 	{
 		var button = new DhdButton();
 		button.SetModel( model );
-		button.SetBodyGroup( bodygroup, subgroup );
 
-		button.EnableAllCollisions = false;
-		button.EnableTraceAndQueries = false;
+		button.SetupPhysicsFromModel( PhysicsMotionType.Static, true ); // needs to have physics for traces
+		button.PhysicsBody.BodyType = PhysicsBodyType.Static;
+		//button.EnableAllCollisions = true;
+		button.EnableTraceAndQueries = true;
 
 		button.Position = Position;
 		button.Rotation = Rotation;
@@ -181,21 +141,23 @@ public abstract partial class Dhd : Prop
 		button.SetParent( this );
 
 		button.Action = action;
-		button.Trigger = buttonTrigger;
-		button.DHD = buttonTrigger.DHD;
-		buttonTrigger.Button = button;
+		button.DHD = this;
 
 		Buttons.Add( action, button );
 	}
 
 	public virtual void CreateButtons() // visible models of buttons that turn on/off and animate
 	{
-		var i = 0;
-		foreach ( var trigger in ButtonTriggers )
+		// SYMBOL BUTTONS
+		for ( var i = 0; i < ButtonSymbols.Length; i++ )
 		{
-			// uses a single model that has all buttons as bodygroups, that way animations/matgroups for all buttons can be edited at once
-			CreateSingleButton( "models/sbox_stargate/dhd/dhd_buttons.vmdl", trigger.Key, trigger.Value, 1, i++);
+			var modelName = $"models/sbox_stargate/dhd/buttons/dhd_button_{i + 1}.vmdl";
+			var actionName = ButtonSymbols[i].ToString();
+			CreateSingleButton( modelName, actionName );
 		}
+
+		// CENTER DIAL BUTTON
+		CreateSingleButton( "models/sbox_stargate/dhd/buttons/dhd_button_39.vmdl", "DIAL" );
 	}
 
 	public DhdButton GetButtonByAction(string action)
@@ -240,7 +202,6 @@ public abstract partial class Dhd : Prop
 	}
 
 	// TOUCH
-
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
