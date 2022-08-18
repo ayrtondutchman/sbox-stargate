@@ -39,8 +39,8 @@
 						_class = "PhysicsHullFile"
 						name = "base_physics"
 						parent_bone = ""
-						surface_prop = "default"
-						collision_prop = "default"
+						surface_prop = "metal"
+						collision_tags = "solid"
 						recenter_on_parent_bone = false
 						offset_origin = [ 0.0, 0.0, 0.0 ]
 						offset_angles = [ 0.0, 0.0, 0.0 ]
@@ -93,8 +93,6 @@
 						game_class = "prop_data"
 						game_keys = 
 						{
-							base = ""
-							allowstatic = false
 							bakelighting = true
 							spawn_motion_disabled = false
 							health = -1.0
@@ -126,5 +124,6 @@
 		model_archetype = "physics_prop_model"
 		primary_associated_entity = "prop_physics"
 		anim_graph_name = ""
+		base_model_name = ""
 	}
 }
