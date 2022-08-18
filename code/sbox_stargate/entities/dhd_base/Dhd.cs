@@ -130,7 +130,7 @@ public abstract partial class Dhd : Prop
 
 		button.SetupPhysicsFromModel( PhysicsMotionType.Static, true ); // needs to have physics for traces
 		button.PhysicsBody.BodyType = PhysicsBodyType.Static;
-		//button.EnableAllCollisions = true;
+		button.EnableAllCollisions = false;
 		button.EnableTraceAndQueries = true;
 
 		button.Position = Position;
