@@ -36,9 +36,7 @@ public partial class DhdButton : AnimatedEntity, IUse
 	public override void TakeDamage( DamageInfo info )
 	{
 		base.TakeDamage( info );
-
-		Log.Info( $"{info.Damage} {Health}" );
-
+		//Log.Info( $"{info.Damage} {Health}" );
 		if ( Health <= 0 ) Delete();
 	}
 

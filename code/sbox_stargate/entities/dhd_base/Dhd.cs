@@ -26,7 +26,7 @@ public abstract partial class Dhd : Prop
 
 	[Net] public Stargate Gate { get; set; }
 
-	protected readonly string ButtonSymbols = "ABCDEFGHI0123456789STUVWXYZ@JKLMNO#PQR";
+	protected virtual string ButtonSymbols => "ABCDEFGHI0123456789STUVWXYZ@JKLMNO#PQR";
 
 	public Dictionary<string, DhdButton> Buttons { get; protected set; } = new();
 
@@ -42,7 +42,7 @@ public abstract partial class Dhd : Prop
 	public List<int> ButtonSkins { get; set; } = new List<int> { 0, 1 };
 
 	// Button positions for DhdWorldPanel
-	public readonly Dictionary<string, Vector3> ButtonPositions = new()
+	protected virtual Dictionary<string, Vector3> ButtonPositions => new()
 	{
 		// Inner Ring
 		["0"] = new Vector3( -5.9916f, -1.4400f, 52.5765f ),
@@ -88,9 +88,7 @@ public abstract partial class Dhd : Prop
 		// ["DIAL"] = new Vector3( -15.0280f, -1.5217f, 55.1249f ),
 	};
 
-	public readonly Vector3 ButtonPositionsOffset = new Vector3( -14.8088f, -1.75652f, 7.5f );
-
-	//public List<DhdWorldPanel> WorldPanels;
+	protected virtual Vector3 ButtonPositionsOffset => new Vector3( -14.8088f, -1.75652f, 7.5f );
 
 	public override void ClientSpawn()
 	{
@@ -216,12 +214,7 @@ public abstract partial class Dhd : Prop
 	// BUTTON PRESS LOGIC
 	public string GetPressedActions()
 	{
-		var retVal = "";
-		foreach ( string action in PressedActions )
-		{
-			retVal += action;
-		}
-		return retVal;
+		return string.Join( "", PressedActions );
 	}
 
 	public void EnableButtonsForDialingAddress()

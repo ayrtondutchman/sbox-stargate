@@ -5,13 +5,10 @@ using Sandbox;
 [Title( "DHD (Atlantis)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class DhdAtlantis : Dhd
 {
-	//public Vector3 SpawnOffset { get; private set; } = new( 0, 0, -5 );
-	//public Angles SpawnOffsetAng { get; private set; } = new( 15, 0, 0 );
-
-	new protected readonly string ButtonSymbols = "ABCDEFGHIJKLMNOPQRST123456789UVW0XYZ";
+	protected override string ButtonSymbols => "ABCDEFGHIJKLMNOPQRST123456789UVW0XYZ";
 
 	// Button positions for DhdWorldPanel
-	new public readonly Dictionary<string, Vector3> ButtonPositions = new()
+	protected override Dictionary<string, Vector3> ButtonPositions => new()
 	{
 		["A"] = new Vector3( -7.7f, -4.893f, 37.8f ),
 		["B"] = new Vector3( -7.7f, -1.358f, 37.8f ),
@@ -60,11 +57,11 @@ public partial class DhdAtlantis : Dhd
 		["IRIS"] = new Vector3( 9.45f, -22.05f, 35.56f ),
 	};
 
-	new public readonly Vector3 ButtonPositionsOffset = new Vector3( 0, 0, -0.4f );
+	protected override Vector3 ButtonPositionsOffset => new Vector3( 0, 0, -0.4f );
 
 	public DhdAtlantis()
 	{
-		Data = new( 0, 1, "dhd.atlantis.press", "dhd.press_dial" );
+		Data = new ( 0, 1, "dhd.atlantis.press", "dhd.press_dial" );
 		DialIsLock = true;
 	}
 
@@ -83,6 +80,7 @@ public partial class DhdAtlantis : Dhd
 	public override void CreateButtons() // visible models of buttons that turn on/off and animate
 	{
 		// SYMBOL BUTTONS
+
 		for ( var i = 0; i < ButtonSymbols.Length; i++ )
 		{
 			var modelName = $"models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_{i + 1}.vmdl";
@@ -92,16 +90,5 @@ public partial class DhdAtlantis : Dhd
 
 		// CENTER DIAL BUTTON
 		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_37.vmdl", "DIAL" );
-	}
-
-	public override void CreateWorldPanels()
-	{
-		foreach ( var item in ButtonPositions )
-		{
-			var sym = item.Key;
-			var pos = item.Value - ButtonPositionsOffset;
-
-			_ = new DhdWorldPanel( this, sym, pos );
-		}
 	}
 }
