@@ -6,6 +6,9 @@ using Sandbox;
 
 public partial class GateSpawner
 {
+	[ConVar.Replicated( "gatespawner_enabled" )]
+	public static bool Enabled { get; set; }
+
 	public static List<Entity> GateSpawnerEntites = new();
 
 	public static void CreateGateSpawner()
@@ -25,6 +28,12 @@ public partial class GateSpawner
 
 	public static async void LoadGateSpawner()
 	{
+		if ( !Enabled )
+		{
+			NotEnabledMessage();
+			return;
+		}
+
 		UnloadGateSpawner(); // unload it before loading, we dont want to have multiple instances of loaded entities
 
 		await Task.Delay( 1000 );
@@ -54,15 +63,38 @@ public partial class GateSpawner
 
 			GateSpawnerEntites.Add( e );
 		}
+
+		SuccessMessage();
 	}
 
 	public static void UnloadGateSpawner()
 	{
+		if ( !Enabled )
+		{
+			NotEnabledMessage();
+			return;
+		}
+
+		var neededUnloading = GateSpawnerEntites.Count > 0;
 		foreach ( var ent in GateSpawnerEntites )
 		{
 			if ( ent.IsValid() ) ent.Delete();
 		}
 		GateSpawnerEntites.Clear();
+
+		if (neededUnloading)
+			SuccessMessage( true );
+	}
+
+	private static void NotEnabledMessage()
+	{
+		Log.Warning("Can't proceed, GateSpawner is not enabled");
+	}
+
+	private static void SuccessMessage(bool unloaded = false)
+	{
+		var action = unloaded ? "unloaded" : "loaded";
+		Log.Warning( $"GateSpawner successfully {action}" );
 	}
 
 	[ConCmd.Server( "gatespawner" )]

@@ -114,6 +114,15 @@
       "VelocityIterations": 8,
       "SoftBodyIterations": 1,
       "SoftBodySubsteps": 1
+    },
+    "GameSettings": {
+      "gatespawner_enabled": {
+        "DisplayType": "Boolean",
+        "Choices": [],
+        "ConVarName": "gatespawner_enabled",
+        "DisplayName": "Enable GateSpawner",
+        "DefaultValue": "true"
+      }
     }
   }
 }
