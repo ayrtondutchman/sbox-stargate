@@ -7,9 +7,6 @@ Layer0
 	//---- PBR ----
 	F_SPECULAR 1
 
-	//---- Rendering ----
-	F_RENDER_BACKFACES 1
-
 	//---- Translucent ----
 	F_TRANSLUCENT 1
 
@@ -20,7 +17,7 @@ Layer0
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[0.862745 0.862745 0.862745 0.000000]"
+	g_vColorTint "[0.745098 0.764706 0.784314 0.000000]"
 	TextureColor "models/sbox_stargate/gate_sg1/src/tex/chev_sg1.tga"
 
 	//---- Fade ----
@@ -34,13 +31,13 @@ Layer0
 	g_flDirectionalLightmapStrength "1.000"
 
 	//---- Metalness ----
-	g_flMetalness "0.500"
+	g_flMetalness "0.800"
 
 	//---- Normal ----
 	TextureNormal "models/sbox_stargate/gate_sg1/src/tex/chev_sg1_normal.tga"
 
 	//---- Roughness ----
-	TextureRoughness "[0.686275 0.686275 0.686275 0.000000]"
+	TextureRoughness "models/sbox_stargate/gate_sg1/src/tex/chev_sg1_rough.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
@@ -50,6 +47,6 @@ Layer0
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
 
 	//---- Translucent ----
-	g_flOpacityScale "0.800"
+	g_flOpacityScale "0.850"
 	TextureTranslucency "materials/default/default_trans.tga"
 }
