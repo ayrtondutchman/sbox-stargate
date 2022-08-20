@@ -37,7 +37,7 @@ Layer0
 	TextureNormal "models/sbox_stargate/gate_universe/src/tex/universe_detail_normal.tga"
 
 	//---- Roughness ----
-	TextureRoughness "models/sbox_stargate/gate_universe/src/tex/universe_detail_spec.tga"
+	TextureRoughness "models/sbox_stargate/gate_universe/src/tex/universe_detail_rough.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
