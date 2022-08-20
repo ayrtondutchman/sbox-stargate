@@ -34,7 +34,7 @@ Layer0
 	TextureNormal "models/sbox_stargate/iris/src/tex/iris_normal.tga"
 
 	//---- Roughness ----
-	TextureRoughness "[0.709804 0.709804 0.709804 0.000000]"
+	TextureRoughness "models/sbox_stargate/iris/src/tex/iris_rough.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
