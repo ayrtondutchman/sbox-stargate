@@ -684,6 +684,8 @@ public partial class StargateMilkyWay : Stargate
 				var chev = GetChevronBasedOnAddressLength( i, numChevs );
 				ChevronActivate( chev, 0, ChevronLightup );
 			}
+
+			if ( MovieDialingType ) ChevronAnimLockAll( numChevs, 0, ChevronLightup );
 		}
 		catch ( Exception )
 		{
