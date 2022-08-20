@@ -49,7 +49,7 @@ public partial class StargateMovie : StargateMilkyWay
 	public override Chevron CreateChevron( int n )
 	{
 		var chev = base.CreateChevron(n);
-		chev.UsesDynamicLight = ChevronLightup;
+		chev.UsesDynamicLight = false;
 
 		chev.ChevronStateSkins = new()
 		{

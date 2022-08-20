@@ -82,6 +82,9 @@ public partial class StargateMilkyWay : Stargate
 		chev.SetParent( this );
 		chev.Transmit = TransmitType.Always;
 		chev.Gate = this;
+
+		chev.UsesDynamicLight = false;
+
 		return chev;
 	}
 

@@ -2,15 +2,15 @@
 
 Layer0
 {
-	shader "glass.vfx"
+	shader "complex.vfx"
 
-	//---- Rendering ----
-	F_RENDER_BACKFACES 1
-
-	//---- Translucent ----
-	F_TRANSLUCENT 1
+	//---- PBR ----
+	F_SELF_ILLUM 1
+	F_SPECULAR 1
 
 	//---- Ambient Occlusion ----
+	g_flAmbientOcclusionDirectDiffuse "0.000"
+	g_flAmbientOcclusionDirectSpecular "0.000"
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
 	//---- Color ----
@@ -18,39 +18,32 @@ Layer0
 	g_vColorTint "[1.000000 1.000000 1.000000 1.000000]"
 	TextureColor "models/sbox_stargate/gate_sg1/src/tex/light_on_sg1.tga"
 
-	//---- Emissive ----
-	g_flEmissiveEdgeColorFalloff "3.000"
-	g_flEmissiveEdgeColorThickness "0.100"
-	g_flEmissiveStrength "0.191"
-	g_vEmissiveColor "[1.000000 0.482353 0.000000 1.000000]"
-	g_vEmissiveEdgeColor "[0.000000 0.000000 0.000000 0.000000]"
-
 	//---- Fade ----
 	g_flFadeExponent "1.000"
 
 	//---- Fog ----
-	g_bAvoidDoubleFogging "1"
-	g_flGlassFogExtinctionAmount "0.000"
-
-	//---- Glass Color ----
-	g_flEdgeColorFalloff "3.000"
-	g_flEdgeColorMaxOpacity "0.500"
-	g_flEdgeColorThickness "0.100"
-	g_vEdgeColor "[0.000000 0.000000 0.000000 1.000000]"
-	GlassTintColor "materials/default/default_color.tga"
+	g_bFogEnabled "1"
 
 	//---- Lighting ----
 	g_flDirectionalLightmapMinZ "0.050"
 	g_flDirectionalLightmapStrength "1.000"
 
 	//---- Metalness ----
-	g_flMetalness "0.000"
+	g_flMetalness "0.500"
 
 	//---- Normal ----
 	TextureNormal "models/sbox_stargate/gate_sg1/src/tex/light_back_sg1_normal.tga"
 
 	//---- Roughness ----
-	TextureRoughness "[0.235294 0.235294 0.235294 0.000000]"
+	TextureRoughness "[0.400000 0.400000 0.400000 0.000000]"
+
+	//---- Self Illum ----
+	g_flSelfIllumAlbedoFactor "1.000"
+	g_flSelfIllumBrightness "5.000"
+	g_flSelfIllumScale "1.000"
+	g_vSelfIllumScrollSpeed "[0.000 0.000]"
+	g_vSelfIllumTint "[1.000000 0.321569 0.168627 0.000000]"
+	TextureSelfIllumMask "models/sbox_stargate/gate_atlantis/src/tex/light_sga_on_trans.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
@@ -58,8 +51,4 @@ Layer0
 	g_vTexCoordOffset "[0.000 0.000]"
 	g_vTexCoordScale "[1.000 1.000]"
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
-
-	//---- Translucent ----
-	g_flOpacityScale "0.851"
-	TextureTranslucency "materials/default/default_trans.tga"
 }
