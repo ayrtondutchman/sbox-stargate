@@ -78,6 +78,8 @@ public partial class CarEntity : Prop, IUse
 	{
 		base.Spawn();
 
+		Predictable = false;
+
 		var modelName = "models/car/car.vmdl";
 
 		Components.Create<CarCamera>();
@@ -193,32 +195,29 @@ public partial class CarEntity : Prop, IUse
 	public override void Simulate( Client client )
 	{
 		SimulateDriver( client );
-
-		if ( !IsServer ) return;
-
-		currentInput.Reset();
-		currentInput.throttle = (Input.Down( InputButton.Forward ) ? 1 : 0) + (Input.Down( InputButton.Back ) ? -1 : 0);
-		currentInput.turning = (Input.Down( InputButton.Left ) ? 1 : 0) + (Input.Down( InputButton.Right ) ? -1 : 0);
-		currentInput.breaking = (Input.Down( InputButton.Jump ) ? 1 : 0);
-		currentInput.tilt = (Input.Down( InputButton.Run ) ? 1 : 0) + (Input.Down( InputButton.Duck ) ? -1 : 0);
-		currentInput.roll = (Input.Down( InputButton.Left ) ? 1 : 0) + (Input.Down( InputButton.Right ) ? -1 : 0);
-
-		//	EyeRot = Input.Rotation;
-		//	EyePosLocal = Vector3.Up * (64 - 10) * car.Scale;
-		//	Velocity = car.Velocity;
-
-		//SetTag( "noclip" );
-		//SetTag( "sitting" );
 	}
 
 	void SimulateDriver( Client client )
 	{
 		if ( !Driver.IsValid() ) return;
 
-		if ( IsServer && Input.Pressed( InputButton.Use ) )
+		if ( IsServer )
 		{
-			RemoveDriver( Driver as SandboxPlayer );
-			return;
+			if ( Input.Pressed( InputButton.Use ) )
+			{
+				RemoveDriver( Driver as SandboxPlayer );
+
+				return;
+			}
+			else
+			{
+				currentInput.Reset();
+				currentInput.throttle = (Input.Down( InputButton.Forward ) ? 1 : 0) + (Input.Down( InputButton.Back ) ? -1 : 0);
+				currentInput.turning = (Input.Down( InputButton.Left ) ? 1 : 0) + (Input.Down( InputButton.Right ) ? -1 : 0);
+				currentInput.breaking = (Input.Down( InputButton.Jump ) ? 1 : 0);
+				currentInput.tilt = (Input.Down( InputButton.Run ) ? 1 : 0) + (Input.Down( InputButton.Duck ) ? -1 : 0);
+				currentInput.roll = (Input.Down( InputButton.Left ) ? 1 : 0) + (Input.Down( InputButton.Right ) ? -1 : 0);
+			}
 		}
 
 		// TODO - at this point the driver isn't actually predicted
@@ -500,6 +499,7 @@ public partial class CarEntity : Prop, IUse
 			return;
 
 		player.Parent = null;
+		player.Position += Vector3.Up * 100;
 
 		if ( player.PhysicsBody.IsValid() )
 		{
