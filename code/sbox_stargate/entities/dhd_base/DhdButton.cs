@@ -11,6 +11,9 @@ public partial class DhdButton : AnimatedEntity, IUse
 	[Net]
 	public bool On { get; set; } = false;
 
+	[Net]
+	public bool Disabled { get; set; } = false;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -30,7 +33,7 @@ public partial class DhdButton : AnimatedEntity, IUse
 
 	public virtual bool IsUsable( Entity ent )
 	{
-		return true;
+		return !Disabled;
 	}
 
 	public override void TakeDamage( DamageInfo info )

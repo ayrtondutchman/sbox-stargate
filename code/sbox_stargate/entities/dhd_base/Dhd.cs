@@ -123,7 +123,7 @@ public abstract partial class Dhd : Prop
 		Gate = Stargate.FindNearestGate( this, 1024 );
 	}
 
-	public virtual void CreateSingleButton(string model, string action) // visible model of buttons that turn on/off and animate
+	public virtual void CreateSingleButton( string model, string action, bool disabled = false) // visible model of buttons that turn on/off and animate
 	{
 		var button = new DhdButton();
 		button.SetModel( model );
@@ -140,6 +140,7 @@ public abstract partial class Dhd : Prop
 
 		button.Action = action;
 		button.DHD = this;
+		button.Disabled = disabled;
 
 		Buttons.Add( action, button );
 	}

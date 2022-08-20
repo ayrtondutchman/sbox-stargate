@@ -94,8 +94,8 @@ public partial class DhdAtlantis : Dhd
 		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_1.vmdl", "@" );
 		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_2.vmdl", "*" );
 		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_3.vmdl", "IRIS" );
-		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_4.vmdl", "_" );
-		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_5.vmdl", "." );
-		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_6.vmdl", "," );
+		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_4.vmdl", "_", true );
+		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_5.vmdl", ".", true );
+		CreateSingleButton( "models/sbox_stargate/dhd_atlantis/buttons/dhd_atlantis_button_extra_6.vmdl", ",", true );
 	}
 }
