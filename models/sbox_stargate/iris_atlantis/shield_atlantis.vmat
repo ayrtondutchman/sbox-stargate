@@ -8,9 +8,6 @@ Layer0
 	F_SELF_ILLUM 1
 	F_SPECULAR 1
 
-	//---- Rendering ----
-	F_RENDER_BACKFACES 1
-
 	//---- Translucent ----
 	F_TRANSLUCENT 1
 
@@ -21,8 +18,8 @@ Layer0
 
 	//---- Color ----
 	g_flModelTintAmount "1.000"
-	g_vColorTint "[0.537255 0.600000 0.658824 0.000000]"
-	TextureColor "models/sbox_stargate/iris_atlantis/src/tex/shield_atlantis_d.tga"
+	g_vColorTint "[0.501961 0.501961 0.501961 0.000000]"
+	TextureColor "models/sbox_stargate/iris_atlantis/src/tex/shield_atlantis_color.tga"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"
@@ -38,14 +35,14 @@ Layer0
 	g_flMetalness "0.000"
 
 	//---- Normal ----
-	TextureNormal "models/sbox_stargate/iris_atlantis/src/tex/shield_atlantis_n.tga"
+	TextureNormal "models/sbox_stargate/iris_atlantis/src/tex/shield_atlantis_normal.tga"
 
 	//---- Roughness ----
 	TextureRoughness "[0.450000 0.450000 0.450000 0.000000]"
 
 	//---- Self Illum ----
-	g_flSelfIllumAlbedoFactor "0.900"
-	g_flSelfIllumBrightness "2.000"
+	g_flSelfIllumAlbedoFactor "0.950"
+	g_flSelfIllumBrightness "3.600"
 	g_flSelfIllumScale "1.000"
 	g_vSelfIllumScrollSpeed "[0.000 0.000]"
 	g_vSelfIllumTint "[1.000000 1.000000 1.000000 0.000000]"
@@ -59,6 +56,6 @@ Layer0
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
 
 	//---- Translucent ----
-	g_flOpacityScale "0.500"
+	g_flOpacityScale "0.750"
 	TextureTranslucency "materials/default/default_trans.tga"
 }
