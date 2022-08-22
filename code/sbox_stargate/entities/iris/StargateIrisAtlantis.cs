@@ -36,6 +36,8 @@ public partial class StargateIrisAtlantis : StargateIris
 		await Task.DelaySeconds( 0.6f );
 		if ( !this.IsValid() ) return;
 
+		if ( !Closed ) return;
+
 		IrisLoop.Stop();
 		IrisLoop = Sound.FromEntity( "stargate.iris.atlantis.loop", this );
 	}
