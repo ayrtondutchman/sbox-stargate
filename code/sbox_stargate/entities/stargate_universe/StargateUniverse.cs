@@ -41,13 +41,15 @@ public partial class StargateUniverse : Stargate
 		SetModel( "models/sbox_stargate/gate_universe/gate_universe.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
-		EnableDrawing = false; // dont draw the base ent, the gate will be a part of the 'ring'
+		SetBodyGroup( 0, 1 ); // hide the base ent, the gate will be a part of the 'ring' (cant disable drawing because parented objects get fucked)
 
 		CreateRing();
 		CreateAllChevrons();
 
 		GateGroup = "U@";
 		GateAddress = GenerateGateAddress( GateGroup );
+
+		AddBearing( this );
 	}
 
 	public override void ResetGateVariablesToIdle()
@@ -117,6 +119,7 @@ public partial class StargateUniverse : Stargate
 
 		SetChevronsGlowState( false );
 		Ring?.ResetSymbols();
+		Bearing?.TurnOff();
 
 		if ( !IsGateUpright() ) AddTask( Time.Now + 2.5f, () => DoResetGateRoll(), TimedTaskCategory.GENERIC );
 	}
@@ -126,6 +129,7 @@ public partial class StargateUniverse : Stargate
 		base.OnStargateBeginOpen();
 
 		PlaySound( this, GetSound( "gate_open" ) );
+		Bearing?.TurnOn();
 	}
 
 	public override void OnStargateOpened()
@@ -146,6 +150,7 @@ public partial class StargateUniverse : Stargate
 
 		SetChevronsGlowState( false );
 		Ring?.ResetSymbols();
+		Bearing?.TurnOff();
 
 		if ( !IsGateUpright() ) AddTask( Time.Now + 1.5f, () => DoResetGateRoll(), TimedTaskCategory.GENERIC );
 	}
@@ -158,6 +163,7 @@ public partial class StargateUniverse : Stargate
 
 		SetChevronsGlowState( false );
 		Ring?.ResetSymbols();
+		Bearing?.TurnOff();
 	}
 
 
@@ -334,7 +340,17 @@ public partial class StargateUniverse : Stargate
 					return;
 				}
 
-				AddTask( Time.Now + 0.65f, () => SymbolOn(sym), TimedTaskCategory.DIALING);
+				void symbolAction()
+				{
+					SymbolOn( sym );
+					Bearing?.TurnOn(0.1f);
+					if (!isLastChev)
+					{
+						Bearing?.TurnOff( 0.6f );
+					}
+				}
+
+				AddTask( Time.Now + 0.65f, symbolAction, TimedTaskCategory.DIALING);
 
 				await Task.DelaySeconds( 1.25f );
 

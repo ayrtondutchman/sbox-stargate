@@ -476,6 +476,40 @@ public partial class Stargate : Prop, IUse
 		return false;
 	}
 
+	/// <summary>
+	/// Adds a Gate Bearing to the target Universe Stargate if it does not have one yet.
+	/// </summary>
+	/// <returns>The just created, or already existing Bearing.</returns>
+	public static GateBearing AddBearing( Stargate gate )
+	{
+		if ( !gate.HasBearing() && gate is StargateUniverse )
+		{
+			var bearing = new GateBearing();
+			bearing.Position = gate.Position + gate.Rotation.Up * 135.5f;
+			bearing.Rotation = gate.Rotation;
+			bearing.Scale = gate.Scale;
+			bearing.SetParent( gate );
+			bearing.Gate = gate;
+			gate.Bearing = bearing;
+		}
+
+		return gate.Bearing;
+	}
+
+	/// <summary>
+	/// Attempts to remove the Bearing from the target Stargate.
+	/// </summary>
+	/// <returns>Whether or not the Bearing was removed succesfully.</returns>
+	public static bool RemoveBearing( Stargate gate )
+	{
+		if ( gate.HasBearing() )
+		{
+			gate.Bearing.Delete();
+			return true;
+		}
+		return false;
+	}
+
 	public static async void PlaySound( Entity ent, string name, float delay = 0 )
 	{
 		if ( !ent.IsValid() ) return;

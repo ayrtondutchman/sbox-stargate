@@ -18,6 +18,7 @@ public abstract partial class Stargate : Prop, IUse
 	public int EventHorizonSkinGroup = 0;
 	public StargateIris Iris;
 	public Stargate OtherGate;
+	public GateBearing Bearing;
 
 	public float AutoCloseTime = -1;
 
@@ -41,8 +42,8 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public GlyphType GateGlyphType { get; protected set; } = GlyphType.MILKYWAY;
 	[Net] public bool EarthPointOfOrigin { get; protected set; } = false;
 
-	public bool Busy { get; set; } = false; // this is pretty much used anytime the gate is busy to do anything (usually during animations/transitions)
-	public bool Inbound { get; set; } = false;
+	[Net] public bool Busy { get; set; } = false; // this is pretty much used anytime the gate is busy to do anything (usually during animations/transitions)
+	[Net] public bool Inbound { get; set; } = false;
 
 	[Net] public bool ShouldStopDialing { get; set; } = false;
 	public GateState CurGateState { get; set; } = GateState.IDLE;
@@ -161,6 +162,12 @@ public abstract partial class Stargate : Prop, IUse
 	public bool IsIrisClosed()
 	{
 		return HasIris() && Iris.Closed;
+	}
+
+	// BEARING
+	public bool HasBearing()
+	{
+		return Bearing.IsValid();
 	}
   
 	protected override void OnDestroy()

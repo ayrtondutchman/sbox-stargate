@@ -16,7 +16,7 @@ Layer0
 	//---- Color ----
 	g_flModelTintAmount "1.000"
 	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
-	TextureColor "[1.000000 1.000000 1.000000 0.000000]"
+	TextureColor "[0.501961 0.501961 0.501961 0.000000]"
 
 	//---- Fade ----
 	g_flFadeExponent "1.000"
@@ -51,4 +51,9 @@ Layer0
 	g_vTexCoordOffset "[0.000 0.000]"
 	g_vTexCoordScale "[1.000 1.000]"
 	g_vTexCoordScrollSpeed "[0.000 0.000]"
+
+	DynamicParams
+	{
+		g_flSelfIllumScale "selfillumscale"
+	}
 }

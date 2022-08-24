@@ -71,6 +71,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
+						name = "base"
 						filename = "models/sbox_stargate/gate_universe/src/base_universe.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
@@ -87,6 +88,7 @@
 					},
 					{
 						_class = "RenderMeshFile"
+						name = "symbols_off"
 						filename = "models/sbox_stargate/gate_universe/src/symbols_universe_off.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
@@ -136,6 +138,32 @@
 						angular_damping = 0.0
 						use_mass_center_override = false
 						mass_center_override = [ 0.0, 0.0, 0.0 ]
+					},
+				]
+			},
+			{
+				_class = "BodyGroupList"
+				children = 
+				[
+					{
+						_class = "BodyGroup"
+						name = "gate"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"base",
+									"symbols_off",
+								]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+						]
+						hidden_in_tools = false
 					},
 				]
 			},
