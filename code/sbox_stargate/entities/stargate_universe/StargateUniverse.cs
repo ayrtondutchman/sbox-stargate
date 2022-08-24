@@ -48,8 +48,6 @@ public partial class StargateUniverse : Stargate
 
 		GateGroup = "U@";
 		GateAddress = GenerateGateAddress( GateGroup );
-
-		AddBearing( this );
 	}
 
 	public override void ResetGateVariablesToIdle()

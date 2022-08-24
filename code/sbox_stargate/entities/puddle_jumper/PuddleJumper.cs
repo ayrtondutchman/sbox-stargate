@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-[Title( "Puddle Jumper" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
+[Title( "Puddle Jumper" ), Category( "Stargate" ), Icon( "chair" )]
 public partial class PuddleJumper : Prop, IUse
 {
 	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 65 );

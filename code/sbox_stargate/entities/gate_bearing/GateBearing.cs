@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-[Title( "Gate Bearing" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
+[Title( "Gate Bearing" ), Category( "Stargate" ), Icon( "chair" )]
 public partial class GateBearing : ModelEntity
 {
 	[Net]
