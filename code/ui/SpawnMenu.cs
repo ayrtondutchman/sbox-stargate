@@ -23,7 +23,6 @@ public partial class SpawnMenu : Panel
 			tabs.AddClass( "tabs" );
 
 			var body = left.Add.Panel( "body" );
-
 			{
 				var props = body.AddChild<SpawnList>();
 				tabs.SelectedButton = tabs.AddButtonActive( "Props", ( b ) => props.SetClass( "active", b ) );

@@ -15,8 +15,9 @@ public partial class StargateSpawnList : Panel
 		AddChild( out Canvas, "canvas" );
 
 		Canvas.Layout.AutoColumns = true;
-		Canvas.Layout.ItemWidth = 100;
-		Canvas.Layout.ItemHeight = 100;
+		Canvas.Layout.ItemWidth = 128;
+		Canvas.Layout.ItemHeight = 128;
+
 		Canvas.OnCreateCell = ( cell, data ) =>
 		{
 			if ( data is TypeDescription type )
@@ -25,6 +26,9 @@ public partial class StargateSpawnList : Panel
 				btn.AddClass( "icon" );
 				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", type.ClassName ) );
 				btn.Style.BackgroundImage = Texture.Load( FileSystem.Mounted, $"/entity/sbox_stargate/{type.ClassName}.png", false );
+
+				var mar = Length.Pixels( 16 );
+				cell.Style.PaddingBottom = mar;
 			}
 		};
 
