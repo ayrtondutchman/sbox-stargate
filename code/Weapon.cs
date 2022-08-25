@@ -225,14 +225,14 @@ public partial class Weapon : BaseWeapon, IUse
 				var newPos = newCoords.Item1;
 				var newDir = newCoords.Item2;
 
-				if ( IsClient )
-				{
-					DebugOverlay.Line( tr.StartPosition, tr.EndPosition, 4 );
-					DebugOverlay.Line( newPos + newDir * 2, newPos + newDir * 5000, 4 );
-				}
+				//if ( IsClient )
+				//{
+				//	DebugOverlay.Line( tr.StartPosition, tr.EndPosition, 4 );
+				//	DebugOverlay.Line( newPos + newDir * 2, newPos + newDir * 5000, 4 );
+				//}
 
 				// shoot a bullet from the other EH, new pos will be offset forward to avoid hitting itself
-				var offset = newDir * 2f;
+				var offset = newDir * 0.5f;
 				ShootBullet( newPos + offset, newDir, spread, force, damage, bulletSize );
 				eh.GetOther().PlayTeleportSound();
 
