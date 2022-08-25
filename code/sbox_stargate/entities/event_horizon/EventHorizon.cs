@@ -7,7 +7,9 @@ using Sandbox;
 
 public partial class EventHorizon : AnimatedEntity
 {
-	public Stargate Gate;
+	[Net]
+	public Stargate Gate { get; private set; } = null;
+
 	public bool IsFullyFormed = false;
 	protected Sound WormholeLoop;
 
@@ -52,9 +54,10 @@ public partial class EventHorizon : AnimatedEntity
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 		EnableShadowCasting = false;
 
-		Tags.Add( "trigger" );
+		Tags.Add( "trigger", "eventhorizon" );
 
 		EnableAllCollisions = false;
+		EnableTraceAndQueries = true;
 		EnableTouch = true;
 	}
 
@@ -94,10 +97,16 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
+	public bool IsPointBehindEventHorizon( Vector3 point )
+	{
+		if ( !this.IsValid() ) return false;
+		return (point - Position).Dot( Rotation.Forward ) < 0;
+	}
+
 	public bool IsEntityBehindEventHorizon( Entity ent )
 	{
 		if ( !this.IsValid() || !ent.IsValid() ) return false;
-		return (ent.Position - Position).Dot( Rotation.Forward ) < 0;
+		return IsPointBehindEventHorizon( ent.Position );
 	}
 
 	public bool IsPawnBehindEventHorizon( Entity pawn )
@@ -199,12 +208,39 @@ public partial class EventHorizon : AnimatedEntity
 		ClientAlphaRenderLogic();
 	}
 
+	public EventHorizon GetOther()
+	{
+		if ( !Gate.IsValid() || !Gate.OtherGate.IsValid() )
+			return null;
+
+		return Gate.OtherGate.EventHorizon;
+	}
+
+	public Tuple<Vector3, Vector3> CalcExitPointAndDir(Vector3 entryPoint, Vector3 entryDir)
+	{
+		var other = GetOther();
+
+		if (!other.IsValid())
+			return Tuple.Create( entryPoint, entryDir );
+
+		var newPos = Transform.PointToLocal( entryPoint );
+		newPos = newPos.WithY( -newPos.y );
+		newPos = other.Transform.PointToWorld( newPos );
+
+		var newDir = Transform.PointToLocal( Position + entryDir );
+		newDir = newDir.WithX( -newDir.x ).WithY( -newDir.y );
+		newDir = other.Position - other.Transform.PointToWorld( newDir );
+		newDir = -newDir;
+
+		return Tuple.Create(newPos, newDir);
+	}
+
 	// TELEPORT
 	public async void TeleportEntity(Entity ent)
 	{
 		if ( !Gate.IsValid() || !Gate.OtherGate.IsValid() ) return;
 
-		var otherEH = Gate.OtherGate.EventHorizon;
+		var otherEH = GetOther();
 
 		if ( !otherEH.IsValid() ) return;
 

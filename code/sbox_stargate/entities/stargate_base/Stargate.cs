@@ -14,10 +14,15 @@ public abstract partial class Stargate : Prop, IUse
 
 	public List<Chevron> Chevrons = new();
 
-	public EventHorizon EventHorizon;
+	[Net]
+	public EventHorizon EventHorizon { get; private set; } = null;
 	public int EventHorizonSkinGroup = 0;
-	public StargateIris Iris;
-	public Stargate OtherGate;
+
+	[Net]
+	public StargateIris Iris { get; set; } = null;
+
+	[Net]
+	public Stargate OtherGate { get; set; } = null;
 	public GateBearing Bearing;
 
 	public float AutoCloseTime = -1;

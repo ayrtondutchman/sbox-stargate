@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Weapon : BaseWeapon, IUse
 {
@@ -144,7 +145,7 @@ public partial class Weapon : BaseWeapon, IUse
 
 		var trace = Trace.Ray( start, end )
 				.UseHitboxes()
-				.WithAnyTags( "solid", "player", "npc", "glass" )
+				.WithAnyTags( "solid", "player", "npc", "glass", "eventhorizon" )
 				.Ignore( this )
 				.Size( radius );
 
@@ -168,7 +169,7 @@ public partial class Weapon : BaseWeapon, IUse
 	{
 		var trace = Trace.Ray( start, end )
 				.UseHitboxes()
-				.WithAnyTags( "solid", "player", "npc", "glass" )
+				.WithAnyTags( "solid", "player", "npc", "glass", "eventhorizon" )
 				.Ignore( this );
 
 		var tr = trace.Run();
@@ -205,6 +206,39 @@ public partial class Weapon : BaseWeapon, IUse
 		//
 		foreach ( var tr in TraceBullet( pos, pos + forward * 5000, bulletSize ) )
 		{
+			if ( tr.Entity is EventHorizon eh )
+			{
+				eh.PlayTeleportSound();
+
+				var isInbound = eh.Gate.Inbound;
+				var otherEH = eh.GetOther();
+				var otherIrisClosed = otherEH.Gate.IsIrisClosed();
+				var fromBehind = eh.IsPointBehindEventHorizon( tr.HitPosition );
+
+				if ( !isInbound && !fromBehind && otherIrisClosed )
+					otherEH.Gate.Iris.PlayHitSound();
+
+				if ( isInbound || fromBehind || otherIrisClosed )
+					return;
+
+				var newCoords = eh.CalcExitPointAndDir(tr.HitPosition, tr.Direction);
+				var newPos = newCoords.Item1;
+				var newDir = newCoords.Item2;
+
+				if ( IsClient )
+				{
+					DebugOverlay.Line( tr.StartPosition, tr.EndPosition, 4 );
+					DebugOverlay.Line( newPos + newDir * 2, newPos + newDir * 5000, 4 );
+				}
+
+				// shoot a bullet from the other EH, new pos will be offset forward to avoid hitting itself
+				var offset = newDir * 2f;
+				ShootBullet( newPos + offset, newDir, spread, force, damage, bulletSize );
+				eh.GetOther().PlayTeleportSound();
+
+				return;
+			}
+
 			tr.Surface.DoBulletImpact( tr );
 
 			if ( !IsServer ) continue;
