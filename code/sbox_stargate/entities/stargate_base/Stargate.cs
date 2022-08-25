@@ -229,7 +229,7 @@ public abstract partial class Stargate : Prop, IUse
 
 		OnStargateBeginOpen();
 
-		await EstablishEventHorizon( 0.5f ); // TODO - fix EH crash when gate gets removed during opening
+		await EstablishEventHorizon( 0.5f );
 		if ( !this.IsValid() ) return;
 
 		OnStargateOpened();
