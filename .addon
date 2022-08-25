@@ -12,7 +12,7 @@
   "RootNamespace": "Sandbox",
   "Metadata": {
     "MapList": [
-      "facepunch.construct"
+      "facepunch.flatgrass"
     ],
     "PerMapRanking": false,
     "LeaderboardType": "None",
