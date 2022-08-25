@@ -3,7 +3,7 @@ using System.Text.Json;
 using Sandbox;
 
 [Title( "Universe Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
-public partial class UniverseRamp : ModelEntity, IStargateRamp, IGateSpawner
+public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 {
 
 	[Net]

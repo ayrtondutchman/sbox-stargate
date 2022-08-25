@@ -4,7 +4,7 @@ using Sandbox;
 using System.Collections.Generic;
 
 [Title( "SGC Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
-public partial class SGCRamp : ModelEntity, IStargateRamp
+public partial class SGCRamp : Prop, IStargateRamp
 {
 	[Net]
 	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 148 );

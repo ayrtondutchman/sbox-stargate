@@ -38,7 +38,7 @@ public class StargateWorldPanel : WorldPanel
 			return;
 		}
 
-		Position = Gate.Position + Gate.Rotation.Up * 172;
+		Position = Gate.Position + Gate.Rotation.Up * 172 + Gate.Rotation.Forward * 16;
 		Rotation = Gate.Rotation;
 
 		UpdateGateInfo();
@@ -46,7 +46,9 @@ public class StargateWorldPanel : WorldPanel
 		var player = Local.Pawn;
 		if ( player == null ) return;
 
-		 //player.Position.DistanceSquared(Gate.Position))
+		//player.Position.DistanceSquared(Gate.Position))
+
+		
 	}
 
 	private void UpdateGateInfo()
