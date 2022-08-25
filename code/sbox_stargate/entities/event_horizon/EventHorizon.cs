@@ -8,7 +8,7 @@ using Sandbox;
 public partial class EventHorizon : AnimatedEntity
 {
 	[Net]
-	public Stargate Gate { get; private set; } = null;
+	public Stargate Gate { get; set; } = null;
 
 	public bool IsFullyFormed = false;
 	protected Sound WormholeLoop;
