@@ -210,6 +210,9 @@ public partial class Weapon : BaseWeapon, IUse
 			{
 				eh.PlayTeleportSound();
 
+				if (!eh.IsFullyFormed)
+					return;
+
 				var isInbound = eh.Gate.Inbound;
 				var otherEH = eh.GetOther();
 				var otherIrisClosed = otherEH.Gate.IsIrisClosed();

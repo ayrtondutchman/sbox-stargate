@@ -10,7 +10,8 @@ public partial class EventHorizon : AnimatedEntity
 	[Net]
 	public Stargate Gate { get; set; } = null;
 
-	public bool IsFullyFormed = false;
+	[Net]
+	public bool IsFullyFormed { get; set; } = false;
 	protected Sound WormholeLoop;
 
 	protected Entity CurrentTeleportingEntity;
