@@ -107,7 +107,8 @@ partial class SandboxGame : Game
 		if ( owner == null )
 			return;
 
-		var entityType = TypeLibrary.GetTypeByName<Entity>( entName );
+		var entityDesc = TypeLibrary.GetDescription( entName );
+		var entityType = entityDesc.GetType();
 		if ( entityType == null )
 
 			if ( !TypeLibrary.Has<SpawnableAttribute>( entityType ) )
@@ -119,7 +120,7 @@ partial class SandboxGame : Game
 			.Size( 2 )
 			.Run();
 
-		var ent = TypeLibrary.Create<Entity>( entityType );
+		var ent = entityDesc.Create<Entity>();
 		if ( ent is BaseCarriable && owner.Inventory != null )
 		{
 			if ( owner.Inventory.Add( ent, true ) )
@@ -132,15 +133,14 @@ partial class SandboxGame : Game
 		ent.Tags.Add( "undoable" ); // cant use Owner, this will need to get reworked at some point, good enough for Singleplayer
 
 		// Stargate Stuffs
-		var hasSpawnOffsetProperty = ent.GetType().GetProperty( "SpawnOffset" ) != null;
+		var hasSpawnOffsetProperty = entityDesc.GetProperty( "SpawnOffset" ) != null;
 		if ( hasSpawnOffsetProperty ) // spawn offsets for Stargate stuff
 		{
-			var type = ent.GetType();
-			var property_spawnoffset = type.GetProperty( "SpawnOffset" );
+			var property_spawnoffset = entityDesc.GetProperty( "SpawnOffset" );
 			if ( property_spawnoffset != null ) ent.Position += (Vector3)property_spawnoffset.GetValue( ent );
 
 
-			var property_spawnoffset_ang = type.GetProperty( "SpawnOffsetAng" );
+			var property_spawnoffset_ang = entityDesc.GetProperty( "SpawnOffsetAng" );
 			if ( property_spawnoffset_ang != null )
 			{
 				var ang = (Angles)property_spawnoffset_ang.GetValue( ent );
@@ -154,6 +154,7 @@ partial class SandboxGame : Game
 		{
 			if ( tr.Entity is IStargateRamp ramp ) Stargate.PutGateOnRamp( gate, ramp );
 		}
+		
 
 		//Log.Info( $"ent: {ent}" );
 	}
