@@ -116,7 +116,11 @@ public partial class EventHorizon : AnimatedEntity
 	public bool IsPawnBehindEventHorizon( Entity pawn )
 	{
 		if ( !this.IsValid() || !pawn.IsValid() ) return false;
-		return ((pawn as Player).CameraMode.Position - Position).Dot( Rotation.Forward ) < 0;
+
+		var ply = pawn as Player;
+		if ( !ply.IsValid() || ply.CameraMode == null ) return false;
+
+		return (ply.CameraMode.Position - Position).Dot( Rotation.Forward ) < 0;
 	}
 
 	// CLIENT ANIM CONTROL
