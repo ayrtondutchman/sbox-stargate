@@ -116,7 +116,7 @@ public partial class EventHorizon : AnimatedEntity
 	public bool IsPawnBehindEventHorizon( Entity pawn )
 	{
 		if ( !this.IsValid() || !pawn.IsValid() ) return false;
-		return (pawn.EyePosition - Position).Dot( Rotation.Forward ) < 0;
+		return ((pawn as Player).CameraMode.Position - Position).Dot( Rotation.Forward ) < 0;
 	}
 
 	// CLIENT ANIM CONTROL
@@ -199,7 +199,7 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void ClientAlphaRenderLogic()
 	{
-		// draw the EH at 0.6 alpha when looking at it from behind -- doesnt work in thirdperson at the moment
+		// draw the EH at 0.6 alpha when looking at it from behind
 		var pawn = Local.Pawn;
 		if ( pawn.IsValid() ) RenderColor = RenderColor.WithAlpha(IsPawnBehindEventHorizon(pawn) ? 0.6f : 1f);
 	}
