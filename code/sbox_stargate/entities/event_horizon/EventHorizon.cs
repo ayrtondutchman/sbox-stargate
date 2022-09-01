@@ -42,6 +42,9 @@ public partial class EventHorizon : AnimatedEntity
 	float lastSoundTime = 0f;
 
 	[Net]
+	private List<Entity> Buffer { get; set; } = new ();
+
+	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;
 
 	public override void Spawn()
@@ -322,6 +325,8 @@ public partial class EventHorizon : AnimatedEntity
 
 		if ( !IsServer ) return;
 
+		Buffer.Add( other );
+
 		if ( other is StargateIris ) return;
 
 		if ( other is Sandbox.Player || other is Prop ) // for now only players and props get teleported
@@ -349,7 +354,7 @@ public partial class EventHorizon : AnimatedEntity
 							DissolveEntity( other );
 							Gate.OtherGate.Iris.PlayHitSound(); // iris goes boom
 						}
-						else // otherwise we should fine for teleportation
+						else // otherwise we should be fine for teleportation
 						{
 							if ( Gate.OtherGate.IsValid() && Gate.OtherGate.EventHorizon.IsValid() )
 							{
@@ -359,7 +364,6 @@ public partial class EventHorizon : AnimatedEntity
 							{
 								DissolveEntity( other );
 							}
-							
 						}
 					}
 				}
@@ -373,6 +377,8 @@ public partial class EventHorizon : AnimatedEntity
 		base.EndTouch( other );
 
 		if ( !IsServer ) return;
+
+		Buffer.Remove( other );
 
 		if ( other == CurrentTeleportingEntity )
 		{
@@ -393,4 +399,23 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		if ( Gate.IsValid() && Scale != Gate.Scale ) Scale = Gate.Scale; // always keep the same scale as gate
 	}
+
+	/*
+	[Event.Frame]
+	public void Draw()
+	{
+		var clipPlane = new Plane( Position, Rotation.Forward.Normal );
+
+		foreach ( var e in Buffer )
+		{
+			var p = e as ModelEntity;
+			if ( !p.IsValid )
+				return;
+
+			var obj = p.SceneObject;
+			obj.Attributes.Set( "EnableClipPlane", true );
+			obj.Attributes.Set( "ClipPlane0", new Vector4( clipPlane.Normal, clipPlane.Distance ) );
+		}
+	}
+	*/
 }
