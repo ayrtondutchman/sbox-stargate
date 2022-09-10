@@ -102,7 +102,7 @@ namespace Sandbox.Tools
 						return;
 					}
 
-					var gateType = TypeLibrary.GetTypeByName<Entity>( GateTypes[CurGateType] );
+					var gateType = TypeLibrary.GetDescription<Entity>( GateTypes[CurGateType] )?.TargetType;
 					if ( gateType == null ) return;
 
 					var gate = TypeLibrary.Create<Entity>( gateType ) as Stargate;
