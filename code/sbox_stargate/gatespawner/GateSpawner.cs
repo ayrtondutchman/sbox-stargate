@@ -41,13 +41,13 @@ public partial class GateSpawner
 		var filepath = $"{Global.MapName}.json";
 
 		bool isData = FileSystem.Data.FileExists( $"gatespawners/{filepath}" );
-		bool isRoot = !isData && FileSystem.Mounted.FileExists( $"sbox_stargate/gatespawner/maps/{filepath}" );
+		bool isRoot = !isData && FileSystem.Mounted.FileExists( $"code/sbox_stargate/gatespawner/maps/{filepath}" );
 
 		if ( !isData && !isRoot )
 			return;
 
 		// Gatespawners in data folder will always have priority
-		filepath = (isRoot ? "sbox_stargate/gatespawner/maps/" : "gatespawners/") + filepath;
+		filepath = (isRoot ? "code/sbox_stargate/gatespawner/maps/" : "gatespawners/") + filepath;
 
 		var file = isRoot ? FileSystem.Mounted.ReadAllText( filepath ) : FileSystem.Data.ReadAllText( filepath );
 		var data = JsonSerializer.Deserialize<GatespawnerModel>( file );
