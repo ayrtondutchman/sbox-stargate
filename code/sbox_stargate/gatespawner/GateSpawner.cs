@@ -43,12 +43,6 @@ public partial class GateSpawner
 		bool isData = FileSystem.Data.FileExists( $"gatespawners/{filepath}" );
 		bool isRoot = !isData && FileSystem.Mounted.FileExists( $"code/sbox_stargate/gatespawner/maps/{filepath}" );
 
-		Log.Info("Mounted directories:");
-		foreach (var dir in FileSystem.Mounted.FindDirectory(""))
-		{
-			Log.Info( dir );
-		}
-
 		if ( !isData && !isRoot )
 			return;
 
