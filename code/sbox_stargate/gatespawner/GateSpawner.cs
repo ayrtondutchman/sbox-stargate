@@ -15,15 +15,33 @@ public partial class GateSpawner
 	{
 		var fileName = Global.MapName;
 
-		if ( !FileSystem.Data.DirectoryExists( "gatespawners/" ) )
-			FileSystem.Data.CreateDirectory( "gatespawners/" );
+		if ( !FileSystem.Data.DirectoryExists( "data/gatespawner/" ) )
+			FileSystem.Data.CreateDirectory( "data/gatespawner/" );
 
 		var model = new GatespawnerModel();
 		foreach ( IGateSpawner e in Entity.All.OfType<IGateSpawner>() )
 		{
 			model.Entities.Add( e.ToJson() );
 		}
-		FileSystem.Data.WriteAllText( $"gatespawners/{fileName}.json", JsonSerializer.Serialize( model, new JsonSerializerOptions() { WriteIndented = true } ) );
+		FileSystem.Data.WriteAllText( $"data/gatespawner/{fileName}.json", JsonSerializer.Serialize( model, new JsonSerializerOptions() { WriteIndented = true } ) );
+	}
+
+	//[Event.Hotload]
+	public static void GetGatespawnerFileByName(string mapName)
+	{
+		var fList = new List<string>();
+		foreach ( var dir in FileSystem.Mounted.FindDirectory( "", recursive: true ) )
+		{
+			foreach ( var file in FileSystem.Mounted.FindFile( dir, $"{mapName}.json", true ) )
+			{
+				var targetName = ( dir + "/" + file );
+				if ( !fList.Contains( targetName ) )
+					fList.Add( targetName );
+			}
+		}
+
+		foreach ( var fName in fList )
+			Log.Info( fName );
 	}
 
 	public static async void LoadGateSpawner()
@@ -38,16 +56,18 @@ public partial class GateSpawner
 
 		await Task.Delay( 1000 );
 
+		//GetGatespawnerFileByName( Global.MapName );
+
 		var filepath = $"{Global.MapName}.json";
 
-		bool isData = FileSystem.Data.FileExists( $"gatespawners/{filepath}" );
+		bool isData = FileSystem.Data.FileExists( $"data/gatespawner/{filepath}" );
 		bool isRoot = !isData && FileSystem.Mounted.FileExists( $"code/sbox_stargate/gatespawner/maps/{filepath}" );
 
 		if ( !isData && !isRoot )
 			return;
 
 		// Gatespawners in data folder will always have priority
-		filepath = (isRoot ? "code/sbox_stargate/gatespawner/maps/" : "gatespawners/") + filepath;
+		filepath = (isRoot ? "code/sbox_stargate/gatespawner/maps/" : "data/gatespawner/") + filepath;
 
 		var file = isRoot ? FileSystem.Mounted.ReadAllText( filepath ) : FileSystem.Data.ReadAllText( filepath );
 		var data = JsonSerializer.Deserialize<GatespawnerModel>( file );

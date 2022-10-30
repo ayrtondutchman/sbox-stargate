@@ -3,13 +3,14 @@
   "Type": "game",
   "Org": "katka",
   "Ident": "sbox_stargate",
-  "Tags": null,
+  "Tags": "",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
   "ResourcePaths": [
     "/entity/*",
-    "/fonts/*"
+    "/fonts/*",
+    "/code/sbox_stargate/gatespawner/maps/*"
   ],
   "HasCode": true,
   "CodePath": "code",
@@ -127,6 +128,7 @@
         "DisplayName": "Enable GateSpawner",
         "DefaultValue": "true"
       }
-    }
+    },
+    "ParentPackage": ""
   }
 }
