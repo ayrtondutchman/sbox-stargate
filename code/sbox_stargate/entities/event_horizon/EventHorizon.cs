@@ -413,13 +413,18 @@ public partial class EventHorizon : AnimatedEntity
 		foreach ( var e in Buffer )
 		{
 			var p = e as ModelEntity;
-			if ( !p.IsValid )
+			if ( !p.IsValid() )
 				return;
 
+			var alpha = p.RenderColor.a;
+			p.RenderColor = p.RenderColor.WithAlpha( alpha.Clamp(0, 0.99f) );
+
 			var obj = p.SceneObject;
+			obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", true ); // <-- thank @MuffinTastic for this line of code
 			obj.Attributes.Set( "EnableClipPlane", true );
 			obj.Attributes.Set( "ClipPlane0", new Vector4( clipPlane.Normal, clipPlane.Distance ) );
 		}
 	}
 	*/
+	
 }
