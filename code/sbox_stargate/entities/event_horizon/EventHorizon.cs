@@ -42,7 +42,9 @@ public partial class EventHorizon : AnimatedEntity
 	float lastSoundTime = 0f;
 
 	[Net]
-	private List<Entity> Buffer { get; set; } = new ();
+	private List<Entity> BufferFront { get; set; } = new ();
+	[Net]
+	private List<Entity> BufferBack { get; set; } = new();
 
 	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;
@@ -291,9 +293,12 @@ public partial class EventHorizon : AnimatedEntity
 			ent.Rotation = otherRot;
 		}
 
+		var newVel = otherVelNorm * ent.Velocity.Length;
+
+		ent.Velocity = Vector3.Zero;
 		ent.Position = otherPos;
 		ent.ResetInterpolation();
-		ent.Velocity = otherVelNorm * ent.Velocity.Length;
+		ent.Velocity = newVel;
 
 		// after any successful teleport, start autoclose timer if gate should autoclose
 		if ( Gate.AutoClose ) Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration;
@@ -323,13 +328,77 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
+	public void OnEntityEntered( ModelEntity ent, bool fromBack=false )
+	{
+		if ( !ent.IsValid() )
+			return;
+
+		(fromBack ? BufferBack : BufferFront ).Add( ent );
+
+		ent.PhysicsBody.GravityEnabled = false;
+
+		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
+		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
+
+		SetModelClippingForEntity( To.Everyone, ent, true, fromBack ? clipPlaneBack : clipPlaneFront );
+	}
+
+	public void OnEntityExited( ModelEntity ent, bool fromBack = false )
+	{
+		if ( !ent.IsValid() )
+			return;
+
+		(fromBack ? BufferBack : BufferFront).Remove( ent );
+
+		ent.PhysicsBody.GravityEnabled = true;
+
+		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
+		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
+
+		SetModelClippingForEntity( To.Everyone, ent, false, fromBack ? clipPlaneBack : clipPlaneFront );
+
+		if ( ent == CurrentTeleportingEntity )
+		{
+			CurrentTeleportingEntity = null;
+			Gate.OtherGate.EventHorizon.CurrentTeleportingEntity = null;
+		}
+	}
+
+	public async void OnEntityFullyEntered( ModelEntity ent, bool fromBack = false )
+	{
+		if ( fromBack )
+		{
+			BufferBack.Remove( ent );
+			DissolveEntity( ent );
+		}
+		else
+		{
+			BufferFront.Remove( ent );
+
+			var otherEH = GetOther();
+			if ( Gate.Inbound || Gate.OtherGate.IsIrisClosed() || !otherEH.IsValid() )
+			{
+				DissolveEntity( ent );
+			}
+			else
+			{
+				otherEH.BufferFront.Add( ent );
+
+				ent.EnableDrawing = false;
+
+				TeleportEntity( ent );
+				await GameTask.Delay( 10 );
+
+				ent.EnableDrawing = true;
+			}
+		}
+	}
+
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
 
 		if ( !IsServer ) return;
-
-		Buffer.Add( other );
 
 		if ( other is StargateIris ) return;
 
@@ -339,6 +408,9 @@ public partial class EventHorizon : AnimatedEntity
 
 			PlayTeleportSound(); // event horizon always plays sound if something entered it
 
+			OnEntityEntered( other as ModelEntity, IsEntityBehindEventHorizon( other ) );
+
+			/*
 			if ( Gate.Inbound || !IsFullyFormed ) // if we entered inbound gate from any direction, dissolve
 			{
 				DissolveEntity( other );
@@ -372,7 +444,7 @@ public partial class EventHorizon : AnimatedEntity
 					}
 				}
 			}
-
+			*/
 		}
 	}
 
@@ -382,13 +454,37 @@ public partial class EventHorizon : AnimatedEntity
 
 		if ( !IsServer ) return;
 
-		Buffer.Remove( other );
+		if (BufferFront.Contains(other)) // entered from front
+		{
+			if ( IsEntityBehindEventHorizon( other ) ) // entered from front and exited behind the gate (should teleport)
+			{
+				OnEntityFullyEntered( other as ModelEntity );
+			}
+			else // entered from front and exited front (should just exit)
+			{
+				OnEntityExited( other as ModelEntity );
+			}
+		}
 
+		if ( BufferBack.Contains( other ) ) // entered from back
+		{
+			if ( IsEntityBehindEventHorizon( other ) ) // entered from back and exited behind the gate (should just exit)
+			{
+				OnEntityExited( other as ModelEntity, true );
+			}
+			else // entered from back and exited front (should dissolve)
+			{
+				OnEntityFullyEntered( other as ModelEntity, true );
+			}
+		}
+
+		/*
 		if ( other == CurrentTeleportingEntity )
 		{
 			CurrentTeleportingEntity = null;
 			Gate.OtherGate.EventHorizon.CurrentTeleportingEntity = null;
 		}
+		*/
 	}
 
 	protected override void OnDestroy()
@@ -404,27 +500,46 @@ public partial class EventHorizon : AnimatedEntity
 		if ( Gate.IsValid() && Scale != Gate.Scale ) Scale = Gate.Scale; // always keep the same scale as gate
 	}
 
-	/*
+	[ClientRpc]
+	public void SetModelClippingForEntity( Entity ent, bool enabled, Plane p )
+	{
+		var m = ent as ModelEntity;
+		if ( !m.IsValid() )
+			return;
+
+		var obj = m.SceneObject;
+		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
+		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
+
+		if ( enabled )
+		{
+			var alpha = m.RenderColor.a;
+			m.RenderColor = m.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) );
+		}
+	}
+
+	public void UpdateModelClippingForEntity( Entity ent, Plane p )
+	{
+		var m = ent as ModelEntity;
+		if ( !m.IsValid() )
+			return;
+
+		var obj = m.SceneObject;
+		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
+		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", true ); // <-- thanks @MuffinTastic for this line of code
+	}
+
 	[Event.Frame]
 	public void Draw()
 	{
-		var clipPlane = new Plane( Position, Rotation.Forward.Normal );
+		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
+		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
 
-		foreach ( var e in Buffer )
-		{
-			var p = e as ModelEntity;
-			if ( !p.IsValid() )
-				return;
+		foreach ( var e in BufferFront )
+			UpdateModelClippingForEntity( e, clipPlaneFront );
 
-			var alpha = p.RenderColor.a;
-			p.RenderColor = p.RenderColor.WithAlpha( alpha.Clamp(0, 0.99f) );
-
-			var obj = p.SceneObject;
-			obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", true ); // <-- thank @MuffinTastic for this line of code
-			obj.Attributes.Set( "EnableClipPlane", true );
-			obj.Attributes.Set( "ClipPlane0", new Vector4( clipPlane.Normal, clipPlane.Distance ) );
-		}
+		foreach ( var e in BufferBack )
+			UpdateModelClippingForEntity( e, clipPlaneBack );
 	}
-	*/
 	
 }
