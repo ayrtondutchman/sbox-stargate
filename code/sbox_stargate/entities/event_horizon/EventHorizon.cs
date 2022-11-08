@@ -89,6 +89,11 @@ public partial class EventHorizon : AnimatedEntity
 		await Task.DelaySeconds( 1f );
 		if ( !this.IsValid() ) return;
 
+		foreach ( var ent in BufferFront.Concat( BufferBack ) )
+		{
+			DissolveEntity( ent );
+		}
+
 		WormholeLoop.Stop();
 	}
 
@@ -339,7 +344,9 @@ public partial class EventHorizon : AnimatedEntity
 
 		(fromBack ? BufferBack : BufferFront ).Add( ent );
 
-		ent.PhysicsBody.GravityEnabled = false;
+		var phys = ent.PhysicsBody;
+		if ( phys.IsValid() )
+			phys.GravityEnabled = false;
 
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
@@ -357,7 +364,9 @@ public partial class EventHorizon : AnimatedEntity
 
 		(fromBack ? BufferBack : BufferFront).Remove( ent );
 
-		ent.PhysicsBody.GravityEnabled = true;
+		var phys = ent.PhysicsBody;
+		if ( phys.IsValid() )
+			phys.GravityEnabled = true;
 
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
@@ -453,6 +462,11 @@ public partial class EventHorizon : AnimatedEntity
 		if ( other == CurrentTeleportingEntity )
 			return;
 
+		if (!IsFullyFormed)
+		{
+			DissolveEntity( other );
+		}
+
 		// for now only players and props get teleported
 		if ( other is Prop ) // props get handled differently (aka model clipping)
 		{
@@ -469,7 +483,11 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.EndTouch( other );
 
-		if ( !IsServer ) return;
+		if ( !other.IsValid() )
+			return;
+
+		if ( !IsServer )
+			return;
 
 		if (BufferFront.Contains(other)) // entered from front
 		{
