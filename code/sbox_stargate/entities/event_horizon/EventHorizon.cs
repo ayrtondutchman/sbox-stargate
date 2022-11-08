@@ -273,7 +273,6 @@ public partial class EventHorizon : AnimatedEntity
 
 		if (ent is SandboxPlayer ply)
 		{
-
 			TeleportScreenOverlay( To.Single( ply ) );
 
 			var oldController = ply.DevController;
@@ -321,6 +320,8 @@ public partial class EventHorizon : AnimatedEntity
 			ply.TakeDamage( dmg );
 
 			RemoveDeathRagdoll( To.Single( ply ), ply);
+
+			PlayTeleportSound();
 		}
 		else
 		{
@@ -333,12 +334,18 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !ent.IsValid() )
 			return;
 
+		if ( !fromBack && Gate.IsIrisClosed() ) // prevent shit accidentaly touching EH from front if our iris is closed
+			return;
+
 		(fromBack ? BufferBack : BufferFront ).Add( ent );
 
 		ent.PhysicsBody.GravityEnabled = false;
 
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
+
+		var alpha = ent.RenderColor.a;
+		ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
 
 		SetModelClippingForEntity( To.Everyone, ent, true, fromBack ? clipPlaneBack : clipPlaneFront );
 	}
@@ -364,7 +371,7 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
-	public async void OnEntityFullyEntered( ModelEntity ent, bool fromBack = false )
+	public void OnEntityFullyEntered( ModelEntity ent, bool fromBack = false )
 	{
 		if ( fromBack )
 		{
@@ -375,21 +382,60 @@ public partial class EventHorizon : AnimatedEntity
 		{
 			BufferFront.Remove( ent );
 
-			var otherEH = GetOther();
-			if ( Gate.Inbound || Gate.OtherGate.IsIrisClosed() || !otherEH.IsValid() )
+			async void tpFunc()
 			{
-				DissolveEntity( ent );
-			}
-			else
-			{
+				var otherEH = GetOther();
 				otherEH.BufferFront.Add( ent );
 
 				ent.EnableDrawing = false;
-
 				TeleportEntity( ent );
-				await GameTask.Delay( 10 );
+
+				await GameTask.NextPhysicsFrame(); // cheap trick to avoid seeing the entity on the wrong side of the EH for a few frames
+				if ( !this.IsValid() )
+					return;
 
 				ent.EnableDrawing = true;
+			}
+
+			TeleportLogic( ent, () => tpFunc(), true );
+		}
+
+		PlayTeleportSound(); // event horizon always plays sound if something entered it
+	}
+
+	public void TeleportLogic( Entity other, Action teleportFunc, bool skipSideChecks = false )
+	{
+		if ( Gate.Inbound || !IsFullyFormed ) // if we entered inbound gate from any direction, dissolve
+		{
+			DissolveEntity( other );
+		}
+		else // we entered a good gate
+		{
+			if ( !skipSideChecks && IsEntityBehindEventHorizon( other ) ) // check if we entered from the back and if yes, dissolve
+			{
+				DissolveEntity( other );
+			}
+			else // othwerwise we entered from the front, so now decide what happens
+			{
+				if ( !Gate.IsIrisClosed() ) // try teleporting only if our iris is open
+				{
+					if ( Gate.OtherGate.IsIrisClosed() ) // if other gate's iris is closed, dissolve
+					{
+						DissolveEntity( other );
+						Gate.OtherGate.Iris.PlayHitSound(); // iris goes boom
+					}
+					else // otherwise we should be fine for teleportation
+					{
+						if ( Gate.OtherGate.IsValid() && Gate.OtherGate.EventHorizon.IsValid() )
+						{
+							teleportFunc();
+						}
+						else // if the other gate or EH is removed for some reason, dissolve
+						{
+							DissolveEntity( other );
+						}
+					}
+				}
 			}
 		}
 	}
@@ -398,53 +444,24 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.StartTouch( other );
 
-		if ( !IsServer ) return;
+		if ( !IsServer )
+			return;
 
-		if ( other is StargateIris ) return;
+		if ( other is StargateIris )
+			return;
 
-		if ( other is Sandbox.Player || other is Prop ) // for now only players and props get teleported
+		if ( other == CurrentTeleportingEntity )
+			return;
+
+		// for now only players and props get teleported
+		if ( other is Prop ) // props get handled differently (aka model clipping)
 		{
-			if ( other == CurrentTeleportingEntity ) return;
-
-			PlayTeleportSound(); // event horizon always plays sound if something entered it
-
 			OnEntityEntered( other as ModelEntity, IsEntityBehindEventHorizon( other ) );
+		}
 
-			/*
-			if ( Gate.Inbound || !IsFullyFormed ) // if we entered inbound gate from any direction, dissolve
-			{
-				DissolveEntity( other );
-			}
-			else // we entered a good gate
-			{
-				if ( IsEntityBehindEventHorizon( other ) ) // check if we entered from the back and if yes, dissolve
-				{
-					DissolveEntity( other );
-				}
-				else // othwerwise we entered from the front, so now decide what happens
-				{
-					if ( !Gate.IsIrisClosed() ) // try teleporting only if our iris is open
-					{
-						if ( Gate.OtherGate.IsIrisClosed() ) // if other gate's iris is closed, dissolve
-						{
-							DissolveEntity( other );
-							Gate.OtherGate.Iris.PlayHitSound(); // iris goes boom
-						}
-						else // otherwise we should be fine for teleportation
-						{
-							if ( Gate.OtherGate.IsValid() && Gate.OtherGate.EventHorizon.IsValid() )
-							{
-								TeleportEntity( other );
-							}
-							else // if the other gate or EH is removed for some reason, dissolve
-							{
-								DissolveEntity( other );
-							}
-						}
-					}
-				}
-			}
-			*/
+		if ( other is Player ) // players should get teleported instantly on EH touch
+		{
+			TeleportLogic( other, () => TeleportEntity( other ) );
 		}
 	}
 
@@ -478,13 +495,11 @@ public partial class EventHorizon : AnimatedEntity
 			}
 		}
 
-		/*
-		if ( other == CurrentTeleportingEntity )
+		if ( other == CurrentTeleportingEntity && other is Player )
 		{
 			CurrentTeleportingEntity = null;
 			Gate.OtherGate.EventHorizon.CurrentTeleportingEntity = null;
 		}
-		*/
 	}
 
 	protected override void OnDestroy()
@@ -498,6 +513,31 @@ public partial class EventHorizon : AnimatedEntity
 	public void EventHorizonTick()
 	{
 		if ( Gate.IsValid() && Scale != Gate.Scale ) Scale = Gate.Scale; // always keep the same scale as gate
+
+		BufferCleanupLogic( BufferFront );
+		BufferCleanupLogic( BufferBack );
+	}
+
+	public void BufferCleanupLogic( IList<Entity> buffer )
+	{
+		if ( buffer.Count > 0 )
+		{
+			for ( var i = buffer.Count - 1; i >= 0; i-- )
+			{
+				if ( buffer.Count > i )
+				{
+					var ent = buffer[i];
+					if ( !ent.IsValid() )
+					{
+						if ( buffer.Count > i )
+						{
+							buffer.RemoveAt( i );
+							//Log.Info("cleaned up item from buffer");
+						}
+					}
+				}
+			}
+		}
 	}
 
 	[ClientRpc]
@@ -507,26 +547,22 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !m.IsValid() )
 			return;
 
+		//Log.Info( $"Setting MC state of {ent} to {enabled}" );
+
 		var obj = m.SceneObject;
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
-
-		if ( enabled )
-		{
-			var alpha = m.RenderColor.a;
-			m.RenderColor = m.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) );
-		}
 	}
 
-	public void UpdateModelClippingForEntity( Entity ent, Plane p )
+	public void UpdateClipPlaneForEntity( Entity ent, Plane p ) // only update plane, not the enabled state
 	{
+		//Log.Info( $"Updating MC plane of {ent} to {p.Normal}" );
 		var m = ent as ModelEntity;
 		if ( !m.IsValid() )
 			return;
 
 		var obj = m.SceneObject;
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
-		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", true ); // <-- thanks @MuffinTastic for this line of code
 	}
 
 	[Event.Frame]
@@ -536,10 +572,10 @@ public partial class EventHorizon : AnimatedEntity
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
 
 		foreach ( var e in BufferFront )
-			UpdateModelClippingForEntity( e, clipPlaneFront );
+			UpdateClipPlaneForEntity( e, clipPlaneFront );
 
 		foreach ( var e in BufferBack )
-			UpdateModelClippingForEntity( e, clipPlaneBack );
+			UpdateClipPlaneForEntity( e, clipPlaneBack );
 	}
 	
 }
