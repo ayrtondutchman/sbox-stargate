@@ -351,8 +351,8 @@ public partial class EventHorizon : AnimatedEntity
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
 
-		var alpha = ent.RenderColor.a;
-		ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
+		//var alpha = ent.RenderColor.a;
+		//ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
 
 		SetModelClippingForEntity( To.Everyone, ent, true, fromBack ? clipPlaneBack : clipPlaneFront );
 	}
@@ -570,6 +570,7 @@ public partial class EventHorizon : AnimatedEntity
 		var obj = m.SceneObject;
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
+		obj.Attributes.Set( "translucent", enabled );
 	}
 
 	public void UpdateClipPlaneForEntity( Entity ent, Plane p ) // only update plane, not the enabled state
