@@ -129,6 +129,7 @@
         "DefaultValue": "true"
       }
     },
-    "ParentPackage": ""
+    "ParentPackage": "",
+    "DefaultLeaderboards": null
   }
 }
