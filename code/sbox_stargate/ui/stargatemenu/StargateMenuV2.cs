@@ -153,7 +153,7 @@ public class StargateMenuV2 : Panel
 	public void CloseMenu()
 	{
 		Blur(); // finally, this makes it lose focus
-		Delete( true );
+		Delete();
 	}
 
 	public override void Tick()
