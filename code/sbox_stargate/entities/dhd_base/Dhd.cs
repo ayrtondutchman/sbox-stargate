@@ -39,7 +39,7 @@ public abstract partial class Dhd : Prop
 	protected bool IsDialLocking = false;
 
 	[Net]
-	public List<int> ButtonSkins { get; set; } = new List<int> { 0, 1 };
+	public IList<int> ButtonSkins { get; set; } = new List<int> { 0, 1 };
 
 	// Button positions for DhdWorldPanel
 	protected virtual Dictionary<string, Vector3> ButtonPositions => new()

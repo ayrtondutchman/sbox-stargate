@@ -42,9 +42,9 @@ public partial class EventHorizon : AnimatedEntity
 	float lastSoundTime = 0f;
 
 	[Net]
-	private List<Entity> BufferFront { get; set; } = new ();
+	private IList<Entity> BufferFront { get; set; } = new ();
 	[Net]
-	private List<Entity> BufferBack { get; set; } = new();
+	private IList<Entity> BufferBack { get; set; } = new();
 
 	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;

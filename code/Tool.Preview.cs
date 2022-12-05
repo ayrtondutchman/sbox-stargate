@@ -5,7 +5,7 @@ namespace Sandbox.Tools
 	public partial class BaseTool
 	{
 		[Net]
-		internal List<PreviewEntity> Previews { get; set; }
+		internal IList<PreviewEntity> Previews { get; set; }
 
 		protected virtual bool IsPreviewTraceValid( TraceResult tr )
 		{
