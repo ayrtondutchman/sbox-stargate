@@ -109,9 +109,7 @@ public partial class PhysGun
 						continue;
 
 					glow = child.Components.GetOrCreate<Glow>();
-					glow.Active = true;
-					glow.RangeMin = 0;
-					glow.RangeMax = 1000;
+					glow.Enabled = true;
 					glow.Color = new Color( 0.1f, 1.0f, 1.0f, 1.0f );
 				}
 			}
