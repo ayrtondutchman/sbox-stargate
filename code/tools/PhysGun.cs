@@ -414,7 +414,10 @@ public partial class PhysGun : Carriable
 		//
 		// Lock view angles
 		//
-		//owner.ViewAngles = owner.OriginalViewAngles;
+		if ( Owner is Player ply )
+		{
+			ply.ViewAngles = ply.OriginalViewAngles;
+		}
 	}
 
 	public override bool IsUsable( Entity user )
