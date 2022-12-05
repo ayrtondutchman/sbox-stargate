@@ -251,7 +251,7 @@ public partial class EventHorizon : AnimatedEntity
 	}
 
 	// TELEPORT
-	public async void TeleportEntity(Entity ent)
+	public void TeleportEntity(Entity ent)
 	{
 		if ( !Gate.IsValid() || !Gate.OtherGate.IsValid() ) return;
 
