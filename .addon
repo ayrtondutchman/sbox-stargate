@@ -120,15 +120,17 @@
       "SoftBodyIterations": 1,
       "SoftBodySubsteps": 1
     },
-    "GameSettings": {
-      "gatespawner_enabled": {
+    "PackageSettings": [
+      {
         "DisplayType": "Boolean",
         "Choices": [],
         "ConVarName": "gatespawner_enabled",
         "DisplayName": "Enable GateSpawner",
-        "DefaultValue": "true"
+        "DefaultValue": "true",
+        "Description": "",
+        "Group": ""
       }
-    },
+    ],
     "ParentPackage": "",
     "DefaultLeaderboards": null,
     "Summary": "Have fun with Stargates in Sandbox",
