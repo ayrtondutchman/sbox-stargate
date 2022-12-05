@@ -279,18 +279,8 @@ public partial class EventHorizon : AnimatedEntity
 		if (ent is SandboxPlayer ply)
 		{
 			TeleportScreenOverlay( To.Single( ply ) );
-
-			var oldController = ply.DevController;
-			using ( Prediction.Off() ) ply.DevController = new EventHorizonController();
-
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
-
-			ply.EyeRotation = Rotation.From( ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) );
-			ply.Rotation = ply.EyeRotation;
-
-			await GameTask.NextPhysicsFrame();
-
-			using ( Prediction.Off() ) ply.DevController = oldController;
+			Input.SetViewAngles( ply.Client, Rotation.From( ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) ) );
 		}
 		else
 		{
