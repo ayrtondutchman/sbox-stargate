@@ -133,6 +133,12 @@ public partial class GateSpawner
 				break;
 		}
 	}
+
+	[Event.Entity.PostSpawn]
+	private static void PostSpawn()
+	{
+		LoadGateSpawner();
+	}
 }
 
 public class GatespawnerModel
