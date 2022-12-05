@@ -27,7 +27,6 @@ public partial class PhysGun
 
 		if ( lastGrabbedEntity.IsValid() )
 		{
-			/*
 			foreach ( var child in lastGrabbedEntity.Children.OfType<ModelEntity>() )
 			{
 				if ( child is Player )
@@ -35,15 +34,14 @@ public partial class PhysGun
 
 				if ( child.Components.TryGet<Glow>( out var childglow ) )
 				{
-					childglow.Active = false;
+					childglow.Enabled = false;
 				}
 			}
 
 			if ( lastGrabbedEntity.Components.TryGet<Glow>( out var glow ) )
 			{
-				glow.Active = false;
+				glow.Enabled = false;
 			}
-			*/
 
 			lastGrabbedEntity = null;
 		}
@@ -101,11 +99,8 @@ public partial class PhysGun
 			{
 				lastGrabbedEntity = modelEnt;
 
-				/*
 				var glow = modelEnt.Components.GetOrCreate<Glow>();
-				glow.Active = true;
-				glow.RangeMin = 0;
-				glow.RangeMax = 1000;
+				glow.Enabled = true;
 				glow.Color = new Color( 0.1f, 1.0f, 1.0f, 1.0f );
 
 				foreach ( var child in lastGrabbedEntity.Children.OfType<ModelEntity>() )
@@ -119,7 +114,6 @@ public partial class PhysGun
 					glow.RangeMax = 1000;
 					glow.Color = new Color( 0.1f, 1.0f, 1.0f, 1.0f );
 				}
-				*/
 			}
 		}
 		else
