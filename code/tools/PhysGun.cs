@@ -404,18 +404,17 @@ public partial class PhysGun : Carriable
 		heldRot = localRot * heldRot;
 	}
 
-	public override void BuildInput( InputBuilder owner )
+	public override void BuildInput()
 	{
-		if ( !GrabbedEntity.IsValid() )
-			return;
-
-		if ( !owner.Down( InputButton.PrimaryAttack ) )
-			return;
-
-		if ( owner.Down( InputButton.Use ) )
+		if ( !Input.Down( InputButton.Use ) || !Input.Down( InputButton.PrimaryAttack ) || !GrabbedEntity.IsValid() )
 		{
-			owner.ViewAngles = owner.OriginalViewAngles;
+			return;
 		}
+
+		//
+		// Lock view angles
+		//
+		//owner.ViewAngles = owner.OriginalViewAngles;
 	}
 
 	public override bool IsUsable( Entity user )
