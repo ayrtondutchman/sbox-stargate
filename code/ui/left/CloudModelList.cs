@@ -33,14 +33,11 @@ public partial class CloudModelList : Panel
 
 	public async Task UpdateItems( int offset = 0 )
 	{
-		var q = new Package.Query();
-		q.Type = Package.Type.Model;
-		q.Order = Package.Order.Newest;
-		q.Take = 200;
-		q.Skip = offset;
-
-		var found = await q.RunAsync( default );
-		Canvas.SetItems( found );
+		var found = await Package.FindAsync("type: model", 200, offset);
+		if (found != null )
+		{
+			Canvas.SetItems( found.Packages );
+		}
 
 		// TODO - auto add more items here
 	}
