@@ -150,7 +150,7 @@ public abstract partial class Stargate : Prop, IUse
 		if ( !this.IsValid() || !EventHorizon.IsValid() ) return;
 
 		EventHorizon.IsFullyFormed = false;
-		EventHorizon.CollapseClientAnim();
+		EventHorizon.Collapse();
 
 		await Task.DelaySeconds( sec + 2f );
 		if ( !this.IsValid() || !EventHorizon.IsValid() ) return;
