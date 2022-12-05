@@ -280,7 +280,7 @@ public partial class EventHorizon : AnimatedEntity
 		{
 			TeleportScreenOverlay( To.Single( ply ) );
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
-			Input.SetViewAngles( ply.Client, Rotation.From( ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) ) );
+			// Input.SetViewAngles( ply.Client, Rotation.From( ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) ) ); // TODO: update this since this got nuked just now
 		}
 		else
 		{

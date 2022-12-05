@@ -143,7 +143,7 @@ public partial class StargatePlatformEntity : KeyframeEntity
 	/// </summary>
 	public float CurrentRotation { get; protected set; } = 0;
 
-	public override void MoveFinished()
+	public void MoveFinished()
 	{
 		LocalVelocity = Vector3.Zero;
 		AngularVelocity = Angles.Zero;
