@@ -31,7 +31,7 @@ public partial class RingRing : KeyframeEntity {
 		RenderColor = RenderColor.WithAlpha( 0 );
 	}
 
-	public override void MoveFinished() {
+	public void MoveFinished() {
 		reachedPos = true;
 
 		if (ShouldRetract) {
@@ -40,7 +40,7 @@ public partial class RingRing : KeyframeEntity {
 		}
 	}
 
-	public override void MoveBlocked( Entity ent ) {
+	public void MoveBlocked( Entity ent ) {
 		var dmg = new DamageInfo();
 		dmg.Attacker = RingParent;
 		dmg.Damage = 200;

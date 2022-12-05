@@ -250,6 +250,12 @@ public partial class EventHorizon : AnimatedEntity
 		return Tuple.Create(newPos, newDir);
 	}
 
+	[ClientRpc]
+	public void SetPlayerViewAngles( Angles ang )
+	{
+		(Local.Pawn as Player).ViewAngles = ang;
+	}
+
 	// TELEPORT
 	public void TeleportEntity(Entity ent)
 	{
@@ -280,7 +286,7 @@ public partial class EventHorizon : AnimatedEntity
 		{
 			TeleportScreenOverlay( To.Single( ply ) );
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
-			Input.SetViewAngles( ply.Client, Rotation.From( ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) ) );
+			SetPlayerViewAngles( To.Single( ply ), ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) );
 		}
 		else
 		{
