@@ -130,6 +130,10 @@
       }
     },
     "ParentPackage": "",
-    "DefaultLeaderboards": null
+    "DefaultLeaderboards": null,
+    "Summary": "Have fun with Stargates in Sandbox",
+    "Description": "Sandbox gamemode with Stargates and other Stargate related stuff.  Work in progress.",
+    "Public": true,
+    "ReplaceTags": "techdemo experiment"
   }
 }
