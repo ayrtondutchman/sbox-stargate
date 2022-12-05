@@ -118,7 +118,7 @@ public class JumperTestCamera : CameraMode
 	{
 		base.BuildInput();
 
-		var pawn = Local.Pawn as Player;
+		var pawn = (Local.Pawn as JumperTest).Driver;
 		if ( pawn == null ) return;
 
 		if ( (Math.Abs( Input.AnalogLook.pitch ) + Math.Abs( Input.AnalogLook.yaw )) > 0.0f )
