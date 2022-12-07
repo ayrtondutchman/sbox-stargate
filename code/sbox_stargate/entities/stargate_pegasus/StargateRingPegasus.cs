@@ -315,7 +315,7 @@ public partial class StargateRingPegasus : ModelEntity
 		}
 	}
 
-	[Event.Frame]
+	[Event.Client.Frame]
 	public void RingSymbolsDebug()
 	{
 		//DrawSymbols();

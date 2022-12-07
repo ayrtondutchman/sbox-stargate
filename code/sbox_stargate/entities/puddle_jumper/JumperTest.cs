@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-[Title( "Test Jumper" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
+[Title( "Test Jumper" ), Category( "Stargate" ), Icon( "chair" )]
 public partial class JumperTest : Prop, IUse
 {
 	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 65 );
@@ -61,7 +61,6 @@ public partial class JumperTest : Prop, IUse
 		SetModel( "models/sbox_stargate/puddle_jumper/puddle_jumper.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 
-		Components.Create<JumperTestCamera>();
 		PhysicsBody.UseController = false;
 	}
 

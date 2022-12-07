@@ -455,7 +455,7 @@ public abstract partial class Stargate : Prop, IUse
 		DhdDialTimerThink();
 	}
 
-	[Event.Frame]
+	[Event.Client.Frame]
 	public void CreateWorldPanels()
 	{
 		if (WorldPanel == null)

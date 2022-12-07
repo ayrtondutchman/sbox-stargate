@@ -125,9 +125,9 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !this.IsValid() || !pawn.IsValid() ) return false;
 
 		var ply = pawn as Player;
-		if ( !ply.IsValid() || ply.CameraMode == null ) return false;
+		if ( !ply.IsValid() ) return false;
 
-		return (ply.CameraMode.Position - Position).Dot( Rotation.Forward ) < 0;
+		return (Camera.Position - Position).Dot( Rotation.Forward ) < 0;
 	}
 
 	// CLIENT ANIM CONTROL
@@ -216,7 +216,7 @@ public partial class EventHorizon : AnimatedEntity
 	}
 
 	// CLIENT LOGIC
-	[Event.Frame]
+	[Event.Client.Frame]
 	public void EventHorizonClientTick()
 	{
 		ClientAnimLogic();
@@ -580,7 +580,7 @@ public partial class EventHorizon : AnimatedEntity
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 	}
 
-	[Event.Frame]
+	[Event.Client.Frame]
 	public void Draw()
 	{
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );

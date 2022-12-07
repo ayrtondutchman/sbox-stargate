@@ -45,7 +45,7 @@ public partial class RingPanelButton : AnimatedEntity, IUse
 		DebugOverlay.Text( Action, pos, Color.White, 0, 86 );
 	}
 
-	[Event.Frame]
+	[Event.Client.Frame]
 	public void Think()
 	{
 		ButtonGlowLogic();

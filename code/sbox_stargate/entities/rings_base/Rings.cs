@@ -412,7 +412,7 @@ public partial class Rings : AnimatedEntity, IUse
 		ChildRings.Clear();
 	}
 
-	//[Event.Frame]
+	//[Event.Client.Frame]
 	public void OnFrame()
 	{
 		DebugOverlay.Text( $"Address: {this.Address}", Position, Color.White );

@@ -27,7 +27,9 @@ public partial class StargateRingsController : Weapon
 		using (Prediction.Off()) {
 			Rings ring;
 
-			var tr = Trace.Ray(Owner.EyePosition, Owner.EyePosition + Owner.EyeRotation.Forward * 500f).Ignore(Owner).Run();
+			var ray = Owner.AimRay;
+
+			var tr = Trace.Ray(ray.Position, ray.Position + ray.Forward * 500f).Ignore(Owner).Run();
 
 			if (tr.Hit && tr.Entity is Rings)
 				ring = tr.Entity as Rings;

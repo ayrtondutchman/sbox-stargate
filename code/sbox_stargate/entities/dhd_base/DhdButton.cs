@@ -43,7 +43,7 @@ public partial class DhdButton : AnimatedEntity, IUse
 		if ( Health <= 0 ) Delete();
 	}
 
-	[Event.Frame]
+	[Event.Client.Frame]
 	public void ButtonGlowLogic()
 	{
 		if (DHD.IsValid())

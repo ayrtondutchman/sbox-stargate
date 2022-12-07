@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-partial class SandboxGame : Game
+partial class SandboxGame : GameManager
 {
 	public SandboxGame()
 	{
@@ -30,7 +30,7 @@ partial class SandboxGame : Game
 	[ConCmd.Server( "spawn" )]
 	public static async Task Spawn( string modelname )
 	{
-		var owner = ConsoleSystem.Caller?.Pawn;
+		var owner = ConsoleSystem.Caller?.Pawn as Player;
 
 		if ( ConsoleSystem.Caller == null )
 			return;
@@ -47,7 +47,7 @@ partial class SandboxGame : Game
 		//
 		if ( modelname.Count( x => x == '.' ) == 1 && !modelname.EndsWith( ".vmdl", System.StringComparison.OrdinalIgnoreCase ) && !modelname.EndsWith( ".vmdl_c", System.StringComparison.OrdinalIgnoreCase ) )
 		{
-			modelname = await SpawnPackageModel( modelname, tr.EndPosition, modelRotation, owner );
+			modelname = await SpawnPackageModel( modelname, tr.EndPosition, modelRotation, owner as Entity);
 			if ( modelname == null )
 				return;
 		}
@@ -196,7 +196,7 @@ partial class SandboxGame : Game
 
 		if ( ent.IsValid() )
 		{
-			caller.Pawn?.PlaySound( "balloon_pop_cute" );
+			(caller.Pawn as Entity)?.PlaySound( "balloon_pop_cute" );
 			ent.Delete();
 		}
 	}

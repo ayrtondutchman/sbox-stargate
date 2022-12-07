@@ -50,7 +50,7 @@ public partial class GateBearing : ModelEntity
 		On = false;
 	}
 
-	[Event.Frame]
+	[Event.Client.Frame]
 	private void GlowLogic()
 	{
 		if ( !Gate.IsValid() )

@@ -327,7 +327,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		//DebugOverlay.Text( CurRingSymbol, Position, Color.White, 0, 512 );
 	}
 
-	//[Event.Frame]
+	//[Event.Client.Frame]
 	public void RingSymbolsDebug()
 	{
 		DrawSymbols();
