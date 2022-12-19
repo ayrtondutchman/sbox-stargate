@@ -1,4 +1,6 @@
-﻿namespace Sandbox.Tools
+﻿using Sandbox.Physics;
+
+namespace Sandbox.Tools
 {
 	[Library( "tool_balloon", Title = "Balloons", Description = "Create Balloons!", Group = "construction" )]
 	public partial class BalloonTool : BaseTool
@@ -12,7 +14,7 @@
 		{
 			base.Activate();
 
-			if ( Host.IsServer )
+			if ( Game.IsServer )
 			{
 				Tint = Color.Random;
 			}
@@ -44,7 +46,7 @@
 				previewModel.RenderColor = Tint;
 			}
 
-			if ( !Host.IsServer )
+			if ( !Game.IsServer )
 				return;
 
 			using ( Prediction.Off() )

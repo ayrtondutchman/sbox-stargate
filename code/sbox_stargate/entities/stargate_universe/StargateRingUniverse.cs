@@ -63,7 +63,7 @@ public partial class StargateRingUniverse : StargateRingMilkyWay
 	{
 		foreach ( var part in SymbolParts )
 		{
-			if ( IsServer && part.IsValid() ) part.Delete();
+			if ( Game.IsServer && part.IsValid() ) part.Delete();
 		}
 
 		base.OnDestroy();

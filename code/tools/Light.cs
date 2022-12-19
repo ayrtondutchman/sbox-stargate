@@ -1,4 +1,6 @@
-﻿namespace Sandbox.Tools
+﻿using Sandbox.Physics;
+
+namespace Sandbox.Tools
 {
 	[Library( "tool_light", Title = "Lights", Description = "A dynamic point light", Group = "construction" )]
 	public partial class LightTool : BaseTool
@@ -30,7 +32,7 @@
 
 		public override void Simulate()
 		{
-			if ( !Host.IsServer )
+			if ( !Game.IsServer )
 				return;
 
 			using ( Prediction.Off() )

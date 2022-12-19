@@ -31,7 +31,7 @@ public partial class RingPanelButton : AnimatedEntity, IUse
 	{
 		base.OnDestroy();
 
-		if ( IsServer ) RingPanel?.Delete();
+		if ( Game.IsServer ) RingPanel?.Delete();
 	}
 
 	public void ButtonGlowLogic()

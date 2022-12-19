@@ -6,14 +6,14 @@ partial class SandboxGame : GameManager
 {
 	public SandboxGame()
 	{
-		if ( IsServer )
+		if ( Game.IsServer )
 		{
 			// Create the HUD
 			_ = new SandboxHud();
 		}
 	}
 
-	public override void ClientJoined( Client cl )
+	public override void ClientJoined( IClient cl )
 	{
 		base.ClientJoined( cl );
 		var player = new SandboxPlayer( cl );
@@ -104,11 +104,11 @@ partial class SandboxGame : GameManager
 		if ( owner == null )
 			return;
 
-		var entityDesc = TypeLibrary.GetDescription( entName );
+		var entityDesc = TypeLibrary.GetType( entName );
 		var entityType = entityDesc.GetType();
 		if ( entityType == null )
 
-			if ( !TypeLibrary.Has<SpawnableAttribute>( entityType ) )
+			if ( !TypeLibrary.HasAttribute<SpawnableAttribute>( entityType ) )
 				return;
 
 		var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 4096 )
@@ -156,27 +156,73 @@ partial class SandboxGame : GameManager
 		//Log.Info( $"ent: {ent}" );
 	}
 
-	public override void DoPlayerNoclip( Client player )
+	[ConCmd.Admin( "noclip" )]
+	static void DoPlayerNoclip()
 	{
-		if ( player.Pawn is Player basePlayer )
+		if ( ConsoleSystem.Caller.Pawn is SandboxPlayer basePlayer )
 		{
 			if ( basePlayer.DevController is NoclipController )
 			{
-				Log.Info( "Noclip Mode Off" );
 				basePlayer.DevController = null;
 			}
 			else
 			{
-				Log.Info( "Noclip Mode On" );
 				basePlayer.DevController = new NoclipController();
 			}
 		}
 	}
 
-	[ConCmd.Admin( "respawn_entities" )]
-	public static void RespawnEntities()
+	[ConCmd.Admin( "kill" )]
+	static void DoPlayerSuicide()
 	{
-		Map.Reset( DefaultCleanupFilter );
+		if ( ConsoleSystem.Caller.Pawn is SandboxPlayer basePlayer )
+		{
+			basePlayer.TakeDamage( new DamageInfo { Damage = basePlayer.Health * 99 } );
+		}
+	}
+
+	[ClientRpc]
+	internal static void RespawnEntitiesClient()
+	{
+		Sandbox.Game.ResetMap( Entity.All.Where( x => !DefaultCleanupFilter( x ) ).ToArray() );
+	}
+
+	[ConCmd.Admin( "respawn_entities" )]
+	static void RespawnEntities()
+	{
+		Sandbox.Game.ResetMap( Entity.All.Where( x => !DefaultCleanupFilter( x ) ).ToArray() );
+		RespawnEntitiesClient();
+	}
+
+	static bool DefaultCleanupFilter( Entity ent )
+	{
+		// Basic Source engine stuff
+		var className = ent.ClassName;
+		if ( className == "player" || className == "worldent" || className == "worldspawn" || className == "soundent" || className == "player_manager" )
+		{
+			return false;
+		}
+
+		// When creating entities we only have classNames to work with..
+		// The filtered entities below are created through code at runtime, so we don't want to be deleting them
+		if ( ent == null || !ent.IsValid ) return true;
+
+		// Gamemode entity
+		if ( ent is BaseGameManager ) return false;
+
+		// HUD entities
+		if ( ent.GetType().IsBasedOnGenericType( typeof( HudEntity<> ) ) ) return false;
+
+		// Player related stuff, clothing and weapons
+		foreach ( var cl in Game.Clients )
+		{
+			if ( ent.Root == cl.Pawn ) return false;
+		}
+
+		// Do not delete view model
+		if ( ent is BaseViewModel ) return false;
+
+		return true;
 	}
 
 	[ClientRpc]
@@ -188,7 +234,7 @@ partial class SandboxGame : GameManager
 	[ConCmd.Server( "undo" )]
 	public static void OnUndoCommand()
 	{
-		Client caller = ConsoleSystem.Caller;
+		IClient caller = ConsoleSystem.Caller;
 
 		if ( !caller.IsValid() ) return;
 

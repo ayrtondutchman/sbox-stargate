@@ -1,4 +1,5 @@
 using Sandbox;
+using Sandbox.Physics;
 using System;
 using System.Linq;
 
@@ -44,7 +45,7 @@ public partial class PhysGun : Carriable
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 	}
 
-	public override void Simulate( Client client )
+	public override void Simulate( IClient client )
 	{
 		if ( Owner is not Player owner ) return;
 
@@ -70,7 +71,7 @@ public partial class PhysGun : Carriable
 
 		BeamActive = grabEnabled;
 
-		if ( IsServer )
+		if ( Game.IsServer )
 		{
 			using ( Prediction.Off() )
 			{
@@ -238,12 +239,12 @@ public partial class PhysGun : Carriable
 
 	private void Activate()
 	{
-		if ( !IsServer )
+		if ( !Game.IsServer )
 			return;
 
 		if ( !holdBody.IsValid() )
 		{
-			holdBody = new PhysicsBody( Map.Physics )
+			holdBody = new PhysicsBody( Game.PhysicsWorld )
 			{
 				BodyType = PhysicsBodyType.Keyframed
 			};
@@ -251,7 +252,7 @@ public partial class PhysGun : Carriable
 
 		if ( !velBody.IsValid() )
 		{
-			velBody = new PhysicsBody( Map.Physics )
+			velBody = new PhysicsBody( Game.PhysicsWorld )
 			{
 				BodyType = PhysicsBodyType.Dynamic,
 				AutoSleep = false
@@ -261,7 +262,7 @@ public partial class PhysGun : Carriable
 
 	private void Deactivate()
 	{
-		if ( IsServer )
+		if ( Game.IsServer )
 		{
 			GrabEnd();
 

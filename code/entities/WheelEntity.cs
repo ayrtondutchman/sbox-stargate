@@ -1,9 +1,10 @@
 ﻿using Sandbox;
+using Sandbox.Physics;
 
 [Library( "ent_wheel" )]
 public partial class WheelEntity : Prop
 {
-	public HingeJoint Joint;
+	public PhysicsJoint Joint;
 
 	protected override void OnDestroy()
 	{

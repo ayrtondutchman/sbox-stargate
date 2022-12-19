@@ -201,11 +201,11 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		RotateRingToSymbol( sym, angOffset );
 		CurDialingSymbol = sym;
 
-		await Task.DelaySeconds( Global.TickInterval ); // wait, otherwise it hasnt started moving yet and can cause issues
+		await Task.DelaySeconds( Game.TickInterval ); // wait, otherwise it hasnt started moving yet and can cause issues
 
 		while (IsMoving)
 		{
-			await Task.DelaySeconds( Global.TickInterval ); // wait here, too, otherwise game hangs :)
+			await Task.DelaySeconds( Game.TickInterval ); // wait here, too, otherwise game hangs :)
 			if ( !this.IsValid() ) return false;
 
 			if ( Gate.ShouldStopDialing )

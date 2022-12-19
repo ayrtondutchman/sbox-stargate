@@ -1,4 +1,6 @@
-﻿namespace Sandbox.Tools
+﻿using Sandbox.Physics;
+
+namespace Sandbox.Tools
 {
 	[Library( "tool_wheel", Title = "Wheel", Description = "A wheel that you can turn on and off (but actually can't yet)", Group = "construction" )]
 	public partial class WheelTool : BaseTool
@@ -26,7 +28,7 @@
 
 		public override void Simulate()
 		{
-			if ( !Host.IsServer )
+			if ( !Game.IsServer )
 				return;
 
 			using ( Prediction.Off() )

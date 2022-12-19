@@ -13,7 +13,7 @@ public partial class GateSpawner
 
 	public static void CreateGateSpawner()
 	{
-		var fileName = Global.MapName;
+		var fileName = Game.Server.MapIdent;
 
 		if ( !FileSystem.Data.DirectoryExists( "data/gatespawner/" ) )
 			FileSystem.Data.CreateDirectory( "data/gatespawner/" );
@@ -56,9 +56,9 @@ public partial class GateSpawner
 
 		await Task.Delay( 1000 );
 
-		//GetGatespawnerFileByName( Global.MapName );
+		//GetGatespawnerFileByName( Game.Server.MapIdent );
 
-		var filepath = $"{Global.MapName}.json";
+		var filepath = $"{Game.Server.MapIdent}.json";
 
 		bool isData = FileSystem.Data.FileExists( $"data/gatespawner/{filepath}" );
 		bool isRoot = !isData && FileSystem.Mounted.FileExists( $"code/sbox_stargate/gatespawner/maps/{filepath}" );

@@ -66,7 +66,7 @@ namespace Sandbox.Tools
 
 		public override void Simulate()
 		{
-			if ( !Host.IsServer )
+			if ( !Game.IsServer )
 				return;
 
 			using ( Prediction.Off() )
@@ -102,7 +102,7 @@ namespace Sandbox.Tools
 						return;
 					}
 
-					var gateType = TypeLibrary.GetDescription<Entity>( GateTypes[CurGateType] )?.TargetType;
+					var gateType = TypeLibrary.GetType<Entity>( GateTypes[CurGateType] )?.TargetType;
 					if ( gateType == null ) return;
 
 					var gate = TypeLibrary.Create<Entity>( gateType ) as Stargate;

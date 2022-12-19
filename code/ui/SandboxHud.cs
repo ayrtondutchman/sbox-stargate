@@ -6,7 +6,7 @@ public partial class SandboxHud : HudEntity<RootPanel>
 {
 	public SandboxHud()
 	{
-		if ( !IsClient )
+		if ( !Game.IsClient )
 			return;
 
 		PopulateHud();
@@ -31,7 +31,7 @@ public partial class SandboxHud : HudEntity<RootPanel>
 	[Event.Hotload]
 	private void OnReloaded()
 	{
-		if ( !IsClient )
+		if ( !Game.IsClient )
 			return;
 
 		RootPanel.DeleteChildren();

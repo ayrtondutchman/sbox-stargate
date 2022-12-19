@@ -80,19 +80,19 @@ public partial class Stargate : Prop, IUse
 
 	public void AddTask(float time, Action task, TimedTaskCategory category)
 	{
-		if ( !IsServer ) return;
+		if ( !Game.IsServer ) return;
 		StargateActions.Add( new TimedTask(time, task, category) );
 	}
 
 	public void ClearTasks()
 	{
-		if ( !IsServer ) return;
+		if ( !Game.IsServer ) return;
 		StargateActions.Clear();
 	}
 
 	public void ClearTasksByCategory(TimedTaskCategory category)
 	{
-		if ( !IsServer ) return;
+		if ( !Game.IsServer ) return;
 		var rem = StargateActions.RemoveAll( task => task.TaskCategory == category );
 	}
 

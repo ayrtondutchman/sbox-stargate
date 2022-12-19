@@ -67,7 +67,7 @@ public partial class JumperTest : Prop, IUse
 	[Event.Physics.PreStep]
 	public void PhysicsSimulate()
 	{
-		if ( !IsServer )
+		if ( !Game.IsServer )
 			return;
 
 		var phys = PhysicsBody;
@@ -128,16 +128,16 @@ public partial class JumperTest : Prop, IUse
 
 	}
 
-	public override void Simulate( Client client )
+	public override void Simulate( IClient client )
 	{
 		SimulateDriver( client );
 	}
 
-	void SimulateDriver( Client client )
+	void SimulateDriver( IClient client )
 	{
 		if ( !Driver.IsValid() ) return;
 
-		if ( IsServer )
+		if ( Game.IsServer )
 		{
 			if ( Input.Pressed( InputButton.Use ) )
 			{
@@ -158,7 +158,7 @@ public partial class JumperTest : Prop, IUse
 		}
 	}
 
-	public override void FrameSimulate( Client client )
+	public override void FrameSimulate( IClient client )
 	{
 		base.FrameSimulate( client );
 

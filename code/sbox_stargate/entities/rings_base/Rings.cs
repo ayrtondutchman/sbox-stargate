@@ -126,7 +126,7 @@ public partial class Rings : AnimatedEntity, IUse
 	//[ConCmd.Server]
 	public void DialClosest()
 	{
-		if ( IsClient ) return;
+		if ( Game.IsClient ) return;
 		Rings ring = GetClosestRing();
 		if ( ring.IsValid() ) DialRing( ring );
 	}
@@ -134,7 +134,7 @@ public partial class Rings : AnimatedEntity, IUse
 	//[ConCmd.Server]
 	public void DialAddress( string address )
 	{
-		if ( IsClient ) return;
+		if ( Game.IsClient ) return;
 		var other = Entity.All.OfType<Rings>().Where( x => x.Address == address ).FirstOrDefault();
 		if ( other.IsValid() ) DialRing( other );
 	}
@@ -142,7 +142,7 @@ public partial class Rings : AnimatedEntity, IUse
 	//[ConCmd.Server]
 	public void DialRing( Rings ring )
 	{
-		if ( IsClient ) return;
+		if ( Game.IsClient ) return;
 		if ( Busy ) return;
 		if ( ring == this ) return;
 
@@ -352,9 +352,9 @@ public partial class Rings : AnimatedEntity, IUse
 		var particle2 = DestinationRings.PlayTeleportEffect();
 
 		var worldEndPos = Transform.PointToWorld( EndPos );
-		var tempBody = new PhysicsBody( Map.Physics );
+		var tempBody = new PhysicsBody( Game.PhysicsWorld );
 		tempBody.Position = worldEndPos;
-		var tempBody2 = new PhysicsBody( Map.Physics );
+		var tempBody2 = new PhysicsBody( Game.PhysicsWorld );
 		tempBody2.Position = DestinationRings.Transform.PointToWorld( DestinationRings.EndPos );
 		foreach ( Entity e in toDest )
 		{

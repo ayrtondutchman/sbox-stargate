@@ -181,7 +181,7 @@ public partial class StargateMilkyWay : Stargate
 		if ( Dialing )
 		{
 			ShouldStopDialing = true;
-			await Task.DelaySeconds( Global.TickInterval * 4 ); // give the ring logic a chance to catch up
+			await Task.DelaySeconds( Game.TickInterval * 4 ); // give the ring logic a chance to catch up
 		}
 
 		base.DoStargateReset();

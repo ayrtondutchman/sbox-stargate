@@ -43,7 +43,7 @@ public class StargateWorldPanel : WorldPanel
 
 		UpdateGateInfo();
 
-		var player = Local.Pawn;
+		var player = Game.LocalPawn;
 		if ( player == null ) return;
 
 		//player.Position.DistanceSquared(Gate.Position))

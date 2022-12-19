@@ -135,8 +135,8 @@ public partial class EventHorizon : AnimatedEntity
 	[ClientRpc]
 	public void TeleportScreenOverlay()
 	{
-		var hud = Local.Hud;
-		hud?.AddChild<EventHorizonScreenOverlay>();
+		//var hud = Game.LocalPawn;
+		//hud?.AddChild<EventHorizonScreenOverlay>();
 	}
 
 	[ClientRpc]
@@ -211,7 +211,7 @@ public partial class EventHorizon : AnimatedEntity
 	public void ClientAlphaRenderLogic()
 	{
 		// draw the EH at 0.6 alpha when looking at it from behind
-		var pawn = Local.Pawn;
+		var pawn = Game.LocalPawn;
 		if ( pawn.IsValid() ) RenderColor = RenderColor.WithAlpha(IsPawnBehindEventHorizon(pawn) ? 0.6f : 1f);
 	}
 
@@ -253,7 +253,7 @@ public partial class EventHorizon : AnimatedEntity
 	[ClientRpc]
 	public void SetPlayerViewAngles( Angles ang )
 	{
-		(Local.Pawn as Player).ViewAngles = ang;
+		(Game.LocalPawn as Player).ViewAngles = ang;
 	}
 
 	// TELEPORT
@@ -449,7 +449,7 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.StartTouch( other );
 
-		if ( !IsServer )
+		if ( !Game.IsServer )
 			return;
 
 		if ( other is StargateIris )
@@ -482,7 +482,7 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !other.IsValid() )
 			return;
 
-		if ( !IsServer )
+		if ( !Game.IsServer )
 			return;
 
 		if (BufferFront.Contains(other)) // entered from front

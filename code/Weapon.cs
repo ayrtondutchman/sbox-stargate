@@ -52,7 +52,7 @@ public partial class Weapon : BaseWeapon, IUse
 		StartReloadEffects();
 	}
 
-	public override void Simulate( Client owner )
+	public override void Simulate( IClient owner )
 	{
 		if ( TimeSinceDeployed < 0.6f )
 			return;
@@ -83,7 +83,7 @@ public partial class Weapon : BaseWeapon, IUse
 
 	public override void CreateViewModel()
 	{
-		Host.AssertClient();
+		Game.AssertClient();
 
 		if ( string.IsNullOrEmpty( ViewModelPath ) )
 			return;
@@ -132,7 +132,7 @@ public partial class Weapon : BaseWeapon, IUse
 	[ClientRpc]
 	protected virtual void ShootEffects()
 	{
-		Host.AssertClient();
+		Game.AssertClient();
 
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 
@@ -228,7 +228,7 @@ public partial class Weapon : BaseWeapon, IUse
 				var newPos = newCoords.Item1;
 				var newDir = newCoords.Item2;
 
-				//if ( IsClient )
+				//if ( Game.IsClient )
 				//{
 				//	DebugOverlay.Line( tr.StartPosition, tr.EndPosition, 4 );
 				//	DebugOverlay.Line( newPos + newDir * 2, newPos + newDir * 5000, 4 );
@@ -244,7 +244,7 @@ public partial class Weapon : BaseWeapon, IUse
 
 			tr.Surface.DoBulletImpact( tr );
 
-			if ( !IsServer ) continue;
+			if ( !Game.IsServer ) continue;
 			if ( !tr.Entity.IsValid() ) continue;
 
 			//
@@ -267,7 +267,7 @@ public partial class Weapon : BaseWeapon, IUse
 	/// </summary>
 	public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
 	{
-		Rand.SetSeed( Time.Tick );
+		Game.SetRandomSeed( Time.Tick );
 
 		var ray = Owner.AimRay;
 		ShootBullet( ray.Position, ray.Forward, spread, force, damage, bulletSize );

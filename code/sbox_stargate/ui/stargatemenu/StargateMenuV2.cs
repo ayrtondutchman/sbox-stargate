@@ -169,12 +169,12 @@ public class StargateMenuV2 : Panel
 
 		if ( !DHD.IsValid() )
 		{
-			var dist = Local.Pawn.Position.Distance( Gate.Position );
+			var dist = Game.LocalPawn.Position.Distance( Gate.Position );
 			if ( dist > 220 * Gate.Scale ) CloseMenu();
 		}
 		else
 		{
-			var dist = Local.Pawn.Position.Distance( DHD.Position );
+			var dist = Game.LocalPawn.Position.Distance( DHD.Position );
 			if ( dist > 80 * DHD.Scale ) CloseMenu();
 		}
 

@@ -179,7 +179,7 @@ public abstract partial class Stargate : Prop, IUse
 	{
 		if ( Ramp != null ) Ramp.Gate.Remove( this );
 
-		if ( IsServer && OtherGate.IsValid() )
+		if ( Game.IsServer && OtherGate.IsValid() )
 		{
 			if (OtherGate.Inbound && !OtherGate.Dialing) OtherGate.StopDialing();
 			if ( OtherGate.Open ) OtherGate.DoStargateClose();
@@ -469,7 +469,7 @@ public abstract partial class Stargate : Prop, IUse
 	[ClientRpc]
 	public void OpenStargateMenu(Dhd dhd = null)
 	{
-		var hud = Local.Hud;
+		var hud = Game.RootPanel;
 		var count = 0;
 		foreach ( StargateMenuV2 menu in hud.ChildrenOfType<StargateMenuV2>() ) count++;
 
