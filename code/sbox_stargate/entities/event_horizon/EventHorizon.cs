@@ -135,8 +135,8 @@ public partial class EventHorizon : AnimatedEntity
 	[ClientRpc]
 	public void TeleportScreenOverlay()
 	{
-		//var hud = Game.LocalPawn;
-		//hud?.AddChild<EventHorizonScreenOverlay>();
+		var hud = Game.RootPanel;
+		hud?.AddChild<EventHorizonScreenOverlay>();
 	}
 
 	[ClientRpc]
