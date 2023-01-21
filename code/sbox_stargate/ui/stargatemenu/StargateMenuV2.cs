@@ -233,7 +233,7 @@ public class StargateMenuV2 : Panel
 		Table table = GetTable();
 		if (table is null)
 		{
-			Log.Warning("Failed to create Table element for the UI. No idea why the fuck this works locally but not from the cloud.");
+			Log.Error("Sorry, but failed to create Table element for the UI. No idea why the fuck this works locally but not from the cloud.");
 			return;
 		}
 		// table.Rows.DeleteChildren(true);
