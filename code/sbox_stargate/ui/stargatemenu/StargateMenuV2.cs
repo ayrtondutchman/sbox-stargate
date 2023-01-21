@@ -183,7 +183,7 @@ public class StargateMenuV2 : Panel
 	public void SetGate( Stargate gate )
 	{
 		this.Gate = gate;
-		FillGates();
+		//FillGates();
 		RefreshGateInformation();
 	}
 
@@ -231,6 +231,11 @@ public class StargateMenuV2 : Panel
 	public void FillGates()
 	{
 		Table table = GetTable();
+		if (table is null)
+		{
+			Log.Warning("Failed to create Table element for the UI. No idea why the fuck this works locally but not from the cloud.");
+			return;
+		}
 		// table.Rows.DeleteChildren(true);
 		table.Rows.Clear();
 		table.Rows.Layout.Columns = 1;
