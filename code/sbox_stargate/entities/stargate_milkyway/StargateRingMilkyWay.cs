@@ -11,9 +11,8 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 
 	[Net]
 	public Stargate Gate { get; set; } = null;
-
-	public string RingSymbols { get; set; } = "?0JKNTR3MBZX*H69IGPL#@QFS1E4AU85OCW72YVD";
-
+	[Net]
+	public string RingSymbols { get; set; } = "#0JKNTR3MBZX*H69IGPL @QFS1E4AU85OCW72YVD";
 	[Net]
 	public float RingAngle { get; private set; } = 0.0f;
 	[Net]
@@ -83,7 +82,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	public virtual float GetSymbolAngle( char sym ) // gets the symbols angle on the ring
 	{
 		sym = sym.ToString().ToUpper()[0];
-		return GetSymbolPosition( sym ) * (360 / RingSymbols.Length);
+		return GetSymbolPosition( sym ) * (360f / RingSymbols.Length);
 	}
 
 	// sounds
@@ -164,7 +163,8 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	// helper calcs
 	public virtual float GetDesiredRingAngleForSymbol( char sym, int angOffset = 0 )
 	{
-		if ( sym is '#' && (Gate.IsValid() && Gate.EarthPointOfOrigin) ) sym = '?';
+		//if ( sym is '#' && (Gate.IsValid() && Gate.EarthPointOfOrigin) ) sym = '?';
+		// eliminate custom points of origin for now, use just Giza, we will only have one (probably will have Abydos/Beta switchable on the gate model tho)
 
 		// get the symbol's position on the ring
 		var symPos = GetSymbolPosition( sym );
@@ -317,10 +317,10 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 			var rotAng = ang.WithRoll( ang.roll - (i * deg) );
 			var newRot = rotAng.ToRotation();
 			var pos = Position + newRot.Forward * 4 + newRot.Up * 117.5f;
-			if ( sym == CurDialingSymbol )
-			{
+			//if ( sym == CurDialingSymbol )
+			//{
 				DebugOverlay.Text( sym.ToString(), pos, sym == CurDialingSymbol ? Color.Green : Color.Yellow );
-			}
+			//}
 			i++;
 		}
 

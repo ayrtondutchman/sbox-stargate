@@ -24,7 +24,6 @@ public partial class StargateMovie : StargateMilkyWay
 		};
 
 		GateGlyphType = GlyphType.MILKYWAY;
-		EarthPointOfOrigin = true;
 
 		MovieDialingType = true;
 		ChevronLightup = false;

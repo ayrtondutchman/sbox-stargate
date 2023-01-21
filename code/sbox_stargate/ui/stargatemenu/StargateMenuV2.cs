@@ -245,7 +245,8 @@ public class StargateMenuV2 : Panel
 
 			var address = GetOtherGateAddressForMenu( Gate, gate );
 			var glyphAddress = address;
-			if ( Gate.GateGlyphType == GlyphType.MILKYWAY && Gate.EarthPointOfOrigin ) glyphAddress = glyphAddress.Replace( '#', '?' );
+			//if ( Gate.GateGlyphType == GlyphType.MILKYWAY && Gate.EarthPointOfOrigin ) glyphAddress = glyphAddress.Replace( '#', '?' ); // custom POO removed for now
+			if ( Gate.GateGlyphType == GlyphType.MILKYWAY ) glyphAddress = glyphAddress.Replace( '#', '?' );
 
 			var td = panel.Add.Panel( $"td {GetGlyphsFontForGate( Gate )}" );
 			td.AddChild<Label>().Text = glyphAddress;

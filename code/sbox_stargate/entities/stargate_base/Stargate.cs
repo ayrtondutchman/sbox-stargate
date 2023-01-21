@@ -45,7 +45,6 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public bool GatePrivate { get; set; } = false;
 	[Net] public bool GateLocal { get; set; } = false;
 	[Net] public GlyphType GateGlyphType { get; protected set; } = GlyphType.MILKYWAY;
-	[Net] public bool EarthPointOfOrigin { get; protected set; } = false;
 
 	[Net] public bool Busy { get; set; } = false; // this is pretty much used anytime the gate is busy to do anything (usually during animations/transitions)
 	[Net] public bool Inbound { get; set; } = false;

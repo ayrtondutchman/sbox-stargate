@@ -7,7 +7,10 @@ using Sandbox;
 
 public partial class Chevron : AnimatedEntity
 {
-	public bool On = false;
+	[Net]
+	public bool On { get; private set; } = false;
+	private float selfillumscale = 0;
+
 	public bool Open = false;
 	public bool UsesDynamicLight = true;
 
@@ -120,4 +123,11 @@ public partial class Chevron : AnimatedEntity
 		if ( Light.IsValid() ) Light.Enabled = UsesDynamicLight && On;
 	}
 
+	[Event.Client.Frame]
+	public void LightLogic()
+	{
+		selfillumscale = selfillumscale.Approach( On ? 1 : 0, Time.Delta * 5 );
+		SceneObject.Attributes.Set( "selfillumscale", selfillumscale );
+		SceneObject.Batchable = false;
+	}
 }
