@@ -21,12 +21,13 @@ public partial class TableHead : Panel {
 		AddChild(col);
 	}
 
-	public override bool OnTemplateElement( INode element )
-	{
-		var columnsNames = element.InnerHtml.Split(',');
-		foreach (string col in columnsNames)
-			AddColumn(col);
-		return true;
-	}
+	//public override bool OnTemplateElement( INode element )
+	//{
+	//	Log.Info( element );
+	//	var columnsNames = element.InnerHtml.Split(',');
+	//	foreach (string col in columnsNames)
+	//		AddColumn(col);
+	//	return true;
+	//}
 
 }
