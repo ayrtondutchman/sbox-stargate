@@ -2,6 +2,7 @@ using Sandbox;
 using Sandbox.Html;
 using Sandbox.UI;
 using Sandbox.UI.Tests;
+using System.Linq;
 
 public partial class Table : Panel {
 
@@ -28,15 +29,16 @@ public partial class Table : Panel {
 		Log.Info(content);
 	}
 
-	public override bool OnTemplateElement( INode element )
-	{
-		foreach (INode child in element.Children) {
-			if (child.Name == "tablehead") {
-				Head.OnTemplateElement(child);
-				AddChild(Head);
-			}
-		}
-		return true;
-	}
+	//public override bool OnTemplateElement( INode element )
+	//{
+	//	foreach (INode child in element.Children) {
+	//		if (child.Name == "tablehead") {
+	//			Head.OnTemplateElement(child);
+	//			AddChild(Head);
+	//		}
+	//	}
+	//	return true;
+	//}
+
 
 }
