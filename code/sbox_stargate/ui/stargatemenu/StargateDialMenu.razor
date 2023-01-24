@@ -125,8 +125,10 @@
     icon {
         color: white;
         font-family: MaterialIcons;
-        font-size: 16px;
+        font-size: 20px;
+        display: flex;
         align-items: center;
+        justify-content: center;
 
         &.red {
             color: darkred;
@@ -159,7 +161,7 @@
 
     .options {
         height: 100%;
-        width: 30%;
+        width: 25%;
         margin-right: 2.5%;
         display: flex;
         flex-direction: column;
@@ -174,7 +176,7 @@
 
     .dialing {
         height: 100%;
-        width: 67.5%;
+        width: auto;
         display: flex;
         flex-direction: column;
         padding: 5px;
@@ -278,36 +280,39 @@
 </style>
 
 <root>
-    <div class="options">
-        <text class="panel-title">Gate Settings</text>
+    @if (!DHD.IsValid())
+    {
+        <div class="options">
+            <text class="panel-title">Gate Settings</text>
 
-        <div class="input inline">
-            <label class="input-label">Address:</label>
-            <TextEntry Value:bind=@GateAddress style="text-transform: uppercase;"></TextEntry>
-        </div>
+            <div class="input inline">
+                <label class="input-label">Address:</label>
+                <TextEntry Value:bind=@GateAddress style="text-transform: uppercase;"></TextEntry>
+            </div>
 
-        <div class="input inline">
-            <label class="input-label">Group:</label>
-            <TextEntry Value:bind=@GateGroup style="text-transform: uppercase;"></TextEntry>
-        </div>
+            <div class="input inline">
+                <label class="input-label">Group:</label>
+                <TextEntry Value:bind=@GateGroup style="text-transform: uppercase;"></TextEntry>
+            </div>
 
-        <div class="input inline">
-            <label class="input-label">Name:</label>
-            <TextEntry Value:bind=@GateName></TextEntry>
-        </div>
+            <div class="input inline">
+                <label class="input-label">Name:</label>
+                <TextEntry Value:bind=@GateName></TextEntry>
+            </div>
 
-        <div class="input inline">
-            <Checkbox Value:bind=@IsPrivate>Private</Checkbox>
-        </div>
+            <div class="input inline">
+                <Checkbox Value:bind=@IsPrivate>Private</Checkbox>
+            </div>
 
-        <div class="input inline">
-            <Checkbox Value:bind=@IsLocal>Local</Checkbox>
-        </div>
+            <div class="input inline">
+                <Checkbox Value:bind=@IsLocal>Local</Checkbox>
+            </div>
 
-        <div class="input inline">
-            <Checkbox Value:bind=@AutoClose>Auto Close</Checkbox>
-        </div>
-    </div>
+            <div class="input inline">
+                <Checkbox Value:bind=@AutoClose>Auto Close</Checkbox>
+            </div>
+        </div>  
+    }
 
     <div class="dialing">
         <text class="panel-title">Dialing</text>
