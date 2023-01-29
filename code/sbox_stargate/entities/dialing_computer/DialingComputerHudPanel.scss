@@ -1,0 +1,13 @@
+﻿DialingComputerHudPanel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(black, 1);
+    align-items: center;
+    justify-content: center;
+
+    .programscreen {
+        height: 153%;
+        aspect-ratio: 1;
+    }
+}

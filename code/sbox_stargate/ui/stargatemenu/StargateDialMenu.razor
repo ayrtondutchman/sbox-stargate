@@ -484,13 +484,11 @@
     public void OpenGate()
     {
         Stargate.RequestDial(FastDial ? DialType.FAST : DialType.SLOW, DialAddress, Gate.NetworkIdent);
-        Log.Info("req dial");
     }
 
     public void CloseGate()
     {
         Stargate.RequestClose(Gate.NetworkIdent);
-        Log.Info("req close");
     }
 
     [Event("stargate.refreshgateinformation")]

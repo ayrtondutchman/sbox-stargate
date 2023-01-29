@@ -1,0 +1,517 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using System.Threading.Tasks;
+@using System.Text;
+
+<style>
+
+	.canvas {
+		background-color: transparent;
+		width: 100%;
+		height: 100%;
+		opacity: 1;
+		z-index: 1;
+	}
+
+	.black_bg {
+		background-color: black;
+		width: 100%;
+		height: 65%;
+		margin: auto;
+		z-index: 2;
+	}
+
+	.base {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image-tint: @col_sg_blue;
+		z-index: 3;
+	}
+
+	.chevron_arcs {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image-tint: @col_sg_yellow;
+		z-index: 4;
+	}
+
+	.ring {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		bottom: 5%;
+		background-image-tint: @col_sg_yellow;
+		z-index: 5;
+	}
+
+	.chevron {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		bottom: 5%;
+		background-image-tint: @col_sg_yellow;
+		z-index: 6;
+
+		&.active {
+			background-image-tint: red;
+		}
+	}
+
+	@@keyframes glyph_appear {
+		0%   {transform: scale(0); transform-origin: 50% 0%; opacity: 0.1;}
+		100% {transform: scale(1); opacity: 1;}
+	}
+	
+	.glyph_encode_frame {
+		position: absolute;
+		border-width: 0.5%;
+		border-color: white;
+		background-color: transparent;
+		justify-content: center;
+		z-index: 11;
+
+		<!--Transition params-->
+		transition: top 0.6s, left 0.6s, width 0.6s, height 0.6s;
+
+		<!--Default pos, hidden-->
+		top: 24.5%;
+		left: 50%;
+		width: 0%;
+		height: 0%;
+		opacity: 0;
+
+		<!--Centered pos, appeared-->
+		&.appear_t {
+			top: 20.6%;
+			left: 19.45%;
+			width: 61.1%;
+			height: 48.95%;
+			opacity: 1;
+		}
+
+		&.move_1_t {
+			top: 20.6%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_2_t {
+			top: 28.82%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_3_t {
+			top: 37.05%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_4_t {
+			top: 45.3%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_5_t {
+			top: 53.55%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_6_t {
+			top: 61.8%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_7_t {
+			top: 70.05%;
+			left: 84.8%;
+			width: 12.2%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.appear {
+			opacity: 1;
+			animation-name: glyph_appear;
+			animation-duration: 0.6s;
+			animation-iteration-count: 1;
+			animation-fill-mode: forwards;
+		}
+	}
+
+	<!--
+	.glyph_encode_glyph {
+		color: white;
+		margin-right: 93.5%;
+		margin-top: auto;
+		margin-bottom: auto;
+		font-family: 'Stargate Address Glyphs U';
+	}
+	-->
+
+	.glyph_encode_glyph_image {
+		background-image-tint: white;
+		height: 100%;
+		aspect-ratio: 1;
+		z-index: 12;
+
+		&.none {
+			background-image-tint: transparent;
+		}
+	}
+
+	.address_boxes_base {
+		position: absolute;
+		display: flex;
+		width: 11.1%;
+		height: 56.5%;
+		top: 19.2%;
+		right: 1.7%;
+		margin-right: 1.3%;
+		margin-top: 1.3%;
+		flex-direction: column;
+		z-index: 7;
+	}
+
+	@@keyframes boxes_blink_complete {
+		0% {background-color: rgba(skyblue, 0);}
+		50% {background-color: rgba(skyblue, 1);}
+		100% {background-color: rgba(skyblue, 0);}
+	}
+
+	.address_box {
+		justify-content: center;
+		padding: 1%;
+		border-color: transparent;
+		border-width: 2.6%;
+		border-radius: 1.5%;
+		margin-top: 1.5%;
+		margin-bottom: 1.5%;
+		margin-left: 1%;
+		margin-right: 1%;
+		background-color: transparent;
+		z-index: 8;
+
+		&.first {
+			margin-top: 0.2%;
+		}
+
+		&.last {
+			margin-bottom: 0.2%;
+		}
+
+		&.complete {
+			animation-name: boxes_blink_complete;
+			animation-duration: 0.5s;
+			animation-iteration-count: 2;
+		}
+	}
+
+	.address_box_glyph_image {
+		background-image-tint: white;
+		height: 100%;
+		aspect-ratio: 1;
+		z-index: 9;
+
+		&.none {
+			background-image-tint: transparent;
+		}
+	}
+
+	@@keyframes blinking {
+		0% {opacity: 0;}
+		50% {opacity: 1;}
+		100% {opacity: 0;}
+	}
+
+	.status {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		z-index: 10;
+		background-image-tint: @col_sg_blue;
+
+		animation-name: blinking;
+		animation-duration: 1.5s;
+		animation-iteration-count: infinite;
+
+		&.locked {
+			background-image-tint: red;
+		}
+	}
+
+	.offworld {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image-tint: red;
+		z-index: 13;
+
+		animation-name: blinking;
+		animation-duration: 1.5s;
+		animation-iteration-count: infinite;
+	}
+
+</style>
+
+<root>
+
+	<div class="canvas">
+		<div class="black_bg"></div>
+
+		<div class="address_boxes_base">
+			@for (int i = 0; i < 7; i++)
+			{
+				var firstOrLast = "";
+				if (i == 0)
+					firstOrLast = "first";
+				if (i == 6)
+					firstOrLast = "last";
+				var complete = SequenceComplete ? "complete" : "";
+				var boxclass = $"address_box {firstOrLast} {complete}";
+
+				var sym = GetAddressSymbol(i);
+				var imgclass = "address_box_glyph_image";
+				if (sym == ' ')
+				{
+					imgclass += " none";
+				}
+				var num = GetGlyphNumber(sym);
+				var imgname = $"materials/sbox_stargate/glyphs/mw/glyph_{num}.png";
+				if (num == 0) imgname = "materials/sbox_stargate/glyphs/mw/glyph_1.png";
+
+				<div class=@boxclass>
+					<image src=@imgname class=@imgclass />
+				</div>
+			}
+		</div>
+
+		<image src="materials/sbox_stargate/programs/dialing/dialing_base.png" class="base" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron_arcs.png" class="chevron_arcs" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_ring.png" class="ring" style="transform: rotate(@RingAngle)" />
+
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev1" style="transform: rotate( 0 )" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev2" style="transform: rotate( 40 )" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev3" style="transform: rotate( 80 )" />
+
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev4" style="transform: rotate( 200 )" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev5" style="transform: rotate( 240 )" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev6" style="transform: rotate( 280 )" />
+
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron_top.png" class="chevron" @ref=chev7/>
+
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev8" style="transform: rotate( 120 )" />
+		<image src="materials/sbox_stargate/programs/dialing/dialing_chevron.png" class="chevron" @ref="chev9" style="transform: rotate( 160 )" />
+
+		@{
+			var status = GetGateStatus();
+			var classname = $"status {status}";
+			var img = $"materials/sbox_stargate/programs/dialing/dialing_status_{status}.png";
+
+			if (status != "")
+			{
+				<image src=@img class=@classname />
+			}
+
+			if (IsOffworldActivation())
+			{
+				<image src="materials/sbox_stargate/programs/dialing/dialing_offworld.png" class="offworld" />
+			}
+		}
+
+		<div class="glyph_encode_frame" @ref="encode_box">
+		@{
+			var num = GetGlyphNumber(EncodingGlyph);
+			var imgname = $"materials/sbox_stargate/glyphs/mw/glyph_{num}.png";
+			var c = "glyph_encode_glyph_image";
+			if (num == 0)
+			{
+				c += " none";
+				imgname = "materials/sbox_stargate/glyphs/mw/glyph_1.png";
+			}
+			<image src=@imgname class=@c/>
+		}
+		</div>
+
+	</div>
+
+</root>
+
+@code
+{
+	public Stargate Gate;
+	public DialingComputer Computer;
+
+	float RingAngle { get; set; } = 0;
+	char EncodingGlyph { get; set; } = ' ';
+	string Address { get; set; } = "";
+	bool SequenceComplete { get; set; } = false;
+
+	Panel chev1 { get; set; } = null;
+	Panel chev2 { get; set; } = null;
+	Panel chev3 { get; set; } = null;
+	Panel chev4 { get; set; } = null;
+	Panel chev5 { get; set; } = null;
+	Panel chev6 { get; set; } = null;
+	Panel chev7 { get; set; } = null;
+	Panel chev8 { get; set; } = null;
+	Panel chev9 { get; set; } = null;
+	Panel encode_box { get; set; } = null;
+
+	string col_sg_blue = "#00AAB7";
+	string col_sg_yellow = "#E2E2AA";
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		if (!Gate.IsValid()) return;
+
+		var ring = (Gate as StargateMilkyWayNew).Ring;
+		RingAngle = (Gate as StargateMilkyWayNew).Ring.RingAngle;
+	}
+
+	private int GetGlyphNumber(char sym)
+	{
+		if (sym == ' ') return 0;
+		return "?0JKNTR3MBZX*H69IGPL@QFS1E4AU85OCW72YVD".IndexOf(sym) + 1;
+	}
+
+	private char GetAddressSymbol(int pos)
+	{
+		if (pos >= Address.Length) return ' ';
+		return Address[pos];
+	}
+
+	private string GetGateStatus()
+	{
+		if (!Gate.IsValid()) return "";
+		if ((Gate.Opening || Gate.Open || Gate.Closing) && !Gate.Inbound) return "locked";
+		if (SequenceComplete) return "complete";
+		if (Gate.Dialing) return "progress";
+		if (Gate.Idle) return "idle";
+		return "";
+	}
+
+	private bool IsOffworldActivation()
+	{
+		if (!Gate.IsValid()) return false;
+
+		return Gate.Inbound;
+	}
+
+	TimeSince encodeAnimation = 0;
+
+	public async void EncodeBoxAnim(int chevnum, char sym)
+	{
+		if (encodeAnimation < 5)
+			return;
+
+		encodeAnimation = 0;
+
+		var moveclass = $"move_{chevnum}_t";
+		var appearclass = "appear_t";
+
+		encode_box.SetClass(appearclass, true);
+		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
+
+		await GameTask.DelaySeconds(0.6f);
+
+		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
+
+		await GameTask.DelaySeconds(0.8f);
+
+		encode_box.SetClass(moveclass, true);
+		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
+
+		await GameTask.DelaySeconds(0.6f);
+		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
+
+		Address = Address + sym;
+
+		encode_box.SetClass(moveclass, false);
+		encode_box.SetClass(appearclass, false);
+
+		if (Gate.ActiveChevrons == 7)
+		{
+			SequenceComplete = true;
+			await GameTask.DelaySeconds(0.25f);
+			
+			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
+
+			await GameTask.DelaySeconds(0.5f);
+
+			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
+
+			await GameTask.DelaySeconds(0.25f);
+			SequenceComplete = false;
+		}
+	}
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		if (!Gate.IsValid()) return;
+
+		chev1.SetClass("active", Gate.Chevrons[0].On);
+		chev2.SetClass("active", Gate.Chevrons[1].On);
+		chev3.SetClass("active", Gate.Chevrons[2].On);
+		chev4.SetClass("active", Gate.Chevrons[3].On);
+		chev5.SetClass("active", Gate.Chevrons[4].On);
+		chev6.SetClass("active", Gate.Chevrons[5].On);
+		chev7.SetClass("active", Gate.Chevrons[6].On);
+		chev8.SetClass("active", Gate.Chevrons[7].On);
+		chev9.SetClass("active", Gate.Chevrons[8].On);
+
+		var sg = Gate as StargateMilkyWayNew;
+
+		var dialingSym = sg.Ring.CurDialingSymbol;
+		var ringSym = sg.Ring.CurRingSymbol;
+		var desiredAngDiff = sg.Ring.DesiredRingAngleDifference;
+		EncodingGlyph = dialingSym;
+
+		if (EncodingGlyph == '#')
+			EncodingGlyph = '?';
+
+		var b = (dialingSym == ringSym) && desiredAngDiff < 10 && Gate.Dialing;
+
+		if (b)
+		{
+			EncodeBoxAnim(Gate.ActiveChevrons + 1, EncodingGlyph);
+		}
+
+		if (Gate.Idle && Address.Length > 0)
+			Address = "";
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+	[Event("stargate.beginopen")]
+	public void OnGateBeginOpen(Stargate gate)
+	{
+		if (gate != Gate) return;
+
+		Log.Info($"The gate {gate} just started opening");
+	}
+	
+}

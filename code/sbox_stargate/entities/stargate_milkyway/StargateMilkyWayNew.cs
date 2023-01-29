@@ -7,7 +7,8 @@ using Sandbox;
 [Title( "Stargate New (MW)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateMilkyWayNew : Stargate
 {
-	public StargateRingMilkyWay Ring;
+	[Net]
+	public StargateRingMilkyWay Ring { get; set; } = null;
 	public List<Chevron> EncodedChevronsOrdered = new();
 
 	public bool MovieDialingType = false; // when enabled, encodes the symbol under each chevron like in the movie

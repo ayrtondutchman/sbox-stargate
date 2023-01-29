@@ -16,9 +16,11 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	[Net]
 	public float RingAngle { get; private set; } = 0.0f;
 	[Net]
+	public float DesiredRingAngleDifference { get; private set; } = 0.0f;
+	[Net]
 	public char CurDialingSymbol { get; private set; } = '!';
 	[Net]
-	public string CurRingSymbol { get; private set; } = "";
+	public char CurRingSymbol { get; private set; } = ' ';
 	public float TargetRingAngle { get; private set; } = 0.0f;
 
 	private float RingCurSpeed = 0f;
@@ -225,7 +227,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		var symCoverage = (RingAngle + symRange/2f).UnsignedMod( symRange );
 		var symIndex = ((int) Math.Round(-RingAngle / ( symRange ))).UnsignedMod( RingSymbols.Length );
 		
-		CurRingSymbol = (symCoverage < 8 && symCoverage > 1) ? RingSymbols[symIndex].ToString() : "";
+		CurRingSymbol = (symCoverage < 8 && symCoverage > 1) ? RingSymbols[symIndex] : ' ';
 	}
 
 	public void RingRotationThink()
@@ -285,6 +287,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 			{
 				var angDiff = MathF.Abs( CurrentRotation - CurStopAtAngle );
 				//Log.Info( $"RingAng={RingAngle}, AngDiff={angDiff}" );
+				DesiredRingAngleDifference = angDiff;
 				if ( angDiff < 1f ) // if the angle difference is smal enough, start spindown
 				{
 					SpinDown();
@@ -297,6 +300,8 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		RingDirection = IsMovingForwards ? 1 : -1;
 
 		//Log.Info( $"Speed={RingCurSpeed}, Ang={RingAngle}" );
+
+		//Log.Info( DesiredRingAngleDifference );
 	}
 
 	[Event.Tick.Server]

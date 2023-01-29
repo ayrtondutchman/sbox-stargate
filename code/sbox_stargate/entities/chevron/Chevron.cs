@@ -11,7 +11,8 @@ public partial class Chevron : AnimatedEntity
 	public bool On { get; private set; } = false;
 	private float selfillumscale = 0;
 
-	public bool Open = false;
+	[Net]
+	public bool Open { get; private set; } = false;
 	public bool UsesDynamicLight = true;
 
 	public Stargate Gate;

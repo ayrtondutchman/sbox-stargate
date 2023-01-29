@@ -12,7 +12,8 @@ public abstract partial class Stargate : Prop, IUse
 {
 	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 90 );
 
-	public List<Chevron> Chevrons = new();
+	[Net]
+	public List<Chevron> Chevrons { get; set; } = new();
 
 	[Net]
 	public EventHorizon EventHorizon { get; private set; } = null;
@@ -50,8 +51,8 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public bool Inbound { get; set; } = false;
 
 	[Net] public bool ShouldStopDialing { get; set; } = false;
-	public GateState CurGateState { get; set; } = GateState.IDLE;
-	public DialType CurDialType { get; set; } = DialType.FAST;
+	[Net] public GateState CurGateState { get; set; } = GateState.IDLE;
+	[Net] public DialType CurDialType { get; set; } = DialType.FAST;
 
 	// gate state accessors
 	public bool Idle { get => CurGateState is GateState.IDLE; }
@@ -61,9 +62,9 @@ public abstract partial class Stargate : Prop, IUse
 	public bool Open { get => CurGateState is GateState.OPEN; }
 	public bool Closing { get => CurGateState is GateState.CLOSING; }
 
-	public string DialingAddress { get; set; } = "";
-	public int ActiveChevrons = 0;
-	public bool IsLockedInvalid = false;
+	[Net] public string DialingAddress { get; set; } = "";
+	[Net] public int ActiveChevrons { get; set; } = 0;
+	[Net] public bool IsLockedInvalid { get; set; } = false;
 
 	public TimeSince TimeSinceDHDAction = 0f;
 	public float DhdDialShutdownTime = 20f;
@@ -352,6 +353,7 @@ public abstract partial class Stargate : Prop, IUse
 		CurGateState = GateState.OPENING;
 		Busy = true;
 	}
+
 	public virtual void OnStargateOpened()
 	{
 		CurGateState = GateState.OPEN;
