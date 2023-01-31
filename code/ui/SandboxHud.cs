@@ -26,7 +26,6 @@ public partial class SandboxHud : HudEntity<RootPanel>
 		RootPanel.AddChild<CurrentTool>();
 		RootPanel.AddChild<SpawnMenu>();
 		RootPanel.AddChild<Crosshair>();
-		RootPanel.AddChild<WormholeCinematic>();
 	}
 
 	[Event.Hotload]
