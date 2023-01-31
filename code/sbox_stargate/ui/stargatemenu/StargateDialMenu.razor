@@ -311,6 +311,10 @@
             <div class="input inline">
                 <Checkbox Value:bind=@AutoClose>Auto Close</Checkbox>
             </div>
+
+            <div class="input inline">
+                <Checkbox Value:bind=@WormholeCinematic>Wormhole</Checkbox>
+            </div>
         </div>  
     }
 
@@ -447,6 +451,24 @@
             _autoClose = value;
 
             Stargate.SetAutoClose(Gate.NetworkIdent, _autoClose);
+        }
+    }
+
+    private bool _wormholeCinematic = true;
+    public bool WormholeCinematic
+    {
+        get
+        {
+            return _wormholeCinematic;
+        }
+        set
+        {
+            if (_wormholeCinematic == value)
+                return;
+
+            _wormholeCinematic = value;
+
+            Stargate.ToggleWormhole(Gate.NetworkIdent, _wormholeCinematic);
         }
     }
 
