@@ -103,7 +103,7 @@
 						source_filename = "models/sbox_stargate/wormhole/anims/wormhole_travel_anim.smd"
 						start_frame = -1
 						end_frame = -1
-						framerate = 10.0
+						framerate = 14.0
 						take = 0
 						reverse = false
 					},
