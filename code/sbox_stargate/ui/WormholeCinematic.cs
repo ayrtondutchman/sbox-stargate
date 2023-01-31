@@ -34,7 +34,6 @@ public class WormholeCinematic : Panel
 		scenePanel.Style.PointerEvents = PointerEvents.All;
 		scenePanel.Style.Cursor = "none";
 
-
 		AddChild( scenePanel );
 
 		new SceneSkyBox( world, Material.Load( "models/sbox_stargate/wormhole/skybox.vmat" ) );
@@ -50,6 +49,8 @@ public class WormholeCinematic : Panel
 
 		particleObj = new SceneParticles( world, "particles/sbox_stargate/wormhole/wormhole_end.vpcf" );
 		new SceneLight( world, Vector3.Zero, 100.0f, Color.White * 20.0f );
+
+		Sound.FromScreen( "wormhole.sound_travel" );
 	}
 
 	public override void Tick()
