@@ -42,9 +42,11 @@ public partial class EventHorizon : AnimatedEntity
 	float lastSoundTime = 0f;
 
 	[Net]
-	private IList<Entity> BufferFront { get; set; } = new ();
+	private List<Entity> BufferFront { get; set; } = new ();
 	[Net]
-	private IList<Entity> BufferBack { get; set; } = new();
+	private List<Entity> BufferBack { get; set; } = new();
+
+	public List<IEntity> InTransitPlayers { get; private set; } = new();
 
 	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;
@@ -256,6 +258,34 @@ public partial class EventHorizon : AnimatedEntity
 		(Game.LocalPawn as Player).ViewAngles = ang;
 	}
 
+	[ClientRpc]
+	private async void PlayWormholeCinematic()
+	{
+		// TODO: Find a way to call this when the EH is deleted before the cinematic end to not keep the player stuck in this
+		var panel = Game.RootPanel.AddChild<WormholeCinematic>();
+
+		await GameTask.DelayRealtimeSeconds( 7.07f );
+
+		panel.Delete( true );
+		EventHorizon.OnPlayerEndWormhole( NetworkIdent );
+	}
+
+	[ConCmd.Server]
+	private static void OnPlayerEndWormhole(int netId)
+	{
+		var eh = FindByIndex<EventHorizon>( netId );
+		if ( !eh.IsValid ) return;
+
+		var pawn = ConsoleSystem.Caller.Pawn;
+
+		var id = eh.InTransitPlayers.IndexOf( pawn );
+		if ( id == -1 ) return;
+
+		if ( eh.Gate.AutoClose ) eh.Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration;
+
+		eh.InTransitPlayers.RemoveAt( id );
+	}
+
 	// TELEPORT
 	public void TeleportEntity(Entity ent)
 	{
@@ -287,6 +317,12 @@ public partial class EventHorizon : AnimatedEntity
 			TeleportScreenOverlay( To.Single( ply ) );
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
 			SetPlayerViewAngles( To.Single( ply ), ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) );
+
+			if ( Gate.ShowWormholeCinematic )
+			{
+				InTransitPlayers.Add( ply );
+				PlayWormholeCinematic( To.Single( ply ) );
+			}
 		}
 		else
 		{
