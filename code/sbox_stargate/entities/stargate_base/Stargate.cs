@@ -192,6 +192,16 @@ public abstract partial class Stargate : Prop, IUse
 		base.OnDestroy();
 	}
 
+	private void KillAllPlayersInTransit()
+	{
+		if ( !EventHorizon.IsValid() ) return;
+
+		foreach (var ply in EventHorizon.InTransitPlayers)
+		{
+			EventHorizon.DissolveEntity( ply );
+		}
+	}
+
 	// DIALING -- please don't touch any of these, dialing is heavy WIP
 
 	public void MakeBusy( float duration )
@@ -207,7 +217,7 @@ public abstract partial class Stargate : Prop, IUse
 
 	public bool CanStargateClose()
 	{
-		return ( !Busy && Open) && (EventHorizon.InTransitPlayers.Count <= 0 && OtherGate.EventHorizon.InTransitPlayers.Count <= 0);
+		return ( !Busy && Open );
 	}
 
 	public bool CanStargateStartDial()
@@ -367,6 +377,8 @@ public abstract partial class Stargate : Prop, IUse
 	{
 		CurGateState = GateState.CLOSING;
 		Busy = true;
+
+		KillAllPlayersInTransit();
 	}
 	public virtual void OnStargateClosed()
 	{

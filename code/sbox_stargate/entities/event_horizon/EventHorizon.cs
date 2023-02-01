@@ -42,11 +42,11 @@ public partial class EventHorizon : AnimatedEntity
 	float lastSoundTime = 0f;
 
 	[Net]
-	private List<Entity> BufferFront { get; set; } = new ();
+	private IList<Entity> BufferFront { get; set; } = new ();
 	[Net]
-	private List<Entity> BufferBack { get; set; } = new();
-
-	public List<IEntity> InTransitPlayers { get; private set; } = new();
+	private IList<Entity> BufferBack { get; set; } = new();
+	
+	public List<Entity> InTransitPlayers { get; set; } = new();
 
 	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;
@@ -267,23 +267,22 @@ public partial class EventHorizon : AnimatedEntity
 		await GameTask.DelayRealtimeSeconds( 7.07f );
 
 		panel.Delete( true );
-		EventHorizon.OnPlayerEndWormhole( NetworkIdent );
+		OnPlayerEndWormhole( NetworkIdent );
 	}
 
 	[ConCmd.Server]
 	private static void OnPlayerEndWormhole(int netId)
 	{
 		var eh = FindByIndex<EventHorizon>( netId );
-		if ( !eh.IsValid ) return;
+		if ( !eh.IsValid() ) return;
 
-		var pawn = ConsoleSystem.Caller.Pawn;
+		var pawn = ConsoleSystem.Caller.Pawn as Entity;
 
 		var id = eh.InTransitPlayers.IndexOf( pawn );
 		if ( id == -1 ) return;
 
-		if ( eh.Gate.AutoClose ) eh.Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration;
-
 		eh.InTransitPlayers.RemoveAt( id );
+		Log.Info("wormhole end");
 	}
 
 	// TELEPORT
@@ -337,7 +336,7 @@ public partial class EventHorizon : AnimatedEntity
 		ent.Velocity = newVel;
 
 		// after any successful teleport, start autoclose timer if gate should autoclose
-		if ( Gate.AutoClose ) Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration;
+		if ( Gate.AutoClose ) Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration + (Gate.ShowWormholeCinematic ? 7 : 0);
 	}
 
 	[ClientRpc]

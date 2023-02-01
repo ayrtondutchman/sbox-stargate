@@ -11,6 +11,8 @@ public class WormholeCinematic : Panel
 
 	private TimeSince sinceStarted = 0;
 
+	private Sound WormholeSound;
+
 	public WormholeCinematic()
 	{
 		Style.FlexWrap = Wrap.Wrap;
@@ -50,7 +52,7 @@ public class WormholeCinematic : Panel
 		particleObj = new SceneParticles( world, "particles/sbox_stargate/wormhole/wormhole_end.vpcf" );
 		new SceneLight( world, Vector3.Zero, 100.0f, Color.White * 20.0f );
 
-		Sound.FromScreen( "wormhole.sound_travel" );
+		WormholeSound = Sound.FromScreen( "wormhole.sound_travel" );
 	}
 
 	public override void Tick()
@@ -67,6 +69,13 @@ public class WormholeCinematic : Panel
 		if (sinceStarted.Relative >= 6.0f)
 		{
 			particleObj?.Simulate( RealTime.Delta );
+		}
+
+		if (Game.LocalPawn.Health <= 0)
+		{
+			WormholeSound.Stop();
+
+			Delete();
 		}
 	}
 }
