@@ -189,6 +189,8 @@ public abstract partial class Stargate : Prop, IUse
 			if ( OtherGate.Open ) OtherGate.DoStargateClose();
 		}
 
+		KillAllPlayersInTransit();
+
 		base.OnDestroy();
 	}
 
