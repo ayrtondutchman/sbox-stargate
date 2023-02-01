@@ -260,6 +260,7 @@ partial class SandboxPlayer : Player
 		Camera.ZNear = 1f;
 		Camera.ZFar = 64000f;
 		Camera.Rotation = ViewAngles.ToRotation();
+		Camera.FieldOfView = Screen.CreateVerticalFieldOfView( Game.Preferences.FieldOfView );
 
 		if ( ThirdPersonCamera )
 		{
@@ -270,7 +271,7 @@ partial class SandboxPlayer : Player
 			var center = Position + Vector3.Up * 64;
 
 			var pos = center;
-			var rot = Rotation.FromAxis( Vector3.Up, -16 ) * Camera.Rotation;
+			var rot = Camera.Rotation * Rotation.FromAxis( Vector3.Up, -16 );
 
 			float distance = 130.0f * Scale;
 			targetPos = pos + rot.Right * ((CollisionBounds.Mins.x + 32) * Scale);
@@ -283,6 +284,22 @@ partial class SandboxPlayer : Player
 				.Run();
 
 			Camera.Position = tr.EndPosition;
+		}
+		else if ( LifeState != LifeState.Alive && Corpse.IsValid() )
+		{
+			Corpse.EnableDrawing = true;
+
+			var pos = Corpse.GetBoneTransform( 0 ).Position + Vector3.Up * 10;
+			var targetPos = pos + Camera.Rotation.Backward * 100;
+
+			var tr = Trace.Ray( pos, targetPos )
+				.WithAnyTags( "solid" )
+				.Ignore( this )
+				.Radius( 8 )
+				.Run();
+
+			Camera.Position = tr.EndPosition;
+			Camera.FirstPersonViewer = null;
 		}
 		else
 		{
