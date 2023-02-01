@@ -46,6 +46,8 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public bool GatePrivate { get; set; } = false;
 	[Net] public bool GateLocal { get; set; } = false;
 	[Net] public GlyphType GateGlyphType { get; protected set; } = GlyphType.MILKYWAY;
+	// Show Wormhole or not
+	[Net] public bool ShowWormholeCinematic { get; set; } = true;
 
 	[Net] public bool Busy { get; set; } = false; // this is pretty much used anytime the gate is busy to do anything (usually during animations/transitions)
 	[Net] public bool Inbound { get; set; } = false;
@@ -53,6 +55,8 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public bool ShouldStopDialing { get; set; } = false;
 	[Net] public GateState CurGateState { get; set; } = GateState.IDLE;
 	[Net] public DialType CurDialType { get; set; } = DialType.FAST;
+
+	
 
 	// gate state accessors
 	public bool Idle { get => CurGateState is GateState.IDLE; }
@@ -91,6 +95,7 @@ public abstract partial class Stargate : Prop, IUse
 		DialingAddress = "";
 		ActiveChevrons = 0;
 		IsLockedInvalid = false;
+		AutoCloseTime = -1;
 	}
 
 	// USABILITY
@@ -185,7 +190,19 @@ public abstract partial class Stargate : Prop, IUse
 			if ( OtherGate.Open ) OtherGate.DoStargateClose();
 		}
 
+		KillAllPlayersInTransit();
+
 		base.OnDestroy();
+	}
+
+	private void KillAllPlayersInTransit()
+	{
+		if ( !EventHorizon.IsValid() ) return;
+
+		foreach (var ply in EventHorizon.InTransitPlayers)
+		{
+			EventHorizon.DissolveEntity( ply );
+		}
 	}
 
 	// DIALING -- please don't touch any of these, dialing is heavy WIP
@@ -203,7 +220,7 @@ public abstract partial class Stargate : Prop, IUse
 
 	public bool CanStargateClose()
 	{
-		return ( !Busy && Open);
+		return ( !Busy && Open );
 	}
 
 	public bool CanStargateStartDial()
@@ -363,6 +380,8 @@ public abstract partial class Stargate : Prop, IUse
 	{
 		CurGateState = GateState.CLOSING;
 		Busy = true;
+
+		KillAllPlayersInTransit();
 	}
 	public virtual void OnStargateClosed()
 	{
@@ -601,6 +620,20 @@ public abstract partial class Stargate : Prop, IUse
 				return;
 
 			g.GateLocal = state;
+
+			g.RefreshGateInformation();
+		}
+	}
+
+	[ConCmd.Server]
+	public static void ToggleWormhole( int gateID, bool state )
+	{
+		if ( FindByIndex( gateID ) is Stargate g && g.IsValid() )
+		{
+			if ( g.ShowWormholeCinematic == state )
+				return;
+
+			g.ShowWormholeCinematic = state;
 
 			g.RefreshGateInformation();
 		}

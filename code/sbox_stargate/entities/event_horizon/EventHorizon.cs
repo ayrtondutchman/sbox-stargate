@@ -45,6 +45,8 @@ public partial class EventHorizon : AnimatedEntity
 	private IList<Entity> BufferFront { get; set; } = new ();
 	[Net]
 	private IList<Entity> BufferBack { get; set; } = new();
+	
+	public List<Entity> InTransitPlayers { get; set; } = new();
 
 	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;
@@ -256,6 +258,33 @@ public partial class EventHorizon : AnimatedEntity
 		(Game.LocalPawn as Player).ViewAngles = ang;
 	}
 
+	[ClientRpc]
+	private async void PlayWormholeCinematic()
+	{
+		// TODO: Find a way to call this when the EH is deleted before the cinematic end to not keep the player stuck in this
+		var panel = Game.RootPanel.AddChild<WormholeCinematic>();
+
+		await GameTask.DelayRealtimeSeconds( 7.07f );
+
+		panel.Delete( true );
+		OnPlayerEndWormhole( NetworkIdent );
+	}
+
+	[ConCmd.Server]
+	private static void OnPlayerEndWormhole(int netId)
+	{
+		var eh = FindByIndex<EventHorizon>( netId );
+		if ( !eh.IsValid() ) return;
+
+		var pawn = ConsoleSystem.Caller.Pawn as Entity;
+
+		var id = eh.InTransitPlayers.IndexOf( pawn );
+		if ( id == -1 ) return;
+
+		eh.InTransitPlayers.RemoveAt( id );
+		Log.Info("wormhole end");
+	}
+
 	// TELEPORT
 	public void TeleportEntity(Entity ent)
 	{
@@ -287,6 +316,12 @@ public partial class EventHorizon : AnimatedEntity
 			TeleportScreenOverlay( To.Single( ply ) );
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
 			SetPlayerViewAngles( To.Single( ply ), ply.EyeRotation.Angles() + new Angles( 0, DeltaAngleEH.yaw + 180, 0 ) );
+
+			if ( Gate.ShowWormholeCinematic )
+			{
+				InTransitPlayers.Add( ply );
+				PlayWormholeCinematic( To.Single( ply ) );
+			}
 		}
 		else
 		{
@@ -301,7 +336,7 @@ public partial class EventHorizon : AnimatedEntity
 		ent.Velocity = newVel;
 
 		// after any successful teleport, start autoclose timer if gate should autoclose
-		if ( Gate.AutoClose ) Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration;
+		if ( Gate.AutoClose ) Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration + (Gate.ShowWormholeCinematic ? 7 : 0);
 	}
 
 	[ClientRpc]

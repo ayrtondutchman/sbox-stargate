@@ -38,6 +38,13 @@
 						ignore_rotation = false
 						do_not_discard = true
 					},
+					{
+						_class = "BoneMarkup"
+						target_bone = "wormhole_base"
+						ignore_Translation = false
+						ignore_rotation = false
+						do_not_discard = true
+					},
 				]
 				bone_cull_type = "Aggressive"
 			},
@@ -66,6 +73,7 @@
 					{
 						_class = "Attachment"
 						name = "camera"
+						disabled = true
 						parent_bone = "wormhole_camera"
 						relative_origin = [ 0.0, 0.0, 0.0 ]
 						relative_angles = [ 90.0, 0.0, 0.0 ]
@@ -86,7 +94,7 @@
 						weight_list_name = ""
 						fade_in_time = 0.2
 						fade_out_time = 0.2
-						looping = false
+						looping = true
 						delta = false
 						worldSpace = false
 						hidden = false
@@ -95,6 +103,27 @@
 						source_filename = "models/sbox_stargate/wormhole/anims/wormhole_travel_anim.smd"
 						start_frame = -1
 						end_frame = -1
+						framerate = 14.0
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "idle"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/sbox_stargate/wormhole/anims/wormhole_travel_anim.smd"
+						start_frame = -1
+						end_frame = 1
 						framerate = -1.0
 						take = 0
 						reverse = false
@@ -103,9 +132,9 @@
 				default_root_bone_name = ""
 			},
 		]
-		model_archetype = ""
-		primary_associated_entity = ""
-		anim_graph_name = ""
+		model_archetype = "animated_model"
+		primary_associated_entity = "prop_dynamic"
+		anim_graph_name = "models/sbox_stargate/wormhole/wormhole.vanmgrph"
 		base_model_name = ""
 	}
 }
