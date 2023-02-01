@@ -282,7 +282,6 @@ public partial class EventHorizon : AnimatedEntity
 		if ( id == -1 ) return;
 
 		eh.InTransitPlayers.RemoveAt( id );
-		Log.Info("wormhole end");
 	}
 
 	// TELEPORT
