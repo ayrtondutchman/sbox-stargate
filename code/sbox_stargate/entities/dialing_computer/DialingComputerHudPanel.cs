@@ -5,7 +5,7 @@ public class DialingComputerHudPanel : Panel
 {
 	private DialingComputer Computer;
 
-	public DialingComputerHudPanel( DialingComputer computer, ComputerProgramDialing program )
+	public DialingComputerHudPanel( DialingComputer computer, Panel program )
 	{
 		Computer = computer;
 

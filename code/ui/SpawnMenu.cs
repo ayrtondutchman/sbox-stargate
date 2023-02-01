@@ -25,16 +25,26 @@ public partial class SpawnMenu : Panel
 			var body = left.Add.Panel( "body" );
 			{
 				var props = body.AddChild<SpawnList>();
-				tabs.SelectedButton = tabs.AddButtonActive( "Props", ( b ) => props.SetClass( "active", b ) );
+				//tabs.SelectedButton = tabs.AddButtonActive( "Props", ( b ) => props.SetClass( "active", b ) );
 
 				var ents = body.AddChild<EntityList>();
-				tabs.AddButtonActive( "Entities", ( b ) => ents.SetClass( "active", b ) );
+				//tabs.AddButtonActive( "Entities", ( b ) => ents.SetClass( "active", b ) );
 
 				var models = body.AddChild<CloudModelList>();
-				tabs.AddButtonActive( "asset.party", ( b ) => models.SetClass( "active", b ) );
+				//tabs.AddButtonActive( "asset.party", ( b ) => models.SetClass( "active", b ) );
 
 				var sg = body.AddChild<StargateSpawnList>();
-				tabs.AddButtonActive( "Stargate", ( b ) => sg.SetClass( "active", b ) );
+				//tabs.AddButtonActive( "Stargate", ( b ) => sg.SetClass( "active", b ) );
+
+				tabs.Options = new() { new Option( "Props", props ), new Option( "Entities", ents ), new Option( "asset.party", models ), new Option( "Stargate", sg ) };
+				tabs.ValueChanged = ( s ) =>
+				{
+					foreach (var o in tabs.Options)
+						(o.Value as Panel).SetClass( "active", false );
+					(tabs.Value as Panel).SetClass( "active", true );
+				};
+
+				props.SetClass( "active", true );
 			}
 		}
 

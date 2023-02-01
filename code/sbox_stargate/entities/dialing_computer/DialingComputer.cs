@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
+using Sandbox.UI;
 
 [Title( "Dialing Computer" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class DialingComputer : ModelEntity, IUse
@@ -14,7 +15,10 @@ public partial class DialingComputer : ModelEntity, IUse
 	private DialingComputerHudPanel ComputerPanelHud;
 	private DialingComputerWorldPanel ComputerPanelWorld;
 
-	private ComputerProgramDialing Program;
+	private ComputerProgramDialingV2 Program;
+
+	public static readonly Color Color_SG_Blue = Color.FromBytes( 0, 170, 185 );
+	public static readonly Color Color_SG_Yellow = Color.FromBytes( 225, 225, 170 );
 
 	public override void Spawn()
 	{
@@ -37,7 +41,7 @@ public partial class DialingComputer : ModelEntity, IUse
 	{
 		base.ClientSpawn();
 
-		Program = new ComputerProgramDialing();
+		Program = new();
 		Program.Computer = this;
 		ComputerPanelWorld = new( this, Program );
 	}
@@ -107,5 +111,11 @@ public partial class DialingComputer : ModelEntity, IUse
 	public bool IsUsable( Entity user )
 	{
 		return true;
+	}
+
+	public float GetSinFromTime()
+	{
+		var s = (float)Math.Sin( Time.Now );
+		return s * s;
 	}
 }

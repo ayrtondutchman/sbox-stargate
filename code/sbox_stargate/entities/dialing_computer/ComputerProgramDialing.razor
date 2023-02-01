@@ -181,13 +181,13 @@
 	.address_boxes_base {
 		position: absolute;
 		display: flex;
+		flex-direction: column;
 		width: 11.1%;
 		height: 56.5%;
 		top: 19.2%;
 		right: 1.7%;
 		margin-right: 1.3%;
 		margin-top: 1.3%;
-		flex-direction: column;
 		z-index: 7;
 	}
 
@@ -197,49 +197,66 @@
 		100% {background-color: rgba(skyblue, 0);}
 	}
 
+	@@keyframes box_appear {
+		0%   {transform: scaleY(0); transform-origin: 50% 0%;}
+		100% {transform: scaleY(1);}
+	}
 	.address_box {
 		justify-content: center;
 		padding: 1%;
-		border-color: transparent;
-		border-width: 2.6%;
+		border-color: red;
+		border-width: 2%;
 		border-radius: 1.5%;
-		margin-top: 1.5%;
-		margin-bottom: 1.5%;
-		margin-left: 1%;
-		margin-right: 1%;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+
 		background-color: transparent;
 		z-index: 8;
-
-		&.first {
-			margin-top: 0.2%;
-		}
-
-		&.last {
-			margin-bottom: 0.2%;
-		}
 
 		&.complete {
 			animation-name: boxes_blink_complete;
 			animation-duration: 0.5s;
 			animation-iteration-count: 2;
 		}
+
+		&.box_8 {
+			transition: flex-grow 0.5s;
+
+			&.hidden {
+				flex-grow: 0;
+				border-width: 0;
+				border-radius: 0;
+				transition: flex-grow 0s;
+			}
+		}
+
+		&.box_9 {
+			transition: flex-grow 0.5s;
+
+			&.hidden {
+				flex-grow: 0;
+				border-width: 0;
+				border-radius: 0;
+				transition: flex-grow 0s;
+			}
+		}
 	}
 
 	.address_box_glyph_image {
 		background-image-tint: white;
-		height: 100%;
 		aspect-ratio: 1;
 		z-index: 9;
+		transition: flex-grow 0.5s;
 
 		&.none {
 			background-image-tint: transparent;
 		}
-	}
 
-	@@keyframes blinking {
-		0% {opacity: 0;}
-		50% {opacity: 1;}
-		100% {opacity: 0;}
+		&.hidden {
+			flex-grow: 0;
+			transition: flex-grow 0s;
+		}
 	}
 
 	.status {
@@ -248,10 +265,6 @@
 		width: 100%;
 		z-index: 10;
 		background-image-tint: @col_sg_blue;
-
-		animation-name: blinking;
-		animation-duration: 1.5s;
-		animation-iteration-count: infinite;
 
 		&.locked {
 			background-image-tint: red;
@@ -264,10 +277,6 @@
 		width: 100%;
 		background-image-tint: red;
 		z-index: 13;
-
-		animation-name: blinking;
-		animation-duration: 1.5s;
-		animation-iteration-count: infinite;
 	}
 
 </style>
@@ -278,15 +287,12 @@
 		<div class="black_bg"></div>
 
 		<div class="address_boxes_base">
-			@for (int i = 0; i < 7; i++)
+			@for (int i = 0; i < 9; i++)
 			{
-				var firstOrLast = "";
-				if (i == 0)
-					firstOrLast = "first";
-				if (i == 6)
-					firstOrLast = "last";
+				var firstOrLast = i==0 ? "first" : (i==9 ? "last" : "");
 				var complete = SequenceComplete ? "complete" : "";
-				var boxclass = $"address_box {firstOrLast} {complete}";
+				var box_89 = i == 7 ? "box_8 hidden" : (i == 8 ? "box_9 hidden" : "");
+				var boxclass = $"address_box {firstOrLast} {complete} {box_89}";
 
 				var sym = GetAddressSymbol(i);
 				var imgclass = "address_box_glyph_image";
@@ -298,9 +304,26 @@
 				var imgname = $"materials/sbox_stargate/glyphs/mw/glyph_{num}.png";
 				if (num == 0) imgname = "materials/sbox_stargate/glyphs/mw/glyph_1.png";
 
-				<div class=@boxclass>
-					<image src=@imgname class=@imgclass />
-				</div>
+				if (i==7)
+				{
+					imgclass += " hidden";
+					<div class=@boxclass @ref="box8">
+						<image src=@imgname class=@imgclass @ref="box8_img" />
+					</div>
+				}
+				else if (i==8)
+				{
+					imgclass += " hidden";
+					<div class=@boxclass @ref="box9">
+						<image src=@imgname class=@imgclass @ref="box9_img" />
+					</div>
+				}
+				else
+				{
+					<div class=@boxclass>
+						<image src=@imgname class=@imgclass />
+					</div>
+				}
 			}
 		</div>
 
@@ -328,12 +351,12 @@
 
 			if (status != "")
 			{
-				<image src=@img class=@classname />
+				<image src=@img class=@classname style="opacity: @Computer.GetSinFromTime()" />
 			}
 
 			if (IsOffworldActivation())
 			{
-				<image src="materials/sbox_stargate/programs/dialing/dialing_offworld.png" class="offworld" />
+				<image src="materials/sbox_stargate/programs/dialing/dialing_offworld.png" class="offworld" style="opacity: @Computer.GetSinFromTime()" />
 			}
 		}
 
@@ -362,7 +385,7 @@
 
 	float RingAngle { get; set; } = 0;
 	char EncodingGlyph { get; set; } = ' ';
-	string Address { get; set; } = "";
+	string Address { get; set; } = "123456789";
 	bool SequenceComplete { get; set; } = false;
 
 	Panel chev1 { get; set; } = null;
@@ -375,6 +398,11 @@
 	Panel chev8 { get; set; } = null;
 	Panel chev9 { get; set; } = null;
 	Panel encode_box { get; set; } = null;
+
+	Panel box8 { get; set; } = null;
+	Panel box9 { get; set; } = null;
+	Panel box8_img { get; set; } = null;
+	Panel box9_img { get; set; } = null;
 
 	string col_sg_blue = "#00AAB7";
 	string col_sg_yellow = "#E2E2AA";
@@ -430,6 +458,11 @@
 		var moveclass = $"move_{chevnum}_t";
 		var appearclass = "appear_t";
 
+		if (chevnum > 7)
+		{
+			moveclass = $"move_7_t";
+		}
+
 		encode_box.SetClass(appearclass, true);
 		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
 
@@ -450,11 +483,12 @@
 		encode_box.SetClass(moveclass, false);
 		encode_box.SetClass(appearclass, false);
 
+		/*
 		if (Gate.ActiveChevrons == 7)
-		{
-			SequenceComplete = true;
+			{
+			//SequenceComplete = true;
 			await GameTask.DelaySeconds(0.25f);
-			
+
 			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
 
 			await GameTask.DelaySeconds(0.5f);
@@ -462,13 +496,49 @@
 			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
 
 			await GameTask.DelaySeconds(0.25f);
-			SequenceComplete = false;
+			//SequenceComplete = false;
 		}
+		*/
+
+		if (chevnum == 7)
+		{
+			box8.SetClass("hidden", false);
+			Log.Info("unhiding box 8");
+		}
+
+		if (chevnum == 8)
+		{
+			box9.SetClass("hidden", false);
+			Log.Info("unhiding box 9");
+		}
+
 	}
+
+	TimeSince timesinceBox8 = 0;
+	TimeSince timesinceBox9 = 0;
+	bool ishidden = false;
 
 	protected override void OnAfterTreeRender(bool firstTime)
 	{
+		if (timesinceBox8 > 1f)
+		{
+			timesinceBox8 = 0;
+			box8_img.SetClass("hidden", false);
+			box8.SetClass("hidden", false);
+			
+		}
+
+		if (timesinceBox9 > 2f)
+		{
+			timesinceBox9 = 0;
+			box9_img.SetClass("hidden", false);
+			box9.SetClass("hidden", false);
+		}
+
+
 		if (!Gate.IsValid()) return;
+
+		//Log.Info(GetSinFromTime());
 
 		chev1.SetClass("active", Gate.Chevrons[0].On);
 		chev2.SetClass("active", Gate.Chevrons[1].On);
@@ -497,8 +567,12 @@
 			EncodeBoxAnim(Gate.ActiveChevrons + 1, EncodingGlyph);
 		}
 
-		if (Gate.Idle && Address.Length > 0)
-			Address = "";
+		//if (Gate.Idle && Address.Length > 0)
+			//Address = "";
+			//if (!box8.HasClass("hidden"))
+			//	box8.SetClass("hidden", true);
+			//if (!box9.HasClass("hidden"))
+			//	box9.SetClass("hidden", true);
 	}
 
 	protected override int BuildHash()

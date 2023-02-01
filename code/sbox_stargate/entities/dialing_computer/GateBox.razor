@@ -1,0 +1,136 @@
+﻿@using System;
+@using Sandbox;
+
+<style>
+
+	.frame {
+		width: 100%;
+		height: 100%;
+		border: 0.5% solid @DialingComputer.Color_SG_Blue.Rgb;
+	}
+
+	.gatebox_lines {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image: url("materials/sbox_stargate/programs/dialing/gatebox_lines.png");
+		background-image-tint: @DialingComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	.gate_container {
+		position: absolute;
+		height: 99%;
+		left: 50%;
+		transform: translate(-50% 0%);
+		align-self: center;
+		aspect-ratio: 1;
+	}
+
+	.gate {
+		background-image-tint: @DialingComputer.Color_SG_Blue.ToColor32(true).Rgb;
+	}
+
+	.gate_ring_container {
+		position: absolute;
+		height: 99%;
+		left: 50%;
+		transform: translate(-50% 0%);
+		aspect-ratio: 1;
+		align-self: center;
+	}
+
+	.gate_ring {
+		background-image-tint: @DialingComputer.Color_SG_Yellow.ToColor32(true).Rgb;
+		transform-origin: 0% 50%;
+	}
+
+	.gate_chevrons_container {
+		position: absolute;
+		height: 99%;
+		left: 50%;
+		transform: translate(-50% 0%);
+		align-self: center;
+		aspect-ratio: 1;
+	}
+
+	.gate_chevron {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image: url("materials/sbox_stargate/programs/dialing/gate_chevron.png");
+		background-image-tint: @DialingComputer.Color_SG_Yellow.ToColor32(true).Rgb;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		transform-origin: 0% 50%;
+
+		&.main {
+			background-image: url("materials/sbox_stargate/programs/dialing/gate_chevron_main.png");
+		}
+
+		&.active {
+			background-image-tint: red;
+		}
+	}
+
+	.gate_chevron_wings {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image: url("materials/sbox_stargate/programs/dialing/gate_chevron_wings.png");
+		background-image-tint: @DialingComputer.Color_SG_Yellow.ToColor32(true).Rgb;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		transform-origin: 0% 50%;
+	}
+
+</style>
+
+<div class="frame">
+	<div class="gatebox_lines"></div>
+
+	<div class="gate_container">
+		<img src="materials/sbox_stargate/programs/dialing/gate_base.png" class="gate" />
+	</div>
+
+	<div class="gate_ring_container">
+		<img src="materials/sbox_stargate/programs/dialing/gate_ring.png" class="gate_ring" style="transform: rotate(@RingAngle)" />
+	</div>
+
+	<div class="gate_chevrons_container">
+		<div class="gate_chevron" style="transform: rotate(40)"></div>
+		<div class="gate_chevron" style="transform: rotate(80)"></div>
+		<div class="gate_chevron" style="transform: rotate(120)"></div>
+
+		<div class="gate_chevron" style="transform: rotate(240)"></div>
+		<div class="gate_chevron" style="transform: rotate(280)"></div>
+		<div class="gate_chevron" style="transform: rotate(320)"></div>
+
+		<div class="gate_chevron main"></div>
+
+		<div class="gate_chevron" style="transform: rotate(160)"></div>
+		<div class="gate_chevron" style="transform: rotate(200)"></div>
+
+		@{
+			for (int i = 0; i<9; i++)
+			{
+				<div class="gate_chevron_wings" style="transform: rotate(@(i*40))"></div>
+			}
+		}
+	</div>
+	
+</div>
+
+@code {
+	public float RingAngle { get; set; } = 0;
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+}

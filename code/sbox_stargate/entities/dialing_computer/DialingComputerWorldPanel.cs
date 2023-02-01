@@ -7,12 +7,14 @@ public class DialingComputerWorldPanel : WorldPanel
 {
 	private DialingComputer Computer;
 
-	public DialingComputerWorldPanel( DialingComputer computer, ComputerProgramDialing program )
+	public float RenderSize = 2048;
+	public float ActualSize = 2048;
+
+	public DialingComputerWorldPanel( DialingComputer computer, Panel program )
 	{
 		Computer = computer;
 
-		float size = 1024;
-		PanelBounds = new Rect( -size / 2, -size / 2, size, size );
+		PanelBounds = new Rect( -RenderSize / 2, -RenderSize / 2, RenderSize, RenderSize );
 
 		AddChild( program );
 
@@ -31,6 +33,10 @@ public class DialingComputerWorldPanel : WorldPanel
 
 		Position = Computer.Position + Computer.Rotation.Forward * 30;
 		Rotation = Computer.Rotation;
+
+		var scaleFactor = ActualSize / RenderSize;
+
+		Transform = Transform.WithScale( scaleFactor );
 	}
 	
 }

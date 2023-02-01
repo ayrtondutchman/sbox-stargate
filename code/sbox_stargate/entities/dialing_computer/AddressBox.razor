@@ -1,0 +1,79 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+<style>
+
+	.frame {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: space-between;
+		row-gap: 2%;
+	}
+
+	.box_base {
+		flex-grow: 1;
+		width: 100%;
+	}
+
+	.box_number {
+		position: absolute;
+		border-color: red;
+		border-width: 0.5%;
+		color: white;
+		font-size: 100%;
+		bottom: 0;
+		left: 0;
+	}
+
+	.box_glyph_container {
+		position: absolute;
+		background-color: rgba(green, 0.1);
+		border-width: 2%;
+		border-color: @DialingComputer.Color_SG_Blue.Rgb;
+		height: 100%;
+		width: 75%;
+		right: 0;
+	}
+
+</style>
+
+<div class="frame">
+
+	@{
+		for (int i = 1; i <= 9; i++)
+		{
+			var s = $"font-size: {150 * TextScaleModifier}%";
+			<div class="box_base">
+				<label class="box_number" style=@s>@i</label>
+
+				<div class="box_glyph_container">
+					
+				</div>
+			</div>
+		}
+	}
+	
+
+	
+</div>
+
+@code {
+	
+	private float TextScaleModifier = 0;
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		float h = (this as Panel).Box.Rect.Height;
+		TextScaleModifier = h / 2048.0f;
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+}

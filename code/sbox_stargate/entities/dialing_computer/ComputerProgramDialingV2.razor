@@ -1,0 +1,134 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using System.Threading.Tasks;
+@using System.Text;
+
+<style>
+
+	.canvas {
+		background-color: transparent;
+		width: 100%;
+		height: 100%;
+		opacity: 1;
+	}
+
+	.black_bg {
+		background-color: black;
+		width: 100%;
+		height: 65%;
+		margin: auto;
+	}
+
+	.base {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image-tint: rgba(white, 0);
+	}
+
+	.frame_outer {
+		border-width: 0.5%;
+		border-color: @DialingComputer.Color_SG_Blue.Rgb;
+
+		position: absolute;
+		top: 19.15%;
+		bottom: 19.15%;
+		left: 1.65%;
+		right: 1.65%;
+		margin: auto;
+	}
+
+	.frame_numberbox {
+		border-width: 0.5%;
+		border-color: rgba(red, 0.8);
+
+		position: absolute;
+		top: 20.5%;
+		bottom: 46.75%;
+		left: 3%;
+		right: 81.1%;
+		margin: auto;
+	}
+
+	.frame_gatebox {
+		position: absolute;
+		top: 20.5%;
+		bottom: 30.35%;
+		left: 19.4%;
+		right: 19.4%;
+		margin: auto;
+	}
+
+	.frame_addressbox {
+		position: absolute;
+		top: 20.5%;
+		bottom: 20.75%;
+		left: 81.1%;
+		right: 3%;
+		margin: auto;
+	}
+
+</style>
+
+<root>
+	<div class="canvas">
+		<div class="black_bg"></div>
+		<image src="materials/sbox_stargate/programs/dialing/dialing_base.png" class="base" />
+	</div>
+
+	<div class="frame_outer"></div>
+
+	<div class="frame_numberbox">
+	</div>
+
+	<div class="frame_gatebox">
+		<GateBox @ref=gatebox></GateBox>
+	</div>
+
+	<div class="frame_addressbox">
+		<AddressBox></AddressBox>
+	</div>
+	
+
+</root>
+
+@code
+{
+	public Stargate Gate;
+	public DialingComputer Computer;
+
+	private GateBox gatebox;
+
+	private float TextScaleModifier = 0;
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		float h = (this as Panel).Box.Rect.Height;
+		TextScaleModifier = h / 2048.0f;
+
+		//Log.Info(TextScaleModifier);
+
+		if (!Gate.IsValid()) return;
+
+		var sg = Gate as StargateMilkyWayNew;
+
+		var ang = sg.Ring.RingAngle;
+
+		gatebox.RingAngle = ang;
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+	[Event("stargate.beginopen")]
+	public void OnGateBeginOpen(Stargate gate)
+	{
+		if (gate != Gate) return;
+
+		Log.Info($"The gate {gate} just started opening");
+	}
+	
+}
