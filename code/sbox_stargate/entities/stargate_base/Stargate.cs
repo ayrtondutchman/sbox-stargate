@@ -95,6 +95,7 @@ public abstract partial class Stargate : Prop, IUse
 		DialingAddress = "";
 		ActiveChevrons = 0;
 		IsLockedInvalid = false;
+		AutoCloseTime = -1;
 	}
 
 	// USABILITY
