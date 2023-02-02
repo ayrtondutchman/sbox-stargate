@@ -231,7 +231,11 @@ public partial class StargatePegasus : Stargate
 	// FAST DIAL
 	public override void BeginDialFast(string address)
 	{
+		base.BeginDialFast( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -256,7 +260,7 @@ public partial class StargatePegasus : Stargate
 
 			bool gateValidCheck() { return wasTargetReadyOnStart && target.IsValid() && target != this && target.IsStargateReadyForInboundFastEnd(); }
 
-			Ring.RollSymbolsDialFast( addrLen, gateValidCheck );
+			Ring.RollSymbolsDialFast( address, gateValidCheck );
 
 			async void openOrStop()
 			{
@@ -283,7 +287,11 @@ public partial class StargatePegasus : Stargate
 	// FAST INBOUND
 	public override void BeginInboundFast( int numChevs )
 	{
+		base.BeginInboundFast( numChevs );
+
 		if ( !IsStargateReadyForInboundFast() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -305,7 +313,11 @@ public partial class StargatePegasus : Stargate
 	// SLOW DIAL
 	public override void BeginDialSlow( string address )
 	{
+		base.BeginDialSlow( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -321,17 +333,17 @@ public partial class StargatePegasus : Stargate
 			var startTime = Time.Now;
 			var addrLen = address.Length;
 
-			Stargate target = FindDestinationGateByDialingAddress( this, address );
+			var target = FindDestinationGateByDialingAddress( this, address );
 
 			bool gateValidCheck() { return target.IsValid() && target != this && target.IsStargateReadyForInboundFastEnd(); }
 
-			Ring.RollSymbolsDialSlow(address.Length, gateValidCheck);
+			Ring.RollSymbolsDialSlow(address, gateValidCheck);
 
 			var dialTime = (addrLen == 9) ? 36f : ((addrLen == 8) ? 32f : 26f);
 			
 			void startInboundAnim()
 			{
-				Stargate target = FindDestinationGateByDialingAddress( this, address );
+				//var target = FindDestinationGateByDialingAddress( this, address );
 				if ( target.IsValid() && target != this && target.IsStargateReadyForInboundFast() )
 				{
 					target.BeginInboundFast( address.Length );
@@ -348,7 +360,7 @@ public partial class StargatePegasus : Stargate
 
 				if ( ShouldStopDialing || !Dialing )
 				{
-					ResetGateVariablesToIdle();
+					StopDialing();
 					return;
 				}
 
@@ -368,7 +380,11 @@ public partial class StargatePegasus : Stargate
 	// SLOW INBOUND
 	public override void BeginInboundSlow( int numChevs )
 	{
+		base.BeginInboundSlow( numChevs );
+
 		if ( !IsStargateReadyForInboundInstantSlow() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -396,7 +412,11 @@ public partial class StargatePegasus : Stargate
 
 	public async override void BeginDialInstant( string address )
 	{
+		base.BeginDialInstant( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -438,6 +458,8 @@ public partial class StargatePegasus : Stargate
 
 	public async override void BeginOpenByDHD( string address )
 	{
+		base.BeginOpenByDHD( address );
+
 		if ( !CanStargateStartDial() ) return;
 
 		try
@@ -470,7 +492,11 @@ public partial class StargatePegasus : Stargate
 
 	public async override void BeginInboundDHD( int numChevs )
 	{
+		base.BeginInboundDHD( numChevs );
+
 		if ( !IsStargateReadyForInboundDHD() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -493,9 +519,9 @@ public partial class StargatePegasus : Stargate
 	}
 
 	// CHEVRON STUFF - DHD DIALING
-	public override void DoChevronEncode(char sym)
+	public override void DoDHDChevronEncode(char sym)
 	{
-		base.DoChevronEncode( sym );
+		base.DoDHDChevronEncode( sym );
 
 		var clampLen = Math.Clamp( DialingAddress.Length + 1, 7, 9 );
 
@@ -505,9 +531,9 @@ public partial class StargatePegasus : Stargate
 		Ring.RollSymbolDHDFast( clampLen, () => true, DialingAddress.Length, 0.6f );
 	}
 
-	public override void DoChevronLock( char sym ) // only the top chevron locks, always
+	public override void DoDHDChevronLock( char sym ) // only the top chevron locks, always
 	{
-		base.DoChevronLock( sym );
+		base.DoDHDChevronLock( sym );
 
 		var chev = GetTopChevron();
 		EncodedChevronsOrdered.Add( chev );
@@ -523,9 +549,9 @@ public partial class StargatePegasus : Stargate
 		MakeBusy( rollTime );
 	}
 
-	public override void DoChevronUnlock( char sym )
+	public override void DoDHDChevronUnlock( char sym )
 	{
-		base.DoChevronUnlock( sym );
+		base.DoDHDChevronUnlock( sym );
 
 		var chev = EncodedChevronsOrdered.Last();
 		EncodedChevronsOrdered.Remove( chev );

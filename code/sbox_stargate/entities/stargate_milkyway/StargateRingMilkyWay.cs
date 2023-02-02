@@ -48,6 +48,8 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 
 	public bool StopSoundOnSpinDown = false; // play the stopsound on spindown, or on spin stop
 
+	private bool hasReachedDialingSymbol = false;
+
 	public override void Spawn()
 	{
 		Transmit = TransmitType.Always;
@@ -118,12 +120,21 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	{
 		ShouldDecc = false;
 		ShouldAcc = true;
+
+		Event.Run( StargateEvent.RingSpinUp, Gate );
 	}
 
+	TimeSince lastSpinDown = 0;
 	public void SpinDown()
 	{
+		if ( lastSpinDown < 1 )
+			return;
+
+		lastSpinDown = 0;
 		ShouldAcc = false;
 		ShouldDecc = true;
+
+		Event.Run( StargateEvent.RingSpinDown, Gate );
 
 		if ( StopSoundOnSpinDown )
 		{
@@ -141,6 +152,8 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	{
 		if (Gate.IsValid())
 		{
+			hasReachedDialingSymbol = false;
+			Event.Run( StargateEvent.RingStopped, Gate );
 			if ( !StopSoundOnSpinDown )
 			{
 				PlayStopSound();
@@ -236,8 +249,11 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 
 		if ( IsMoving && Gate.ShouldStopDialing )
 		{
-			SpinDown();
-			Gate.CurGateState = Stargate.GateState.IDLE;
+			if ( !ShouldDecc )
+			{
+				SpinDown();
+				Gate.CurGateState = Stargate.GateState.IDLE;
+			}
 		}
 
 		if ( ShouldAcc )
@@ -266,6 +282,16 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 			if ( RingCurSpeed > 0 )
 			{
 				RingCurSpeed -= RingDeccelStep;
+
+				if (!hasReachedDialingSymbol)
+				{
+					if ( CurRingSymbol == CurDialingSymbol && Gate.Dialing )
+					{
+						hasReachedDialingSymbol = true;
+						Event.Run( StargateEvent.ReachedDialingSymbol, Gate, CurDialingSymbol );
+					}
+				}
+
 			}
 			else
 			{

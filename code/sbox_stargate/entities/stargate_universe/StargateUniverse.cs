@@ -8,7 +8,8 @@ using Sandbox;
 [Title( "Stargate (Universe)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateUniverse : Stargate
 {
-	public StargateRingUniverse Ring;
+	[Net]
+	public StargateRingUniverse Ring { get; set; } = null;
 	public List<Chevron> EncodedChevronsOrdered = new ();
 	public Chevron Chevron;
 
@@ -66,6 +67,11 @@ public partial class StargateUniverse : Stargate
 		Ring.SetParent( this );
 		Ring.Gate = this;
 		Ring.Transmit = TransmitType.Always;
+	}
+
+	public override float GetRingAngle()
+	{
+		return Ring.RingAngle;
 	}
 
 	public async Task<bool> RotateRingToSymbol( char sym, int angOffset = 0 )
@@ -197,7 +203,11 @@ public partial class StargateUniverse : Stargate
 	// FAST DIAL
 	public override void BeginDialFast( string address )
 	{
+		base.BeginDialFast( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -239,7 +249,20 @@ public partial class StargateUniverse : Stargate
 				var i_copy = i;
 				var symTime = rollStartTime + symbolStartDelay + (symbolDelay * i_copy);
 
-				AddTask( symTime, () => SymbolOn( address[i_copy] ), TimedTaskCategory.DIALING );
+				AddTask( symTime, () => {
+					SymbolOn( address[i_copy] );
+
+					var isLastChev = i_copy == addrLen - 1;
+					if (!isLastChev)
+					{
+						Event.Run( StargateEvent.ChevronEncoded, this, address[i_copy] );
+					}
+					else
+					{
+						Event.Run( StargateEvent.ChevronLocked, this, address[i_copy], gateValidCheck() );
+					}
+					
+				}, TimedTaskCategory.DIALING );
 			}
 
 			async void openOrStop()
@@ -267,7 +290,11 @@ public partial class StargateUniverse : Stargate
 	// FAST INBOUND
 	public override void BeginInboundFast( int numChevs )
 	{
+		base.BeginInboundFast( numChevs );
+
 		if ( !IsStargateReadyForInboundFast() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -294,7 +321,11 @@ public partial class StargateUniverse : Stargate
 	// SLOW DIAL
 	public async override void BeginDialSlow( string address )
 	{
+		base.BeginDialSlow( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -334,7 +365,7 @@ public partial class StargateUniverse : Stargate
 				var success = await RotateRingToSymbol( sym ); // wait for ring to rotate to the target symbol
 				if ( !success || ShouldStopDialing )
 				{
-					ResetGateVariablesToIdle();
+					StopDialing();
 					return;
 				}
 
@@ -345,7 +376,13 @@ public partial class StargateUniverse : Stargate
 					if (!isLastChev)
 					{
 						Bearing?.TurnOff( 0.6f );
+						Event.Run( StargateEvent.ChevronEncoded, this, sym );
 					}
+					else
+					{
+						Event.Run( StargateEvent.ChevronLocked, this, sym, gateValidCheck() );
+					}
+					
 				}
 
 				AddTask( Time.Now + 0.65f, symbolAction, TimedTaskCategory.DIALING);
@@ -378,7 +415,11 @@ public partial class StargateUniverse : Stargate
 	// SLOW INBOUND
 	public override void BeginInboundSlow( int numChevs )
 	{
+		base.BeginInboundSlow( numChevs );
+
 		if ( !IsStargateReadyForInboundInstantSlow() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -399,7 +440,11 @@ public partial class StargateUniverse : Stargate
 
 	public override void BeginDialInstant( string address )
 	{
+		base.BeginDialInstant( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -435,6 +480,8 @@ public partial class StargateUniverse : Stargate
 
 	public async override void BeginOpenByDHD( string address )
 	{
+		base.BeginOpenByDHD( address );
+
 		if ( !CanStargateStartDial() ) return;
 
 		try
@@ -467,7 +514,11 @@ public partial class StargateUniverse : Stargate
 
 	public async override void BeginInboundDHD( int numChevs )
 	{
+		base.BeginInboundDHD( numChevs );
+
 		if ( !IsStargateReadyForInboundDHD() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -485,25 +536,25 @@ public partial class StargateUniverse : Stargate
 	}
 
 	// CHEVRON STUFF - DHD DIALING
-	public override void DoChevronEncode( char sym )
+	public override void DoDHDChevronEncode( char sym )
 	{
-		base.DoChevronEncode( sym );
+		base.DoDHDChevronEncode( sym );
 
 		if ( DialingAddress.Length == 1 ) DoPreRoll();
 
 		AddTask( Time.Now + 0.25f, () => SymbolOn( sym, DialingAddress.Length == 1 ), TimedTaskCategory.DIALING );
 	}
 
-	public override void DoChevronLock( char sym ) // only the top chevron locks, always
+	public override void DoDHDChevronLock( char sym ) // only the top chevron locks, always
 	{
-		base.DoChevronLock( sym );
+		base.DoDHDChevronLock( sym );
 
 		AddTask( Time.Now + 0.25f, () => SymbolOn( sym ), TimedTaskCategory.DIALING );
 	}
 
-	public override void DoChevronUnlock( char sym )
+	public override void DoDHDChevronUnlock( char sym )
 	{
-		base.DoChevronUnlock( sym );
+		base.DoDHDChevronUnlock( sym );
 
 		SymbolOff( sym );
 

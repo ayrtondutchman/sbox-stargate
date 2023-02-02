@@ -119,20 +119,6 @@ public partial class Stargate : Prop, IUse
 		}
 	}
 
-	// Stargate Events that automatically get sent to all the Clients too
-
-	[ClientRpc]
-	private void RunEventClient( string name )
-	{
-		Event.Run( name, this );
-	}
-
-	protected void RunEvent( string name )
-	{
-		Event.Run( name, this );
-		RunEventClient( To.Everyone, name );
-	}
-
 	// Utility funcs
 
 	/// <summary>

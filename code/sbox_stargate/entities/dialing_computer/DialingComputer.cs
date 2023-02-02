@@ -50,13 +50,13 @@ public partial class DialingComputer : ModelEntity, IUse
 	{
 		base.StartTouch( other );
 
-		if (other is Stargate gate )
+		if ( other is Stargate gate )
 		{
 			Gate = gate;
 		}
 	}
 
-	private void OnGateChanged(Stargate oldGate, Stargate newGate)
+	private void OnGateChanged( Stargate oldGate, Stargate newGate )
 	{
 		Program.Gate = newGate;
 	}
@@ -103,8 +103,8 @@ public partial class DialingComputer : ModelEntity, IUse
 
 	public bool OnUse( Entity user )
 	{
-		SwitchPanelViewing( To.Single(user) );
-		
+		SwitchPanelViewing( To.Single( user ) );
+
 		return false;
 	}
 
@@ -117,5 +117,153 @@ public partial class DialingComputer : ModelEntity, IUse
 	{
 		var s = (float)Math.Sin( Time.Now );
 		return s * s;
+	}
+
+
+	// Events
+
+	[StargateEvent.GateOpening]
+	private void GateOpening( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} is opening" );
+	}
+
+	[StargateEvent.GateOpen]
+	private void GateOpen( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		//Log.Info( $"Stargate {gate} has opened" );
+	}
+
+	[StargateEvent.GateClosing]
+	private void GateClosing( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} is closing" );
+	}
+
+	[StargateEvent.GateClosed]
+	private void GateClosed( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		//Log.Info( $"Stargate {gate} has closed" );
+	}
+
+	[StargateEvent.ChevronEncoded]
+	private void ChevronEncoded( Stargate gate, char sym )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has chevron encoded with sym {sym}" );
+	}
+
+	[StargateEvent.ChevronLocked]
+	private void ChevronLocked( Stargate gate, char sym, bool valid )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has { (valid ? "valid" : "invalid") } chevron locked with sym {sym}" );
+	}
+
+	[StargateEvent.DHDChevronEncoded]
+	private void DHDChevronEncoded( Stargate gate, char sym )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has DHD chevron encoded with sym {sym}" );
+	}
+
+	[StargateEvent.DHDChevronLocked]
+	private void DHDChevronLocked( Stargate gate, char sym, bool valid )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has DHD {(valid ? "valid" : "invalid")} chevron locked with sym {sym}" );
+	}
+
+	[StargateEvent.DHDChevronUnlocked]
+	private void DHDChevronUnlocked( Stargate gate, char sym )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has DHD chevron unlocked with sym {sym}" );
+	}
+
+	[StargateEvent.RingSpinUp]
+	private void RingSpinUp( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		//Log.Info( $"Stargate {gate} is spinning up ring" );
+	}
+
+	[StargateEvent.RingSpinDown]
+	private void RingSpinDown( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		//Log.Info( $"Stargate {gate} is spinning down ring" );
+	}
+
+	[StargateEvent.RingStopped]
+	private void RingStopped( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		//Log.Info( $"Stargate {gate} ring stopped" );
+	}
+
+	[StargateEvent.ReachedDialingSymbol]
+	private void ReachedDialingSymbol( Stargate gate, char sym )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has reached dialing symbol {sym}" );
+	}
+
+	[StargateEvent.DialBegin]
+	private void DialBegin( Stargate gate, string address )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} started dialing {address}" );
+	}
+
+	[StargateEvent.DialAbort]
+	private void DialAbort( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} aborted dialing" );
+	}
+
+	[StargateEvent.InboundBegin]
+	private void InboundBegin( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} has an incoming wormhole" );
+	}
+
+	[StargateEvent.Reset]
+	private void Reset( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		Log.Info( $"Stargate {gate} was reset" );
+	}
+
+
+	[Event.Tick.Server]
+	private void Tick()
+	{
+		if ( !Gate.IsValid() ) return;
+
+		//Log.Info( Gate.DialingAddress );
 	}
 }

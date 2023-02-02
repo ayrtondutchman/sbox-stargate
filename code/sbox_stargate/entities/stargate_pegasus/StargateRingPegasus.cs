@@ -197,11 +197,13 @@ public partial class StargateRingPegasus : ModelEntity
 	}
 
 	// SLOWDIAL
-	public void RollSymbolsDialSlow( int chevCount, Func<bool> validCheck )
+	public void RollSymbolsDialSlow( string address, Func<bool> validCheck )
 	{
 		try
 		{
 			ResetSymbols();
+
+			var chevCount = address.Length;
 
 			var dataSymbols7 = new int[7, 2] { { 35, 32 }, { 3, 40 }, { 7, 32 }, { 11, 48 }, { 23, 32 }, { 27, 40 }, { 31, 32 } };
 			var dataSymbols8 = new int[8, 2] { { 35, 32 }, { 3, 40 }, { 7, 32 }, { 11, 48 }, { 23, 32 }, { 27, 40 }, { 31, 52 }, { 15, 56 } };
@@ -235,8 +237,17 @@ public partial class StargateRingPegasus : ModelEntity
 					StopRollSound();
 
 					var chev = Gate.GetChevronBasedOnAddressLength( i_copy + 1, chevCount );
-					if ( i_copy < chevCount - 1 ) Gate.ChevronActivateDHD( chev, 0, true );
-					else Gate.ChevronActivate( chev, 0, validCheck(), true );
+					if ( i_copy < chevCount - 1 )
+					{
+						Gate.ChevronActivateDHD( chev, 0, true );
+						Event.Run( StargateEvent.ChevronEncoded, Gate, address[i_copy] );
+					}
+					else
+					{
+						var isValid = validCheck();
+						Gate.ChevronActivate( chev, 0, isValid, true );
+						Event.Run( StargateEvent.ChevronLocked, Gate, address[i_copy], isValid );
+					}
 				}
 				Gate.AddTask( chevTaskTime, chevTask, Stargate.TimedTaskCategory.DIALING );
 			}
@@ -245,13 +256,15 @@ public partial class StargateRingPegasus : ModelEntity
 	}
 
 	// FASTDIAL
-	public void RollSymbolsDialFast( int chevCount, Func<bool> validCheck )
+	public void RollSymbolsDialFast( string address, Func<bool> validCheck )
 	{
 		try
 		{
 			ResetSymbols();
 
 			PlayRollSound( true );
+
+			var chevCount = address.Length;
 
 			var symRollTime = 5f / chevCount;
 			var delayBetweenSymbols = 1.5f / (chevCount - 1);
@@ -271,7 +284,19 @@ public partial class StargateRingPegasus : ModelEntity
 				Gate.AddTask( symTaskTime, () => RollSymbol( data[i_copy], 12, i_copy % 2 == 1, symRollTime ), Stargate.TimedTaskCategory.DIALING );
 
 				var chevTaskTime = startTime + (symRollTime + delayBetweenSymbols) * (i_copy + 1) - delayBetweenSymbols;
-				Gate.AddTask( chevTaskTime, () => Gate.ChevronActivate( Gate.GetChevronBasedOnAddressLength( i_copy + 1, chevCount ), 0, i_copy == chevCount - 1 ? validCheck() : true, i_copy == chevCount - 1 ), Stargate.TimedTaskCategory.DIALING );
+				Gate.AddTask( chevTaskTime, () => {
+					var isLastChev = i_copy == chevCount - 1;
+					Gate.ChevronActivate( Gate.GetChevronBasedOnAddressLength( i_copy + 1, chevCount ), 0, isLastChev ? validCheck() : true, isLastChev );
+					if (!isLastChev)
+					{
+						Event.Run( StargateEvent.ChevronEncoded, Gate, address[i_copy] );
+					}
+					else
+					{
+						Event.Run( StargateEvent.ChevronLocked, Gate, address[i_copy], validCheck() );
+					}
+					
+				}, Stargate.TimedTaskCategory.DIALING );
 			}
 		}
 		catch ( Exception ) { }

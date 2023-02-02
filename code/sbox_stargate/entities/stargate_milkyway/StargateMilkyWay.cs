@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Sandbox;
 
@@ -69,6 +70,11 @@ public partial class StargateMilkyWay : Stargate
 		Ring.Transmit = TransmitType.Always;
 
 		Ring.RingSymbols = "#0JKNTR3MBZX*H69IGPL@QFS1E4AU85OCW72YVD";
+	}
+
+	public override float GetRingAngle()
+	{
+		return Ring.RingAngle;
 	}
 
 	public async Task<bool> RotateRingToSymbol( char sym, int angOffset = 0 )
@@ -268,7 +274,11 @@ public partial class StargateMilkyWay : Stargate
 	// FAST DIAL
 	public async override void BeginDialFast( string address )
 	{
+		base.BeginDialFast( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -277,7 +287,7 @@ public partial class StargateMilkyWay : Stargate
 
 			if ( !IsValidFullAddress( address ) ) { StopDialing(); return; }
 
-			Stargate target = FindDestinationGateByDialingAddress( this, address );
+			var target = FindDestinationGateByDialingAddress( this, address );
 			var wasTargetReadyOnStart = false; // if target gate was not available on dial start, dont bother doing anything at the end
 
 			if ( target.IsValid() && target != this && target.IsStargateReadyForInboundFast() )
@@ -322,6 +332,7 @@ public partial class StargateMilkyWay : Stargate
 					}
 
 					ActiveChevrons++;
+					Event.Run( StargateEvent.ChevronEncoded, this, address[i-1] );
 				}
 
 				if ( i == addrLen - 1 ) Ring.SpinDown(); // stop rotating ring when the last looped chevron locks
@@ -340,10 +351,14 @@ public partial class StargateMilkyWay : Stargate
 			var topChev = GetChevron( 7 ); // lock last (top) chevron
 			if ( topChev.IsValid() )
 			{
-				if ( wasTargetReadyOnStart && target.IsValid() && target != this && target.IsStargateReadyForInboundFastEnd() )
+				var readyForOpen = wasTargetReadyOnStart && target.IsValid() && target != this && target.IsStargateReadyForInboundFastEnd();
+				if ( readyForOpen )
 				{
-					if ( ChevronLightup ) topChev.TurnOn( 0.25f );
+					if ( ChevronLightup )
+						topChev.TurnOn( 0.25f );
 				}
+
+				Event.Run( StargateEvent.ChevronLocked, this, address[address.Length - 1], readyForOpen );
 
 				if ( MovieDialingType )
 				{
@@ -383,7 +398,11 @@ public partial class StargateMilkyWay : Stargate
 	// FAST INBOUND
 	public async override void BeginInboundFast( int numChevs )
 	{
+		base.BeginInboundFast( numChevs );
+
 		if ( !IsStargateReadyForInboundFast() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -450,7 +469,11 @@ public partial class StargateMilkyWay : Stargate
 	// SLOW DIAL
 	public async override void BeginDialSlow( string address )
 	{
+		base.BeginDialSlow( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -484,7 +507,7 @@ public partial class StargateMilkyWay : Stargate
 				var success = await RotateRingToSymbol( sym, offset ); // wait for ring to rotate to the target symbol
 				if ( !success || ShouldStopDialing )
 				{
-					ResetGateVariablesToIdle();
+					StopDialing();
 					return;
 				}
 
@@ -508,17 +531,24 @@ public partial class StargateMilkyWay : Stargate
 						//ChevronActivate( chev, 0.5f, ChevronLightup );
 						if ( ChevronLightup ) chev.TurnOn( 0.5f );
 					}
+
+					Event.Run( StargateEvent.ChevronEncoded, this, sym );
 				}
 				else
 				{
+					var valid = target.IsValid() && target != this && target.IsStargateReadyForInboundInstantSlow();
 					if ( MovieDialingType )
 					{
 						ChevronAnimLockAll( chevNum, 0, ChevronLightup );
 					}
 					else
 					{
-						ChevronAnimLockUnlock( topChev, (isLastChev && target.IsValid() && target != this && target.IsStargateReadyForInboundInstantSlow() && ChevronLightup), true );
+						ChevronAnimLockUnlock( topChev, valid && ChevronLightup, true );
 					}
+
+					IsLockedInvalid = !valid;
+
+					Event.Run( StargateEvent.ChevronLocked, this, sym, valid );
 				}
 
 				ActiveChevrons++;
@@ -535,6 +565,7 @@ public partial class StargateMilkyWay : Stargate
 				{
 					target.BeginInboundSlow( address.Length );
 					readyForOpen = true;
+					Log.Info("ready for open");
 				}
 
 				await Task.DelaySeconds( isLastChev && MovieDialingType ? 0.5f : 1.5f ); // wait a bit
@@ -565,7 +596,11 @@ public partial class StargateMilkyWay : Stargate
 	// SLOW INBOUND
 	public async override void BeginInboundSlow( int numChevs )
 	{
+		base.BeginInboundSlow( numChevs );
+
 		if ( !IsStargateReadyForInboundInstantSlow() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -600,7 +635,11 @@ public partial class StargateMilkyWay : Stargate
 
 	public async override void BeginDialInstant( string address )
 	{
+		base.BeginDialInstant( address );
+
 		if ( !CanStargateStartDial() ) return;
+
+		Event.Run( StargateEvent.DialBegin, this, address );
 
 		try
 		{
@@ -645,7 +684,9 @@ public partial class StargateMilkyWay : Stargate
 	// DHD DIAL
 
 	public async override void BeginOpenByDHD( string address )
-	{
+	{	
+		base.BeginOpenByDHD( address );
+
 		if ( !CanStargateStartDial() ) return;
 
 		try
@@ -678,7 +719,11 @@ public partial class StargateMilkyWay : Stargate
 
 	public async override void BeginInboundDHD( int numChevs )
 	{
+		base.BeginInboundDHD( numChevs );
+
 		if ( !IsStargateReadyForInboundDHD() ) return;
+
+		Event.Run( StargateEvent.InboundBegin, this );
 
 		try
 		{
@@ -702,9 +747,9 @@ public partial class StargateMilkyWay : Stargate
 	}
 
 	// CHEVRON STUFF - DHD DIALING
-	public override void DoChevronEncode( char sym )
+	public override void DoDHDChevronEncode( char sym )
 	{
-		base.DoChevronEncode( sym );
+		base.DoDHDChevronEncode( sym );
 
 		var chev = GetChevronBasedOnAddressLength( DialingAddress.Length, 9 );
 		EncodedChevronsOrdered.Add( chev );
@@ -720,9 +765,9 @@ public partial class StargateMilkyWay : Stargate
 
 	}
 
-	public override void DoChevronLock( char sym ) // only the top chevron locks, always
+	public override void DoDHDChevronLock( char sym ) // only the top chevron locks, always
 	{
-		base.DoChevronLock( sym );
+		base.DoDHDChevronLock( sym );
 
 		var chev = GetTopChevron();
 		EncodedChevronsOrdered.Add( chev );
@@ -740,9 +785,9 @@ public partial class StargateMilkyWay : Stargate
 		}
 	}
 
-	public override void DoChevronUnlock( char sym )
+	public override void DoDHDChevronUnlock( char sym )
 	{
-		base.DoChevronUnlock( sym );
+		base.DoDHDChevronUnlock( sym );
 
 		var chev = EncodedChevronsOrdered.Last();
 		EncodedChevronsOrdered.Remove( chev );

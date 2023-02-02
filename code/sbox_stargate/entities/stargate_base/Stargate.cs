@@ -98,13 +98,19 @@ public abstract partial class Stargate : Prop, IUse
 		AutoCloseTime = -1;
 	}
 
+	// RING ANGLE
+	public virtual float GetRingAngle()
+	{
+		return 0;
+	}
+
 	// USABILITY
 	public bool IsUsable( Entity user )
 	{
 		return true; // we should be always usable
 	}
 
-	public virtual bool OnUse( Entity user )
+	public bool OnUse( Entity user )
 	{
 		OpenStargateMenu(To.Single( user ));
 		return false; // aka SIMPLE_USE, not continuously
@@ -313,10 +319,10 @@ public abstract partial class Stargate : Prop, IUse
 	}
 
 	// begin dial
-	public virtual void BeginDialFast(string address) { }
-	public virtual void BeginDialSlow(string address) { }
+	public virtual void BeginDialFast( string address ) { }
+	public virtual void BeginDialSlow( string address ) { }
 	public virtual void BeginDialInstant( string address ) { } // instant gate open, with kawoosh
-	public virtual void BeginDialNox( string address ) { } // instant gate open without kawoosh - asgard/ancient/nox style 
+	public virtual void BeginDialNox( string address ) { } // instant gate open without kawoosh - asgard/ancient/nox style
 
 	// begin inbound
 	public virtual void BeginInboundFast( int numChevs )
@@ -329,11 +335,12 @@ public abstract partial class Stargate : Prop, IUse
 		if ( Inbound && !Dialing ) StopDialing();
 	}
 
-
 	// DHD DIAL
 	public virtual void BeginOpenByDHD( string address ) { } // when dhd dial button is pressed
 	public virtual void BeginInboundDHD( int numChevs ) { } // when a dhd dialing gate locks onto another gate
 
+
+	// stop dial
 	public async void StopDialing()
 	{
 		if ( !CanStargateStopDial() ) return;
@@ -350,6 +357,15 @@ public abstract partial class Stargate : Prop, IUse
 		Busy = true;
 		ShouldStopDialing = true; // can be used in ring/gate logic to to stop ring/gate rotation
 
+		if (Inbound)
+		{
+			Event.Run( StargateEvent.InboundAbort, this );
+		}
+		else
+		{
+			Event.Run( StargateEvent.DialAbort, this );
+		}
+
 		ClearTasksByCategory( TimedTaskCategory.DIALING );
 
 		if ( OtherGate.IsValid() )
@@ -365,33 +381,44 @@ public abstract partial class Stargate : Prop, IUse
 		ResetGateVariablesToIdle();
 	}
 
+	// opening
 	public virtual void OnStargateBeginOpen()
 	{
 		CurGateState = GateState.OPENING;
 		Busy = true;
+		Event.Run( StargateEvent.GateOpening, this );
 	}
 
 	public virtual void OnStargateOpened()
 	{
 		CurGateState = GateState.OPEN;
 		Busy = false;
+		Event.Run( StargateEvent.GateOpen, this );
 	}
+
+	// closing
 	public virtual void OnStargateBeginClose()
 	{
 		CurGateState = GateState.CLOSING;
 		Busy = true;
 
 		KillAllPlayersInTransit();
+		Event.Run( StargateEvent.GateClosing, this );
 	}
+
 	public virtual void OnStargateClosed()
 	{
 		ResetGateVariablesToIdle();
+		Event.Run( StargateEvent.GateClosed, this);
 	}
 
+	// reset
 	public virtual void DoStargateReset()
 	{
 		ResetGateVariablesToIdle();
 		ClearTasks();
+
+		Event.Run( StargateEvent.Reset, this );
 	}
 
 	public virtual void EstablishWormholeTo(Stargate target)
@@ -413,32 +440,31 @@ public abstract partial class Stargate : Prop, IUse
 		return index - 4;
 	}
 
-	public virtual void DoChevronEncode(char sym)
+	public virtual void DoDHDChevronEncode(char sym)
 	{
 		DialingAddress += sym;
-		Log.Info( $"Encoded {sym}, DialingAddress = '{DialingAddress}'" );
+		Event.Run( StargateEvent.DHDChevronEncoded, this, sym );
 	}
 
-	public virtual void DoChevronLock( char sym )
+	public virtual void DoDHDChevronLock( char sym )
 	{
 		DialingAddress += sym;
-		Log.Info( $"Locked {sym}, DialingAddress = '{DialingAddress}'" );
 
 		var gate = FindDestinationGateByDialingAddress( this, DialingAddress );
 		var valid = (gate != this && gate.IsValid() && gate.IsStargateReadyForInboundDHD());
 
 		IsLockedInvalid = !valid;
+
+		Event.Run( StargateEvent.DHDChevronLocked, this, sym, valid );
 	}
 
-	public virtual void DoChevronUnlock(char sym)
+	public virtual void DoDHDChevronUnlock( char sym )
 	{
-		var sb = new StringBuilder(DialingAddress);
-		sb.Remove( DialingAddress.IndexOf( sym ), 1 );
-
-		DialingAddress = sb.ToString();
-		Log.Info( $"Unlocked {sym}, DialingAddress = '{DialingAddress}'" );
+		DialingAddress = DialingAddress.Substring(0, DialingAddress.Length - 1);
 
 		IsLockedInvalid = false;
+
+		Event.Run( StargateEvent.DHDChevronUnlocked, this, sym );
 	}
 
 	// THINK

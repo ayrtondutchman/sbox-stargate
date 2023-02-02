@@ -407,16 +407,6 @@
 	string col_sg_blue = "#00AAB7";
 	string col_sg_yellow = "#E2E2AA";
 
-	public override void Tick()
-	{
-		base.Tick();
-
-		if (!Gate.IsValid()) return;
-
-		var ring = (Gate as StargateMilkyWay).Ring;
-		RingAngle = (Gate as StargateMilkyWay).Ring.RingAngle;
-	}
-
 	private int GetGlyphNumber(char sym)
 	{
 		if (sym == ' ') return 0;
@@ -520,72 +510,65 @@
 
 	protected override void OnAfterTreeRender(bool firstTime)
 	{
-		if (timesinceBox8 > 1f)
-		{
-			timesinceBox8 = 0;
-			box8_img.SetClass("hidden", false);
-			box8.SetClass("hidden", false);
-			
-		}
+		//if (timesinceBox8 > 1f)
+		//{
+		//	timesinceBox8 = 0;
+		//	box8_img.SetClass("hidden", false);
+		//	box8.SetClass("hidden", false);
 
-		if (timesinceBox9 > 2f)
-		{
-			timesinceBox9 = 0;
-			box9_img.SetClass("hidden", false);
-			box9.SetClass("hidden", false);
-		}
+		//}
+
+		//if (timesinceBox9 > 2f)
+		//{
+		//	timesinceBox9 = 0;
+		//	box9_img.SetClass("hidden", false);
+		//	box9.SetClass("hidden", false);
+		//}
 
 
 		if (!Gate.IsValid()) return;
 
+		RingAngle = Gate.GetRingAngle();
+
 		//Log.Info(GetSinFromTime());
 
-		chev1.SetClass("active", Gate.Chevrons[0].On);
-		chev2.SetClass("active", Gate.Chevrons[1].On);
-		chev3.SetClass("active", Gate.Chevrons[2].On);
-		chev4.SetClass("active", Gate.Chevrons[3].On);
-		chev5.SetClass("active", Gate.Chevrons[4].On);
-		chev6.SetClass("active", Gate.Chevrons[5].On);
-		chev7.SetClass("active", Gate.Chevrons[6].On);
-		chev8.SetClass("active", Gate.Chevrons[7].On);
-		chev9.SetClass("active", Gate.Chevrons[8].On);
+		//chev1.SetClass("active", Gate.Chevrons[0].On);
+		//chev2.SetClass("active", Gate.Chevrons[1].On);
+		//chev3.SetClass("active", Gate.Chevrons[2].On);
+		//chev4.SetClass("active", Gate.Chevrons[3].On);
+		//chev5.SetClass("active", Gate.Chevrons[4].On);
+		//chev6.SetClass("active", Gate.Chevrons[5].On);
+		//chev7.SetClass("active", Gate.Chevrons[6].On);
+		//chev8.SetClass("active", Gate.Chevrons[7].On);
+		//chev9.SetClass("active", Gate.Chevrons[8].On);
 
-		var sg = Gate as StargateMilkyWay;
+		//var sg = Gate as StargateMilkyWay;
 
-		var dialingSym = sg.Ring.CurDialingSymbol;
-		var ringSym = sg.Ring.CurRingSymbol;
-		var desiredAngDiff = sg.Ring.DesiredRingAngleDifference;
-		EncodingGlyph = dialingSym;
+		//var dialingSym = sg.Ring.CurDialingSymbol;
+		//var ringSym = sg.Ring.CurRingSymbol;
+		//var desiredAngDiff = sg.Ring.DesiredRingAngleDifference;
+		//EncodingGlyph = dialingSym;
 
-		if (EncodingGlyph == '#')
-			EncodingGlyph = '?';
+		//if (EncodingGlyph == '#')
+		//	EncodingGlyph = '?';
 
-		var b = (dialingSym == ringSym) && desiredAngDiff < 10 && Gate.Dialing;
+		//var b = (dialingSym == ringSym) && desiredAngDiff < 10 && Gate.Dialing;
 
-		if (b)
-		{
-			EncodeBoxAnim(Gate.ActiveChevrons + 1, EncodingGlyph);
-		}
+		//if (b)
+		//{
+		//	EncodeBoxAnim(Gate.ActiveChevrons + 1, EncodingGlyph);
+		//}
 
 		//if (Gate.Idle && Address.Length > 0)
-			//Address = "";
-			//if (!box8.HasClass("hidden"))
-			//	box8.SetClass("hidden", true);
-			//if (!box9.HasClass("hidden"))
-			//	box9.SetClass("hidden", true);
+		//Address = "";
+		//if (!box8.HasClass("hidden"))
+		//	box8.SetClass("hidden", true);
+		//if (!box9.HasClass("hidden"))
+		//	box9.SetClass("hidden", true);
 	}
 
 	protected override int BuildHash()
 	{
 		return HashCode.Combine(Time.Now);
 	}
-
-	[Event("stargate.beginopen")]
-	public void OnGateBeginOpen(Stargate gate)
-	{
-		if (gate != Gate) return;
-
-		Log.Info($"The gate {gate} just started opening");
-	}
-	
 }

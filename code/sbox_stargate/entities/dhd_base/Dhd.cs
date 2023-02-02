@@ -339,7 +339,7 @@ public abstract partial class Dhd : Prop
 
 			if ( PressedActions.Contains( action ) ) // if symbol was pressed before already, deactivate it
 			{
-				Gate.DoChevronUnlock( symbol );
+				Gate.DoDHDChevronUnlock( symbol );
 
 				if ( PressedActions.Count == 1 ) // if we are deactivating last symbol, stop dialing and go back to idle
 				{
@@ -363,11 +363,11 @@ public abstract partial class Dhd : Prop
 
 				if ( PressedActions.Count == 8 || symbol is '#' ) // lock if we are putting Point of Origin or 9th symbol, otherwise encode
 				{
-					Gate.DoChevronLock( symbol );
+					Gate.DoDHDChevronLock( symbol );
 				}
 				else
 				{
-					Gate.DoChevronEncode( symbol );
+					Gate.DoDHDChevronEncode( symbol );
 				}
 
 				PressedActions.Add( action );
