@@ -413,8 +413,8 @@
 
 		if (!Gate.IsValid()) return;
 
-		var ring = (Gate as StargateMilkyWayNew).Ring;
-		RingAngle = (Gate as StargateMilkyWayNew).Ring.RingAngle;
+		var ring = (Gate as StargateMilkyWay).Ring;
+		RingAngle = (Gate as StargateMilkyWay).Ring.RingAngle;
 	}
 
 	private int GetGlyphNumber(char sym)
@@ -550,7 +550,7 @@
 		chev8.SetClass("active", Gate.Chevrons[7].On);
 		chev9.SetClass("active", Gate.Chevrons[8].On);
 
-		var sg = Gate as StargateMilkyWayNew;
+		var sg = Gate as StargateMilkyWay;
 
 		var dialingSym = sg.Ring.CurDialingSymbol;
 		var ringSym = sg.Ring.CurRingSymbol;

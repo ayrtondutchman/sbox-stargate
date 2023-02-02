@@ -7,7 +7,8 @@ using Sandbox;
 [Title( "Stargate (Milky Way)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateMilkyWay : Stargate
 {
-	public StargateRingMilkyWay Ring;
+	[Net]
+	public StargateRingMilkyWay Ring { get; set; } = null;
 	public List<Chevron> EncodedChevronsOrdered = new();
 
 	public bool MovieDialingType = false; // when enabled, encodes the symbol under each chevron like in the movie
@@ -37,7 +38,7 @@ public partial class StargateMilkyWay : Stargate
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
-		SetModel( "models/sbox_stargate/gate_sg1/gate_sg1.vmdl" );
+		SetModel( "models/sbox_stargate/sg_mw/sg_mw_gate.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
@@ -60,11 +61,14 @@ public partial class StargateMilkyWay : Stargate
 	public void CreateRing()
 	{
 		Ring = new();
+		Ring.SetModel( "models/sbox_stargate/sg_mw/sg_mw_ring.vmdl" );
 		Ring.Position = Position;
 		Ring.Rotation = Rotation;
 		Ring.SetParent( this );
 		Ring.Gate = this;
 		Ring.Transmit = TransmitType.Always;
+
+		Ring.RingSymbols = "#0JKNTR3MBZX*H69IGPL@QFS1E4AU85OCW72YVD";
 	}
 
 	public async Task<bool> RotateRingToSymbol( char sym, int angOffset = 0 )
@@ -77,6 +81,7 @@ public partial class StargateMilkyWay : Stargate
 	public virtual Chevron CreateChevron( int n )
 	{
 		var chev = new Chevron();
+		chev.SetModel( "models/sbox_stargate/sg_mw/sg_mw_chevron.vmdl" );
 		chev.Position = Position;
 		chev.Rotation = Rotation.Angles().WithRoll( -ChevronAngles[n - 1] ).ToRotation();
 		chev.SetParent( this );

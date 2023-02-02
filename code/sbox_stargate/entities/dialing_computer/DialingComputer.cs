@@ -15,7 +15,7 @@ public partial class DialingComputer : ModelEntity, IUse
 	private DialingComputerHudPanel ComputerPanelHud;
 	private DialingComputerWorldPanel ComputerPanelWorld;
 
-	private ComputerProgramDialingV2 Program;
+	private ComputerProgramDialing Program;
 
 	public static readonly Color Color_SG_Blue = Color.FromBytes( 0, 170, 185 );
 	public static readonly Color Color_SG_Yellow = Color.FromBytes( 225, 225, 170 );
