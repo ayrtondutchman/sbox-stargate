@@ -87,7 +87,7 @@
 	</div>
 
 	<div class="frame_addressbox">
-		<AddressBox></AddressBox>
+		<AddressBox @ref=addressbox></AddressBox>
 	</div>
 	
 
@@ -99,6 +99,7 @@
 	public DialingComputer Computer;
 
 	private GateBox gatebox;
+	private AddressBox addressbox;
 
 	private float TextScaleModifier = 0;
 
@@ -129,6 +130,31 @@
 		if (gate != Gate) return;
 
 		Log.Info($"The gate {gate} just started opening");
+	}
+
+	[Event("stargate.symbolencoded")]
+	public void OnGateSymbolEncoded(Stargate gate)
+	{
+		if (gate != Gate) return;
+
+		var num = Gate.ActiveChevrons;
+		if (num == 1)
+		{
+			addressbox.Box8_Appear();
+		}
+		else if (num == 2)
+		{
+			addressbox.Box9_Appear();
+		}
+	}
+
+	[Event("stargate.reset")]
+	public void OnGateReset(Stargate gate)
+	{
+		if (gate != Gate) return;
+
+		addressbox.Box8_Disappear();
+		addressbox.Box9_Disappear();
 	}
 	
 }

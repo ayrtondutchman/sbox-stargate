@@ -19,14 +19,54 @@
 		width: 100%;
 	}
 
+	.box_base:nth-child(8) {
+		transition: all 1s;
+
+		&.hidden {
+			flex-grow: 0;
+			opacity: 0;
+			transition: all 0.2s;
+		}
+	}
+
+	.box_base:nth-child(9) {
+		transition: all 1s;
+
+		&.hidden {
+			flex-grow: 0;
+			opacity: 0;
+			transition: all 0.2s;
+		}
+	}
+
 	.box_number {
 		position: absolute;
-		border-color: red;
-		border-width: 0.5%;
 		color: white;
 		font-size: 100%;
+		align-self: center;
+		left: 5%;
 		bottom: 0;
-		left: 0;
+		opacity: 1;
+
+		&.num8 {
+			transition: opacity 0.5s;
+
+			&.hidden
+			{
+				opacity: 0;
+				transition: opacity 0.2s;
+			}
+		}
+
+		&.num9 {
+			transition: opacity 0.5s;
+
+			&.hidden
+			{
+				opacity: 0;
+				transition: opacity 0.2s;
+			}
+		}
 	}
 
 	.box_glyph_container {
@@ -44,26 +84,79 @@
 <div class="frame">
 
 	@{
-		for (int i = 1; i <= 9; i++)
+		var s = $"font-size: {150 * TextScaleModifier}%";
+		for (int i = 1; i <= 7; i++)
 		{
-			var s = $"font-size: {150 * TextScaleModifier}%";
-			<div class="box_base">
-				<label class="box_number" style=@s>@i</label>
+			<div class="box_base hidden">
 
-				<div class="box_glyph_container">
-					
-				</div>
+				<label class="box_number" style=@s text=@i></label>
+				<div class="box_glyph_container"></div>
+
 			</div>
 		}
-	}
-	
 
+		<div class="box_base hidden" @ref="box8">
+
+			<label class="box_number num8 hidden" style=@s text=8 @ref="box8_number"></label>
+			<div class="box_glyph_container"></div>
+
+		</div>
+
+		<div class="box_base hidden" @ref="box9">
+
+			<label class="box_number num9 hidden" style=@s text=9 @ref="box9_number"></label>
+			<div class="box_glyph_container"></div>
+
+		</div>
+	}
 	
 </div>
 
 @code {
-	
+
 	private float TextScaleModifier = 0;
+
+	Panel box8 { get; set; } = null;
+	Panel box8_number { get; set; } = null;
+
+	Panel box9 { get; set; } = null;
+	Panel box9_number { get; set; } = null;
+
+	private async void AnimateBox89(bool enable, bool b9)
+	{
+		if (enable)
+		{
+			(b9 ? box9 : box8).SetClass("hidden", false);
+			await GameTask.DelaySeconds(1);
+			(b9 ? box9_number : box8_number).SetClass("hidden", false);
+		}
+		else
+		{
+			(b9 ? box9_number : box8_number).SetClass("hidden", true);
+			await GameTask.DelaySeconds(0.25f);
+			(b9 ? box9 : box8).SetClass("hidden", true);
+		}
+	}
+
+	public void Box8_Appear()
+	{
+		AnimateBox89(true, false);
+	}
+
+	public void Box8_Disappear()
+	{
+		AnimateBox89(false, false);
+	}
+
+	public void Box9_Appear()
+	{
+		AnimateBox89(true, true);
+	}
+
+	public void Box9_Disappear()
+	{
+		AnimateBox89(false, true);
+	}
 
 	protected override void OnAfterTreeRender(bool firstTime)
 	{
