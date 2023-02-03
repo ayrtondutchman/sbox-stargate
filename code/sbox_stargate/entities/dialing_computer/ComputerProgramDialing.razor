@@ -4,6 +4,8 @@
 @using System.Threading.Tasks;
 @using System.Text;
 
+@inherits SGCProgram;
+
 <style>
 
 	.canvas {
@@ -84,7 +86,7 @@
 		opacity: 0;
 
 		<!--Centered pos, appeared-->
-		&.appear_t {
+		&.appear {
 			top: 20.6%;
 			left: 19.45%;
 			width: 61.1%;
@@ -147,25 +149,7 @@
 			height: 8%;
 			opacity: 1;
 		}
-
-		&.appear {
-			opacity: 1;
-			animation-name: glyph_appear;
-			animation-duration: 0.6s;
-			animation-iteration-count: 1;
-			animation-fill-mode: forwards;
-		}
 	}
-
-	<!--
-	.glyph_encode_glyph {
-		color: white;
-		margin-right: 93.5%;
-		margin-top: auto;
-		margin-bottom: auto;
-		font-family: 'Stargate Address Glyphs U';
-	}
-	-->
 
 	.glyph_encode_glyph_image {
 		background-image-tint: white;
@@ -380,12 +364,10 @@
 
 @code
 {
-	public Stargate Gate;
-	public DialingComputer Computer;
 
 	float RingAngle { get; set; } = 0;
 	char EncodingGlyph { get; set; } = ' ';
-	string Address { get; set; } = "123456789";
+	public string Address { get; set; } = "";
 	bool SequenceComplete { get; set; } = false;
 
 	Panel chev1 { get; set; } = null;
@@ -436,42 +418,46 @@
 		return Gate.Inbound;
 	}
 
-	TimeSince encodeAnimation = 0;
-
-	public async void EncodeBoxAnim(int chevnum, char sym)
+	public async void EncodeBoxAppear(char sym)
 	{
-		if (encodeAnimation < 5)
-			return;
+		EncodingGlyph = sym;
 
-		encodeAnimation = 0;
+		if (EncodingGlyph == '#')
+			EncodingGlyph = '?';
 
-		var moveclass = $"move_{chevnum}_t";
-		var appearclass = "appear_t";
-
-		if (chevnum > 7)
-		{
-			moveclass = $"move_7_t";
-		}
-
-		encode_box.SetClass(appearclass, true);
+		encode_box.SetClass("appear", true);
 		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
 
 		await GameTask.DelaySeconds(0.6f);
 
 		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
+	}
 
-		await GameTask.DelaySeconds(0.8f);
+	public void EncodeBoxDisappear()
+	{
+		encode_box.SetClass("appear", false);
+	}
 
+	public async void EncodeBoxMove(int chevnum)
+	{
+		await GameTask.DelaySeconds(0.5f);
+
+		if (!Gate.Dialing) return;
+
+		var moveclass = $"move_{chevnum}_t";
+		if (chevnum > 7)
+			moveclass = $"move_7_t";
+
+		EncodeBoxDisappear();
 		encode_box.SetClass(moveclass, true);
 		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
 
 		await GameTask.DelaySeconds(0.6f);
 		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
 
-		Address = Address + sym;
+		Address = Address + EncodingGlyph;
 
 		encode_box.SetClass(moveclass, false);
-		encode_box.SetClass(appearclass, false);
 
 		/*
 		if (Gate.ActiveChevrons == 7)
@@ -490,81 +476,34 @@
 		}
 		*/
 
-		if (chevnum == 7)
-		{
-			box8.SetClass("hidden", false);
-			Log.Info("unhiding box 8");
-		}
-
-		if (chevnum == 8)
-		{
-			box9.SetClass("hidden", false);
-			Log.Info("unhiding box 9");
-		}
-
 	}
-
-	TimeSince timesinceBox8 = 0;
-	TimeSince timesinceBox9 = 0;
-	bool ishidden = false;
 
 	protected override void OnAfterTreeRender(bool firstTime)
 	{
-		//if (timesinceBox8 > 1f)
-		//{
-		//	timesinceBox8 = 0;
-		//	box8_img.SetClass("hidden", false);
-		//	box8.SetClass("hidden", false);
-
-		//}
-
-		//if (timesinceBox9 > 2f)
-		//{
-		//	timesinceBox9 = 0;
-		//	box9_img.SetClass("hidden", false);
-		//	box9.SetClass("hidden", false);
-		//}
-
-
 		if (!Gate.IsValid()) return;
 
 		RingAngle = Gate.GetRingAngle();
 
-		//Log.Info(GetSinFromTime());
+		chev1.SetClass("active", Gate.Chevrons[0].On);
+		chev2.SetClass("active", Gate.Chevrons[1].On);
+		chev3.SetClass("active", Gate.Chevrons[2].On);
+		chev4.SetClass("active", Gate.Chevrons[3].On);
+		chev5.SetClass("active", Gate.Chevrons[4].On);
+		chev6.SetClass("active", Gate.Chevrons[5].On);
+		chev7.SetClass("active", Gate.Chevrons[6].On);
+		chev8.SetClass("active", Gate.Chevrons[7].On);
+		chev9.SetClass("active", Gate.Chevrons[8].On);
 
-		//chev1.SetClass("active", Gate.Chevrons[0].On);
-		//chev2.SetClass("active", Gate.Chevrons[1].On);
-		//chev3.SetClass("active", Gate.Chevrons[2].On);
-		//chev4.SetClass("active", Gate.Chevrons[3].On);
-		//chev5.SetClass("active", Gate.Chevrons[4].On);
-		//chev6.SetClass("active", Gate.Chevrons[5].On);
-		//chev7.SetClass("active", Gate.Chevrons[6].On);
-		//chev8.SetClass("active", Gate.Chevrons[7].On);
-		//chev9.SetClass("active", Gate.Chevrons[8].On);
+		if (Gate.Idle && Address.Length > 0)
+		{
+			Address = "";
 
-		//var sg = Gate as StargateMilkyWay;
+			if (!box8.HasClass("hidden"))
+				box8.SetClass("hidden", true);
+			if (!box9.HasClass("hidden"))
+				box9.SetClass("hidden", true);
+		}
 
-		//var dialingSym = sg.Ring.CurDialingSymbol;
-		//var ringSym = sg.Ring.CurRingSymbol;
-		//var desiredAngDiff = sg.Ring.DesiredRingAngleDifference;
-		//EncodingGlyph = dialingSym;
-
-		//if (EncodingGlyph == '#')
-		//	EncodingGlyph = '?';
-
-		//var b = (dialingSym == ringSym) && desiredAngDiff < 10 && Gate.Dialing;
-
-		//if (b)
-		//{
-		//	EncodeBoxAnim(Gate.ActiveChevrons + 1, EncodingGlyph);
-		//}
-
-		//if (Gate.Idle && Address.Length > 0)
-		//Address = "";
-		//if (!box8.HasClass("hidden"))
-		//	box8.SetClass("hidden", true);
-		//if (!box9.HasClass("hidden"))
-		//	box9.SetClass("hidden", true);
 	}
 
 	protected override int BuildHash()

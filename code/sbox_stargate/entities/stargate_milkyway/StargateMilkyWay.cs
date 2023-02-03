@@ -108,40 +108,7 @@ public partial class StargateMilkyWay : Stargate
 		}
 	}
 
-	public Chevron GetChevron( int num )
-	{
-		return (num <= Chevrons.Count) ? Chevrons[num - 1] : null;
-	}
-
-	public Chevron GetChevronBasedOnAddressLength( int num, int len = 7 )
-	{
-		if ( len == 8 )
-		{
-			if ( num == 7 ) return GetChevron( 8 );
-			else if ( num == 8 ) return GetChevron( 7 );
-		}
-		else if ( len == 9 )
-		{
-			if ( num == 7 ) return GetChevron( 8 );
-			else if ( num == 8 ) return GetChevron( 9 );
-			else if ( num == 9 ) return GetChevron( 7 );
-		}
-		return GetChevron( num );
-	}
-
-	public Chevron GetTopChevron()
-	{
-		return GetChevron( 7 );
-	}
-
 	// DIALING
-
-	public async void SetChevronsGlowState( bool state, float delay = 0 )
-	{
-		if ( delay > 0 ) await Task.DelaySeconds( delay );
-
-		foreach ( Chevron chev in Chevrons ) chev.On = state;
-	}
 
 	public override void OnStopDialingBegin()
 	{
@@ -332,7 +299,7 @@ public partial class StargateMilkyWay : Stargate
 					}
 
 					ActiveChevrons++;
-					Event.Run( StargateEvent.ChevronEncoded, this, address[i-1] );
+					Event.Run( StargateEvent.ChevronEncoded, this, i );
 				}
 
 				if ( i == addrLen - 1 ) Ring.SpinDown(); // stop rotating ring when the last looped chevron locks
@@ -358,7 +325,7 @@ public partial class StargateMilkyWay : Stargate
 						topChev.TurnOn( 0.25f );
 				}
 
-				Event.Run( StargateEvent.ChevronLocked, this, address[address.Length - 1], readyForOpen );
+				Event.Run( StargateEvent.ChevronLocked, this, address.Length, readyForOpen );
 
 				if ( MovieDialingType )
 				{
@@ -504,6 +471,8 @@ public partial class StargateMilkyWay : Stargate
 				var movieOffset = -ChevronAngles[Chevrons.IndexOf( GetChevronBasedOnAddressLength( chevNum, address.Length ) )];
 
 				var offset = MovieDialingType ? movieOffset : 0;
+				CurRingSymbolOffset = -offset;
+
 				var success = await RotateRingToSymbol( sym, offset ); // wait for ring to rotate to the target symbol
 				if ( !success || ShouldStopDialing )
 				{
@@ -532,7 +501,7 @@ public partial class StargateMilkyWay : Stargate
 						if ( ChevronLightup ) chev.TurnOn( 0.5f );
 					}
 
-					Event.Run( StargateEvent.ChevronEncoded, this, sym );
+					Event.Run( StargateEvent.ChevronEncoded, this, chevNum );
 				}
 				else
 				{
@@ -548,7 +517,7 @@ public partial class StargateMilkyWay : Stargate
 
 					IsLockedInvalid = !valid;
 
-					Event.Run( StargateEvent.ChevronLocked, this, sym, valid );
+					Event.Run( StargateEvent.ChevronLocked, this, chevNum, valid );
 				}
 
 				ActiveChevrons++;

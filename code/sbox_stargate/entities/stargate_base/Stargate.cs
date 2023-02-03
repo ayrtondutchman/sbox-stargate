@@ -56,8 +56,6 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public GateState CurGateState { get; set; } = GateState.IDLE;
 	[Net] public DialType CurDialType { get; set; } = DialType.FAST;
 
-	
-
 	// gate state accessors
 	public bool Idle { get => CurGateState is GateState.IDLE; }
 	public bool Active { get => CurGateState is GateState.ACTIVE; }
@@ -69,6 +67,10 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public string DialingAddress { get; set; } = "";
 	[Net] public int ActiveChevrons { get; set; } = 0;
 	[Net] public bool IsLockedInvalid { get; set; } = false;
+
+	[Net] public char CurDialingSymbol { get; set; } = '!';
+	[Net] public char CurRingSymbol { get; set; } = ' ';
+	[Net] public float CurRingSymbolOffset { get; set; } = 0;
 
 	public TimeSince TimeSinceDHDAction = 0f;
 	public float DhdDialShutdownTime = 20f;
@@ -433,6 +435,54 @@ public abstract partial class Stargate : Prop, IUse
 	}
 
 	// CHEVRON
+
+	public virtual Chevron GetChevron( int num )
+	{
+		return (num <= Chevrons.Count) ? Chevrons[num - 1] : null;
+	}
+
+	public virtual Chevron GetTopChevron()
+	{
+		return GetChevron( 7 );
+	}
+
+	public bool IsChevronActive(int num)
+	{
+		var chev = GetChevron( num );
+
+		if ( !chev.IsValid() )
+			return false;
+
+		return chev.On;
+	}
+
+	public virtual void SetChevronsGlowState( bool state, float delay = 0 )
+	{
+		foreach ( Chevron chev in Chevrons )
+		{
+			if ( state )
+				chev.TurnOn( delay );
+			else
+				chev.TurnOff( delay );
+		}
+	}
+
+	public Chevron GetChevronBasedOnAddressLength( int num, int len = 7 )
+	{
+		if ( len == 8 )
+		{
+			if ( num == 7 ) return GetChevron( 8 );
+			else if ( num == 8 ) return GetChevron( 7 );
+		}
+		else if ( len == 9 )
+		{
+			if ( num == 7 ) return GetChevron( 8 );
+			else if ( num == 8 ) return GetChevron( 9 );
+			else if ( num == 9 ) return GetChevron( 7 );
+		}
+		return GetChevron( num );
+	}
+
 	public int GetChevronOrderOnGateFromChevronIndex( int index )
 	{
 		if ( index <= 3 ) return index;

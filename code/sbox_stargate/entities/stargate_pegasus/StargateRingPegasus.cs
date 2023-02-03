@@ -240,13 +240,13 @@ public partial class StargateRingPegasus : ModelEntity
 					if ( i_copy < chevCount - 1 )
 					{
 						Gate.ChevronActivateDHD( chev, 0, true );
-						Event.Run( StargateEvent.ChevronEncoded, Gate, address[i_copy] );
+						Event.Run( StargateEvent.ChevronEncoded, Gate, i_copy + 1 );
 					}
 					else
 					{
 						var isValid = validCheck();
 						Gate.ChevronActivate( chev, 0, isValid, true );
-						Event.Run( StargateEvent.ChevronLocked, Gate, address[i_copy], isValid );
+						Event.Run( StargateEvent.ChevronLocked, Gate, i_copy + 1, isValid );
 					}
 				}
 				Gate.AddTask( chevTaskTime, chevTask, Stargate.TimedTaskCategory.DIALING );
@@ -289,11 +289,11 @@ public partial class StargateRingPegasus : ModelEntity
 					Gate.ChevronActivate( Gate.GetChevronBasedOnAddressLength( i_copy + 1, chevCount ), 0, isLastChev ? validCheck() : true, isLastChev );
 					if (!isLastChev)
 					{
-						Event.Run( StargateEvent.ChevronEncoded, Gate, address[i_copy] );
+						Event.Run( StargateEvent.ChevronEncoded, Gate, i_copy + 1 );
 					}
 					else
 					{
-						Event.Run( StargateEvent.ChevronLocked, Gate, address[i_copy], validCheck() );
+						Event.Run( StargateEvent.ChevronLocked, Gate, i_copy + 1, validCheck() );
 					}
 					
 				}, Stargate.TimedTaskCategory.DIALING );

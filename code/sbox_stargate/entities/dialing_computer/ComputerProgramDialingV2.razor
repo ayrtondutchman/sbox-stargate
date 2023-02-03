@@ -4,6 +4,8 @@
 @using System.Threading.Tasks;
 @using System.Text;
 
+@inherits SGCProgram;
+
 <style>
 
 	.canvas {
@@ -29,7 +31,7 @@
 
 	.frame_outer {
 		border-width: 0.5%;
-		border-color: @DialingComputer.Color_SG_Blue.Rgb;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
 
 		position: absolute;
 		top: 19.15%;
@@ -69,6 +71,133 @@
 		margin: auto;
 	}
 
+	.glyph_encode_frame {
+		position: absolute;
+		border-width: 0.5%;
+		border-color: white;
+		background-color: transparent;
+		justify-content: center;
+		z-index: 11;
+
+		<!--Transition params-->
+		transition: top 0.6s, left 0.6s, width 0.6s, height 0.6s;
+
+		<!--Default pos, hidden-->
+		top: 24.5%;
+		left: 50%;
+		width: 0%;
+		height: 0%;
+		opacity: 0;
+
+		<!--Centered pos, appeared-->
+		&.appear {
+			top: 20.6%;
+			left: 19.45%;
+			width: 61.1%;
+			height: 48.95%;
+			opacity: 1;
+		}
+
+		&.move_1 {
+			top: 20.65%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_2 {
+			top: 29.05%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_3 {
+			top: 37.4%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_4 {
+			top: 45.75%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_5 {
+			top: 54.15%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_6 {
+			top: 62.55%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_7 {
+			top: 70.95%;
+			left: 85%;
+			width: 12%;
+			height: 8%;
+			opacity: 1;
+		}
+
+		&.move_7_nonlast {
+			top: 64.7%;
+			left: 85%;
+			width: 12%;
+			height: 7%;
+			opacity: 1;
+		}
+
+		&.move_8 {
+			top: 72.05%;
+			left: 85%;
+			width: 12%;
+			height: 7%;
+			opacity: 1;
+		}
+
+		&.move_8_nonlast {
+			top: 66.4%;
+			left: 85%;
+			width: 12%;
+			height: 6.15%;
+			opacity: 1;
+		}
+
+		&.move_9 {
+			top: 72.95%;
+			left: 85%;
+			width: 12%;
+			height: 6.15%;
+			opacity: 1;
+		}
+	}
+
+	.glyph_encode_glyph_image {
+		background-image-tint: white;
+		height: 100%;
+		aspect-ratio: 1;
+		z-index: 12;
+
+		&.none {
+			background-image-tint: transparent;
+		}
+	}
+
 </style>
 
 <root>
@@ -89,17 +218,33 @@
 	<div class="frame_addressbox">
 		<AddressBox @ref=addressbox></AddressBox>
 	</div>
+
+	<div class="glyph_encode_frame" @ref="encode_box">
+	@{
+		var num = GetGlyphNumber(EncodingGlyph);
+		var imgname = $"materials/sbox_stargate/glyphs/mw/glyph_{num}.png";
+		var c = "glyph_encode_glyph_image";
+		if (num == 0)
+		{
+			c += " none";
+			imgname = "materials/sbox_stargate/glyphs/mw/glyph_1.png";
+		}
+		<image src=@imgname class=@c/>
+	}
+	</div>
 	
 
 </root>
 
 @code
 {
-	public Stargate Gate;
-	public DialingComputer Computer;
+	GateBox gatebox;
+	AddressBox addressbox;
 
-	private GateBox gatebox;
-	private AddressBox addressbox;
+	Panel encode_box { get; set; } = null;
+
+	char EncodingGlyph { get; set; } = ' ';
+	public string Address { get; set; } = "";
 
 	private float TextScaleModifier = 0;
 
@@ -108,15 +253,11 @@
 		float h = (this as Panel).Box.Rect.Height;
 		TextScaleModifier = h / 2048.0f;
 
-		//Log.Info(TextScaleModifier);
-
 		if (!Gate.IsValid()) return;
 
-		var sg = Gate as StargateMilkyWay;
+		gatebox.Gate = Gate;
 
-		var ang = sg.Ring.RingAngle;
-
-		gatebox.RingAngle = ang;
+		addressbox.Address = Address;
 	}
 
 	protected override int BuildHash()
@@ -124,37 +265,112 @@
 		return HashCode.Combine(Time.Now);
 	}
 
-	[Event("stargate.beginopen")]
-	public void OnGateBeginOpen(Stargate gate)
+	private int GetGlyphNumber(char sym)
 	{
-		if (gate != Gate) return;
-
-		Log.Info($"The gate {gate} just started opening");
+		if (sym == ' ') return 0;
+		return "?0JKNTR3MBZX*H69IGPL@QFS1E4AU85OCW72YVD".IndexOf(sym) + 1;
 	}
 
-	[Event("stargate.symbolencoded")]
-	public void OnGateSymbolEncoded(Stargate gate)
+	public async void EncodeBoxAppear(char sym)
 	{
-		if (gate != Gate) return;
+		EncodingGlyph = sym;
 
-		var num = Gate.ActiveChevrons;
-		if (num == 1)
+		if (EncodingGlyph == '#')
+			EncodingGlyph = '?';
+
+		encode_box.SetClass("appear", true);
+		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
+
+		await GameTask.DelaySeconds(0.6f);
+
+		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
+
+		await GameTask.DelaySeconds(0.2f);
+
+		var addrLen = Address.Length;
+		if (EncodingGlyph != '?')
+		{
+			if (addrLen == 6)
+				Box_89_Appear(8);
+			else if (addrLen == 7)
+				Box_89_Appear(9);
+		}
+	}
+
+	public void EncodeBoxDisappear()
+	{
+		encode_box.SetClass("appear", false);
+	}
+
+	public async void EncodeBoxMove(int num, bool last)
+	{
+		await GameTask.DelaySeconds(0.5f);
+
+		Log.Info($"Encode box move {num}");
+
+		if (!Gate.Dialing) return;
+
+		var moveclass = $"move_{num}";
+
+		if (num == 7 || num == 8)
+			if (!last)
+				moveclass += "_nonlast";
+
+		Log.Info(moveclass);
+
+		EncodeBoxDisappear();
+		encode_box.SetClass(moveclass, true);
+		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
+
+		await GameTask.DelaySeconds(0.6f);
+		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
+
+		Address = Address + EncodingGlyph;
+
+		encode_box.SetClass(moveclass, false);
+
+		/*
+		if (Gate.ActiveChevrons == 7)
+			{
+			//SequenceComplete = true;
+			await GameTask.DelaySeconds(0.25f);
+
+			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
+
+			await GameTask.DelaySeconds(0.5f);
+
+			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
+
+			await GameTask.DelaySeconds(0.25f);
+			//SequenceComplete = false;
+		}
+		*/
+
+	}
+
+	public void Box_89_Appear(int num)
+	{
+		if (num == 8)
 		{
 			addressbox.Box8_Appear();
 		}
-		else if (num == 2)
+		else if (num == 9)
 		{
 			addressbox.Box9_Appear();
 		}
 	}
 
-	[Event("stargate.reset")]
-	public void OnGateReset(Stargate gate)
+	public void Box_89_Disappear()
 	{
-		if (gate != Gate) return;
-
 		addressbox.Box8_Disappear();
 		addressbox.Box9_Disappear();
 	}
-	
+
+	public void ReturnToIdle()
+	{
+		EncodeBoxDisappear();
+		Box_89_Disappear();
+		Address = "";
+	}
+
 }

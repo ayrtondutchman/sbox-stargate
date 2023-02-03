@@ -215,6 +215,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	{
 		RotateRingToSymbol( sym, angOffset );
 		CurDialingSymbol = sym;
+		Gate.CurDialingSymbol = CurDialingSymbol;
 
 		await Task.DelaySeconds( Game.TickInterval ); // wait, otherwise it hasnt started moving yet and can cause issues
 
@@ -238,9 +239,10 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 	{
 		var symRange = 360f / RingSymbols.Length;
 		var symCoverage = (RingAngle + symRange/2f).UnsignedMod( symRange );
-		var symIndex = ((int) Math.Round(-RingAngle / ( symRange ))).UnsignedMod( RingSymbols.Length );
+		var symIndex = ((int) Math.Round((-RingAngle + Gate.CurRingSymbolOffset) / ( symRange ))).UnsignedMod( RingSymbols.Length );
 		
 		CurRingSymbol = (symCoverage < 8 && symCoverage > 1) ? RingSymbols[symIndex] : ' ';
+		Gate.CurRingSymbol = CurRingSymbol;
 	}
 
 	public void RingRotationThink()
@@ -291,7 +293,6 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 						Event.Run( StargateEvent.ReachedDialingSymbol, Gate, CurDialingSymbol );
 					}
 				}
-
 			}
 			else
 			{
@@ -355,10 +356,10 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 			i++;
 		}
 
-		//DebugOverlay.Text( CurRingSymbol, Position, Color.White, 0, 512 );
+		DebugOverlay.Text( CurRingSymbol.ToString(), Position, Color.White, 0, 512 );
 	}
 
-	//[Event.Client.Frame]
+	[Event.Client.Frame]
 	public void RingSymbolsDebug()
 	{
 		DrawSymbols();

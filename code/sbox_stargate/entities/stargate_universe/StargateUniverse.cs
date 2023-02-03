@@ -101,13 +101,19 @@ public partial class StargateUniverse : Stargate
 		Chevron = chev;
 	}
 
+	public override Chevron GetChevron( int num )
+	{
+		return Chevron;
+	}
+
 	// DIALING
 
-	public async void SetChevronsGlowState( bool state, float delay = 0)
+	public override void SetChevronsGlowState( bool state, float delay = 0)
 	{
-		if (delay > 0) await Task.DelaySeconds( delay );
-
-		Chevron.On = state;
+		if ( state )
+			Chevron.TurnOn( delay );
+		else
+			Chevron.TurnOff( delay );
 	}
 
 	public override void OnStopDialingBegin()
@@ -255,11 +261,11 @@ public partial class StargateUniverse : Stargate
 					var isLastChev = i_copy == addrLen - 1;
 					if (!isLastChev)
 					{
-						Event.Run( StargateEvent.ChevronEncoded, this, address[i_copy] );
+						Event.Run( StargateEvent.ChevronEncoded, this, i_copy + 1 );
 					}
 					else
 					{
-						Event.Run( StargateEvent.ChevronLocked, this, address[i_copy], gateValidCheck() );
+						Event.Run( StargateEvent.ChevronLocked, this, i_copy + 1, gateValidCheck() );
 					}
 					
 				}, TimedTaskCategory.DIALING );
@@ -345,12 +351,14 @@ public partial class StargateUniverse : Stargate
 			Stargate target = null;
 			var readyForOpen = false;
 
-			bool gateValidCheck()
+			bool gateValidCheck(bool noBeginInbound=false)
 			{
 				target = FindDestinationGateByDialingAddress( this, address ); // if its last chevron, try to find the target gate
 				if ( target.IsValid() && target != this && target.IsStargateReadyForInboundInstantSlow() )
 				{
-					target.BeginInboundSlow( address.Length );
+					if (!noBeginInbound)
+						target.BeginInboundSlow( address.Length );
+
 					return true;
 				}
 
@@ -376,13 +384,12 @@ public partial class StargateUniverse : Stargate
 					if (!isLastChev)
 					{
 						Bearing?.TurnOff( 0.6f );
-						Event.Run( StargateEvent.ChevronEncoded, this, sym );
+						Event.Run( StargateEvent.ChevronEncoded, this, address.IndexOf(sym) + 1 );
 					}
 					else
 					{
-						Event.Run( StargateEvent.ChevronLocked, this, sym, gateValidCheck() );
+						Event.Run( StargateEvent.ChevronLocked, this, address.IndexOf( sym ) + 1, gateValidCheck(true) );
 					}
-					
 				}
 
 				AddTask( Time.Now + 0.65f, symbolAction, TimedTaskCategory.DIALING);

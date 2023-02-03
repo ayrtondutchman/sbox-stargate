@@ -71,12 +71,22 @@
 
 	.box_glyph_container {
 		position: absolute;
-		background-color: rgba(green, 0.1);
 		border-width: 2%;
-		border-color: @DialingComputer.Color_SG_Blue.Rgb;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
 		height: 100%;
 		width: 75%;
 		right: 0;
+		justify-content: center;
+		padding: 1%;
+	}
+
+	.box_glyph_image {
+		background-image-tint: white;
+		aspect-ratio: 1;
+
+		&.none {
+			background-image-tint: transparent;
+		}
 	}
 
 </style>
@@ -85,29 +95,49 @@
 
 	@{
 		var s = $"font-size: {150 * TextScaleModifier}%";
-		for (int i = 1; i <= 7; i++)
+		for (int i = 1; i <= 9; i++)
 		{
-			<div class="box_base hidden">
+			var sym = GetAddressSymbol(i-1);
+			var imgclass = "box_glyph_image";
+			if (sym == ' ')
+			{
+				imgclass += " none";
+			}
+			var num = GetGlyphNumber(sym);
+			var imgname = $"materials/sbox_stargate/glyphs/mw/glyph_{num}.png";
+			if (num == 0) imgname = "materials/sbox_stargate/glyphs/mw/glyph_1.png";
 
-				<label class="box_number" style=@s text=@i></label>
-				<div class="box_glyph_container"></div>
+			var boxNumber = Address.Length < i ? "" : $"{i}";
 
-			</div>
+			if (i == 8)
+			{
+				<div class="box_base hidden" @ref=box8>
+					<label class="box_number" style=@s text=@boxNumber></label>
+					<div class="box_glyph_container">
+						<image src=@imgname class=@imgclass />
+					</div>
+				</div>
+			}
+			else if (i == 9)
+			{
+				<div class="box_base hidden" @ref=box9>
+					<label class="box_number" style=@s text=@boxNumber></label>
+					<div class="box_glyph_container">
+						<image src=@imgname class=@imgclass />
+					</div>
+				</div>
+			}
+			else
+			{
+				<div class="box_base">
+					<label class="box_number" style=@s text=@boxNumber></label>
+					<div class="box_glyph_container">
+						<image src=@imgname class=@imgclass />
+					</div>
+				</div>
+			}
+
 		}
-
-		<div class="box_base hidden" @ref="box8">
-
-			<label class="box_number num8 hidden" style=@s text=8 @ref="box8_number"></label>
-			<div class="box_glyph_container"></div>
-
-		</div>
-
-		<div class="box_base hidden" @ref="box9">
-
-			<label class="box_number num9 hidden" style=@s text=9 @ref="box9_number"></label>
-			<div class="box_glyph_container"></div>
-
-		</div>
 	}
 	
 </div>
@@ -117,25 +147,25 @@
 	private float TextScaleModifier = 0;
 
 	Panel box8 { get; set; } = null;
-	Panel box8_number { get; set; } = null;
-
 	Panel box9 { get; set; } = null;
-	Panel box9_number { get; set; } = null;
+
+	public string Address { get; set; } = "";
+
+	private int GetGlyphNumber(char sym)
+	{
+		if (sym == ' ') return 0;
+		return "?0JKNTR3MBZX*H69IGPL@QFS1E4AU85OCW72YVD".IndexOf(sym) + 1;
+	}
+
+	private char GetAddressSymbol(int pos)
+	{
+		if (pos >= Address.Length) return ' ';
+		return Address[pos];
+	}
 
 	private async void AnimateBox89(bool enable, bool b9)
 	{
-		if (enable)
-		{
-			(b9 ? box9 : box8).SetClass("hidden", false);
-			await GameTask.DelaySeconds(1);
-			(b9 ? box9_number : box8_number).SetClass("hidden", false);
-		}
-		else
-		{
-			(b9 ? box9_number : box8_number).SetClass("hidden", true);
-			await GameTask.DelaySeconds(0.25f);
-			(b9 ? box9 : box8).SetClass("hidden", true);
-		}
+		(b9 ? box9 : box8).SetClass("hidden", !enable);
 	}
 
 	public void Box8_Appear()
@@ -166,6 +196,7 @@
 
 	protected override int BuildHash()
 	{
+		//Log.Info(Address);
 		return HashCode.Combine(Time.Now);
 	}
 

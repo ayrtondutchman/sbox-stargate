@@ -101,40 +101,7 @@ public partial class StargatePegasus : Stargate
 		}
 	}
 
-	public Chevron GetChevron( int num )
-	{
-		return ( num <= Chevrons.Count ) ? Chevrons[num - 1] : null;
-	}
-
-	public Chevron GetChevronBasedOnAddressLength(int num, int len = 7)
-	{
-		if ( len == 8 )
-		{
-			if ( num == 7 ) return GetChevron( 8 );
-			else if ( num == 8 ) return GetChevron( 7 );
-		}
-		else if ( len == 9 )
-		{
-			if ( num == 7 ) return GetChevron( 8 );
-			else if ( num == 8 ) return GetChevron( 9 );
-			else if ( num == 9 ) return GetChevron( 7 );
-		}
-		return GetChevron( num );
-	}
-
-	public Chevron GetTopChevron()
-	{
-		return GetChevron( 7 );
-	}
-
 	// DIALING
-
-	public async void SetChevronsGlowState( bool state, float delay = 0)
-	{
-		if (delay > 0) await Task.DelaySeconds( delay );
-
-		foreach ( Chevron chev in Chevrons ) chev.On = state;
-	}
 
 	public override void OnStopDialingBegin()
 	{
