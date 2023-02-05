@@ -86,7 +86,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.EncodeBoxAppear( sym );
 			}
@@ -98,7 +98,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.ReturnToIdle();
 			}
@@ -110,7 +110,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.EncodeBoxMove( num, last );
 			}
@@ -122,7 +122,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.IndicatorBlink();
 			}
@@ -134,7 +134,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.AddGlyphToAddress( sym );
 			}
@@ -146,7 +146,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.AddressBoxesBlink();
 			}
@@ -158,7 +158,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		foreach ( var monitor in Monitors )
 		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			foreach ( var program in monitor.Programs.OfType<SGCProgram_Dialing>() )
 			{
 				program.Box_89_Appear( num );
 			}

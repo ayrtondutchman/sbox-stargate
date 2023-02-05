@@ -22,13 +22,6 @@
 		margin: auto;
 	}
 
-	.base {
-		position: absolute;
-		height: 100%;
-		width: 100%;
-		background-image-tint: rgba(greenyellow, 0);
-	}
-
 	.frame_outer {
 		border-width: 0.5%;
 		border-color: @SGCComputer.Color_SG_Blue.Rgb;
@@ -42,9 +35,6 @@
 	}
 
 	.frame_numberbox {
-		border-width: 0.5%;
-		border-color: rgba(red, 0.8);
-
 		position: absolute;
 		top: 20.5%;
 		bottom: 46.75%;
@@ -237,12 +227,12 @@
 <root>
 	<div class="canvas">
 		<div class="black_bg"></div>
-		<image src="materials/sbox_stargate/programs/dialing/dialing_base.png" class="base" />
 	</div>
 
 	<div class="frame_outer"></div>
 
 	<div class="frame_numberbox">
+		<NumberBox @ref=numberbox></NumberBox>
 	</div>
 
 	<div class="frame_octagonbox">
@@ -292,6 +282,7 @@
 	AddressBox addressbox;
 	StatusBox statusbox;
 	GradientBox gradientbox;
+	NumberBox numberbox;
 
 	Panel encode_box { get; set; } = null;
 
@@ -339,8 +330,8 @@
 		gatebox.Gate = Gate;
 		addressbox.Address = Address;
 		statusbox.Status = Status;
-
 		gradientbox.CanAnimate = !Gate.Idle;
+		numberbox.Generating = !Gate.Idle;
 	}
 
 	protected override int BuildHash()
