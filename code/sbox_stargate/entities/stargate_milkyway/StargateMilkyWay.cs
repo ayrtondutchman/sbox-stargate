@@ -12,8 +12,8 @@ public partial class StargateMilkyWay : Stargate
 	public StargateRingMilkyWay Ring { get; set; } = null;
 	public List<Chevron> EncodedChevronsOrdered = new();
 
-	public bool MovieDialingType = false; // when enabled, encodes the symbol under each chevron like in the movie
-	public bool ChevronLightup = true;
+	public bool MovieDialingType { get; set; } = false; // when enabled, encodes the symbol under each chevron like in the movie
+	public bool ChevronLightup { get; set; } = true;
 
 	public StargateMilkyWay()
 	{
