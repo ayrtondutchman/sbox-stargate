@@ -236,6 +236,8 @@ public partial class StargateRingPegasus : ModelEntity
 				{
 					StopRollSound();
 
+					Gate.CurDialingSymbol = address[i_copy];
+
 					var chev = Gate.GetChevronBasedOnAddressLength( i_copy + 1, chevCount );
 					if ( i_copy < chevCount - 1 )
 					{
@@ -245,6 +247,9 @@ public partial class StargateRingPegasus : ModelEntity
 					else
 					{
 						var isValid = validCheck();
+						Gate.IsLocked = true;
+						Gate.IsLockedInvalid = !isValid;
+
 						Gate.ChevronActivate( chev, 0, isValid, true );
 						Event.Run( StargateEvent.ChevronLocked, Gate, i_copy + 1, isValid );
 					}
@@ -285,6 +290,9 @@ public partial class StargateRingPegasus : ModelEntity
 
 				var chevTaskTime = startTime + (symRollTime + delayBetweenSymbols) * (i_copy + 1) - delayBetweenSymbols;
 				Gate.AddTask( chevTaskTime, () => {
+
+					Gate.CurDialingSymbol = address[i_copy];
+
 					var isLastChev = i_copy == chevCount - 1;
 					Gate.ChevronActivate( Gate.GetChevronBasedOnAddressLength( i_copy + 1, chevCount ), 0, isLastChev ? validCheck() : true, isLastChev );
 					if (!isLastChev)
@@ -293,6 +301,9 @@ public partial class StargateRingPegasus : ModelEntity
 					}
 					else
 					{
+						Gate.IsLocked = true;
+						Gate.IsLockedInvalid = !validCheck();
+
 						Event.Run( StargateEvent.ChevronLocked, Gate, i_copy + 1, validCheck() );
 					}
 					

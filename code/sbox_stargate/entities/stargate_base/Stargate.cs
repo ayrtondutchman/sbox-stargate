@@ -13,7 +13,7 @@ public abstract partial class Stargate : Prop, IUse
 	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 90 );
 
 	[Net]
-	public List<Chevron> Chevrons { get; set; } = new();
+	public IList<Chevron> Chevrons { get; set; } = new();
 
 	[Net]
 	public EventHorizon EventHorizon { get; private set; } = null;
@@ -66,6 +66,8 @@ public abstract partial class Stargate : Prop, IUse
 
 	[Net] public string DialingAddress { get; set; } = "";
 	[Net] public int ActiveChevrons { get; set; } = 0;
+
+	[Net] public bool IsLocked { get; set; } = false;
 	[Net] public bool IsLockedInvalid { get; set; } = false;
 
 	[Net] public char CurDialingSymbol { get; set; } = '!';
@@ -96,6 +98,7 @@ public abstract partial class Stargate : Prop, IUse
 		CurDialType = DialType.FAST;
 		DialingAddress = "";
 		ActiveChevrons = 0;
+		IsLocked = false;
 		IsLockedInvalid = false;
 		AutoCloseTime = -1;
 	}
@@ -503,6 +506,7 @@ public abstract partial class Stargate : Prop, IUse
 		var gate = FindDestinationGateByDialingAddress( this, DialingAddress );
 		var valid = (gate != this && gate.IsValid() && gate.IsStargateReadyForInboundDHD());
 
+		IsLocked = true;
 		IsLockedInvalid = !valid;
 
 		Event.Run( StargateEvent.DHDChevronLocked, this, sym, valid );
@@ -512,6 +516,7 @@ public abstract partial class Stargate : Prop, IUse
 	{
 		DialingAddress = DialingAddress.Substring(0, DialingAddress.Length - 1);
 
+		IsLocked = false;
 		IsLockedInvalid = false;
 
 		Event.Run( StargateEvent.DHDChevronUnlocked, this, sym );

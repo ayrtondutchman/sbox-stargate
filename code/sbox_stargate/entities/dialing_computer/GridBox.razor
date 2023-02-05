@@ -1,0 +1,132 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Sandbox;
+@using Sandbox.UI;
+
+<style>
+
+	.frame {
+		width: 100%;
+		height: 100%;
+	}
+
+	.grid_image {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image: url("materials/sbox_stargate/programs/dialing/gridbox_grid.png");
+		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	.grid_image_border {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
+		border-width: 1%;
+	}
+
+	.grid_base {
+		width: 100%;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.grid_container {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.grid_row {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-around;
+	}
+
+	.grid_box {
+		flex-grow: 1;
+		background-color: white;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
+		border-width: 1%;
+	}
+
+
+</style>
+
+<root class="frame">
+
+	<div class="grid_base">
+		<div class="grid_container" @ref=gridbox>
+			@{
+				for (int i = 0; i<3; i++)
+				{
+					<div class="grid_row">
+						@{
+							for (int j = 0; j<8; j++)
+							{
+								<div class="grid_box"></div>
+							}
+						}
+					</div>
+				}
+			}
+		
+		</div>
+	</div>
+
+	<div class="grid_image">
+		<div class="grid_image_border"></div>
+	</div>
+	
+</root>
+
+@code {
+
+	private Panel gridbox = null;
+
+	private TimeSince lastRefresh = 0;
+
+	private Random rnd = new Random();
+
+	private void ProcessGridChildren()
+	{
+		if (lastRefresh < 0.5f)
+			return;
+
+		var panels = new List<Panel>();
+		foreach (var row in gridbox.Children)
+		{
+			foreach (var box in row.Children)
+			{
+				panels.Add(box);
+				box.Style.Opacity = 0;
+			}
+		}
+
+		foreach (var box in panels.OrderBy(x => rnd.Next()).Take(6))
+			box.Style.Opacity = 1;
+
+		lastRefresh = 0;
+	}
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		ProcessGridChildren();
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+}

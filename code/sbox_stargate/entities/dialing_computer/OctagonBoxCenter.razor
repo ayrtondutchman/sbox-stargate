@@ -1,0 +1,109 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Sandbox;
+@using Sandbox.UI;
+
+<style>
+
+	.frame {
+		width: 100%;
+		height: 100%;
+	}
+
+	.grid_base {
+		width: 100%;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.grid_container {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.grid_row {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-around;
+	}
+
+	.grid_box {
+		flex-grow: 1;
+		background-color: @SGCComputer.Color_SG_Yellow.Rgb;
+		margin: 2% 2% 2% 2%;
+		border-radius: 10%;
+	}
+
+
+</style>
+
+<root class="frame">
+
+	<div class="grid_base">
+		<div class="grid_container" @ref=gridbox>
+			@{
+				for (int i = 0; i<3; i++)
+				{
+					<div class="grid_row">
+						@{
+							for (int j = 0; j<3; j++)
+							{
+								<div class="grid_box"></div>
+							}
+						}
+					</div>
+				}
+			}
+		
+		</div>
+	</div>
+	
+</root>
+
+@code {
+
+	private Panel gridbox = null;
+
+	private TimeSince lastRefresh = 0;
+
+	private Random rnd = new Random();
+
+	private void ProcessGridChildren()
+	{
+		if (lastRefresh < 0.15f)
+			return;
+
+		var panels = new List<Panel>();
+		foreach (var row in gridbox.Children)
+		{
+			foreach (var box in row.Children)
+			{
+				panels.Add(box);
+				box.Style.Opacity = 0;
+			}
+		}
+
+		foreach (var box in panels.OrderBy(x => rnd.Next()).Take(4))
+			box.Style.Opacity = 1;
+
+		lastRefresh = 0;
+	}
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		ProcessGridChildren();
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+}

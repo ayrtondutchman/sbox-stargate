@@ -73,11 +73,98 @@ public partial class SGCComputer : ModelEntity, IUse
 		return true;
 	}
 
-	public float GetSinFromTime()
+	public static float GetSinFromTime()
 	{
 		var s = (float)Math.Sin( Time.Now );
 		return s * s;
 	}
+
+	// RPC's
+
+	[ClientRpc]
+	private void DialProgramEncodeBoxAppear( char sym )
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.EncodeBoxAppear( sym );
+			}
+		}
+	}
+
+	[ClientRpc]
+	private void DialProgramReturnToIdle()
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.ReturnToIdle();
+			}
+		}
+	}
+
+	[ClientRpc]
+	private void DialProgramEncodeBoxMove( int num, bool last )
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.EncodeBoxMove( num, last );
+			}
+		}
+	}
+
+	[ClientRpc]
+	private void DialProgramIndicatorBlink()
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.IndicatorBlink();
+			}
+		}
+	}
+
+	[ClientRpc]
+	private void DialProgramAddGlyph( char sym )
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.AddGlyphToAddress( sym );
+			}
+		}
+	}
+
+	[ClientRpc]
+	private void DialProgramBlinkAddressBoxes()
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.AddressBoxesBlink();
+			}
+		}
+	}
+
+	[ClientRpc]
+	private void DialProgramBox_89_Appear(int num)
+	{
+		foreach ( var monitor in Monitors )
+		{
+			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
+			{
+				program.Box_89_Appear( num );
+			}
+		}
+	}
+
 
 	// Events
 
@@ -87,6 +174,8 @@ public partial class SGCComputer : ModelEntity, IUse
 		if ( gate != Gate ) return;
 
 		Log.Info( $"Stargate {gate} is opening" );
+
+		//DialProgramStatusChange( To.Everyone, "locked" );
 	}
 
 	[StargateEvent.GateOpen]
@@ -122,8 +211,17 @@ public partial class SGCComputer : ModelEntity, IUse
 
 		Log.Info( $"Stargate {gate} has chevron {num} encoded with {Gate.CurDialingSymbol}" );
 
-		if (Gate.CurDialType == Stargate.DialType.SLOW)
+		if ( Gate.CurDialType == Stargate.DialType.SLOW )
 			DialProgramEncodeBoxMove( To.Everyone, num, false );
+		else
+		{
+			DialProgramAddGlyph( To.Everyone, Gate.CurDialingSymbol );
+			if ( num == 7 )
+				DialProgramBox_89_Appear(To.Everyone, 8 );
+			else if (num == 8)
+				DialProgramBox_89_Appear( To.Everyone, 9 );
+		}
+			
 	}
 
 	[StargateEvent.ChevronLocked]
@@ -133,9 +231,14 @@ public partial class SGCComputer : ModelEntity, IUse
 
 		Log.Info( $"Stargate {gate} has {(valid ? "valid" : "invalid")} chevron {num} locked with {Gate.CurDialingSymbol}" );
 
-		if ( Gate.CurDialType == Stargate.DialType.SLOW )
-			if (valid)
+		if ( valid )
+			if ( Gate.CurDialType == Stargate.DialType.SLOW )
 				DialProgramEncodeBoxMove( To.Everyone, num, true );
+			else
+			{
+				DialProgramAddGlyph( To.Everyone, Gate.CurDialingSymbol );
+				DialProgramBlinkAddressBoxes( To.Everyone );
+			}
 	}
 
 	[StargateEvent.DHDChevronEncoded]
@@ -176,6 +279,9 @@ public partial class SGCComputer : ModelEntity, IUse
 		if ( gate != Gate ) return;
 
 		//Log.Info( $"Stargate {gate} is spinning down ring" );
+
+		if ( !Gate.ShouldStopDialing && Gate.CurDialType == Stargate.DialType.SLOW )
+			DialProgramIndicatorBlink( To.Everyone );
 	}
 
 	[StargateEvent.RingStopped]
@@ -184,42 +290,6 @@ public partial class SGCComputer : ModelEntity, IUse
 		if ( gate != Gate ) return;
 
 		//Log.Info( $"Stargate {gate} ring stopped" );
-	}
-
-	[ClientRpc]
-	private void DialProgramEncodeBoxAppear(char sym)
-	{
-		foreach (var monitor in Monitors)
-		{
-			foreach (var program in monitor.Programs.OfType<ComputerProgramDialingV2>())
-			{
-				program.EncodeBoxAppear( sym );
-			}
-		}
-	}
-
-	[ClientRpc]
-	private void DialProgramReturnToIdle( )
-	{
-		foreach ( var monitor in Monitors )
-		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
-			{
-				program.ReturnToIdle();
-			}
-		}
-	}
-
-	[ClientRpc]
-	private void DialProgramEncodeBoxMove( int num, bool last )
-	{
-		foreach ( var monitor in Monitors )
-		{
-			foreach ( var program in monitor.Programs.OfType<ComputerProgramDialingV2>() )
-			{
-				program.EncodeBoxMove( num, last );
-			}
-		}
 	}
 
 	[StargateEvent.ReachedDialingSymbol]

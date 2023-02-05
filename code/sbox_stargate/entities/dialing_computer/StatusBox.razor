@@ -1,0 +1,69 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+<style>
+
+	.frame {
+		width: 100%;
+		height: 100%;
+	}
+
+	.status {
+		background-image: url("materials/sbox_stargate/programs/dialing/status_idle.png");
+		background-image-tint: transparent;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 100%;
+		height: 100%;
+
+		&.idle {
+			background-image: url("materials/sbox_stargate/programs/dialing/status_idle.png");
+			background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		}
+
+		&.progress {
+			background-image: url("materials/sbox_stargate/programs/dialing/status_seq_progress.png");
+			background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		}
+
+		&.complete {
+			background-image: url("materials/sbox_stargate/programs/dialing/status_seq_complete.png");
+			background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		}
+
+		&.locked {
+			background-image: url("materials/sbox_stargate/programs/dialing/status_locked.png");
+			background-image-tint: red;
+		}
+
+		&.nolock {
+			background-image: url("materials/sbox_stargate/programs/dialing/status_nolock.png");
+			background-image-tint: red;
+		}
+	}
+
+</style>
+
+<root class="frame">
+
+	@{
+		var statusStyle = $"opacity: {SGCComputer.GetSinFromTime()}";
+		var statusClass = $"status {Status}";
+
+		<div class=@statusClass style=@statusStyle></div>
+	}
+	
+</root>
+
+@code {
+
+	public string Status = "";
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+}

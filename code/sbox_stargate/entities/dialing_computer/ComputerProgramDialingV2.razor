@@ -26,7 +26,7 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		background-image-tint: rgba(white, 0);
+		background-image-tint: rgba(greenyellow, 0);
 	}
 
 	.frame_outer {
@@ -51,6 +51,40 @@
 		left: 3%;
 		right: 81.1%;
 		margin: auto;
+	}
+
+	.frame_octagonbox {
+		position: absolute;
+		top: 53.8%;
+		bottom: 30.35%;
+		left: 3%;
+		right: 81.1%;
+		margin: auto;
+	}
+
+	.frame_gradientbox {
+		position: absolute;
+		top: 70.2%;
+		bottom: 20.5%;
+		left: 3%;
+		right: 66.7%;
+		margin: auto;
+	}
+
+	.frame_gridbox {
+		position: absolute;
+		top: 70.2%;
+		bottom: 20.5%;
+		left: 33.7%;
+		right: 53.7%;
+	}
+
+	.frame_statusbox {
+		position: absolute;
+		top: 70.2%;
+		bottom: 20.5%;
+		left: 47%;
+		right: 19.4%;
 	}
 
 	.frame_gatebox {
@@ -211,6 +245,22 @@
 	<div class="frame_numberbox">
 	</div>
 
+	<div class="frame_octagonbox">
+		<OctagonBox></OctagonBox>
+	</div>
+
+	<div class="frame_gradientbox">
+		<GradientBox @ref=gradientbox></GradientBox>
+	</div>
+
+	<div class="frame_gridbox">
+		<GridBox></GridBox>
+	</div>
+
+	<div class="frame_statusbox">
+		<StatusBox @ref=statusbox></StatusBox>
+	</div>
+
 	<div class="frame_gatebox">
 		<GateBox @ref=gatebox></GateBox>
 	</div>
@@ -240,13 +290,44 @@
 {
 	GateBox gatebox;
 	AddressBox addressbox;
+	StatusBox statusbox;
+	GradientBox gradientbox;
 
 	Panel encode_box { get; set; } = null;
 
 	char EncodingGlyph { get; set; } = ' ';
 	public string Address { get; set; } = "";
+	string Status = "";
+
+	bool WasSeqCompleted = false;
 
 	private float TextScaleModifier = 0;
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		if (!Gate.IsValid())
+		{
+			Status = "";
+			return;
+		}
+
+		if (Gate.Idle)
+			Status = "idle";
+
+		if (Gate.Dialing)
+			Status = "progress";
+
+		if (!Gate.Inbound && (Gate.Open || Gate.Closing))
+			Status = "locked";
+
+		if ((Gate.Dialing && Gate.IsLocked) || (!Gate.Inbound && Gate.Opening))
+			Status = Gate.IsLockedInvalid ? "nolock" : "complete";
+
+		if (Gate.Inbound)
+			Status = "";
+	}
 
 	protected override void OnAfterTreeRender(bool firstTime)
 	{
@@ -256,8 +337,10 @@
 		if (!Gate.IsValid()) return;
 
 		gatebox.Gate = Gate;
-
 		addressbox.Address = Address;
+		statusbox.Status = Status;
+
+		gradientbox.CanAnimate = !Gate.Idle;
 	}
 
 	protected override int BuildHash()
@@ -302,11 +385,14 @@
 		encode_box.SetClass("appear", false);
 	}
 
+	public void AddGlyphToAddress(char sym)
+	{
+		Address += sym;
+	}
+
 	public async void EncodeBoxMove(int num, bool last)
 	{
 		await GameTask.DelaySeconds(0.5f);
-
-		Log.Info($"Encode box move {num}");
 
 		if (!Gate.Dialing) return;
 
@@ -316,8 +402,6 @@
 			if (!last)
 				moveclass += "_nonlast";
 
-		Log.Info(moveclass);
-
 		EncodeBoxDisappear();
 		encode_box.SetClass(moveclass, true);
 		Sound.FromWorld("sg.program.dial.chevron_encode", Computer.Position);
@@ -325,9 +409,15 @@
 		await GameTask.DelaySeconds(0.6f);
 		Sound.FromWorld("sg.program.dial.chevron_beep", Computer.Position);
 
-		Address = Address + EncodingGlyph;
+		AddGlyphToAddress(EncodingGlyph);
 
 		encode_box.SetClass(moveclass, false);
+
+		if (last)
+		{
+			await GameTask.DelaySeconds(0.25f);
+			AddressBoxesBlink();
+		}
 
 		/*
 		if (Gate.ActiveChevrons == 7)
@@ -364,6 +454,22 @@
 	{
 		addressbox.Box8_Disappear();
 		addressbox.Box9_Disappear();
+	}
+
+	public void IndicatorBlink()
+	{
+		gatebox.ChevronIndicatorBlink();
+	}
+
+	public async void AddressBoxesBlink()
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			addressbox.BlinkBoxes();
+			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
+
+			await GameTask.DelaySeconds(0.8f);
+		}
 	}
 
 	public void ReturnToIdle()

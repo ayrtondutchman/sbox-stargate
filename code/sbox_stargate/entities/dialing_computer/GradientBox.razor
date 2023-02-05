@@ -1,0 +1,92 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Sandbox;
+@using Sandbox.UI;
+
+<style>
+
+	.frame {
+		width: 100%;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.grid_container {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-around;
+	}
+
+	.border {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
+		border-width: 0.5%;
+	}
+
+	.sidegrid {
+		width: 30%;
+		height: 100%;
+		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		background-image: url("materials/sbox_stargate/programs/dialing/gradientbox_sidegrid.png");
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
+		border-width: 2%;
+	}
+
+</style>
+
+<root class="frame">
+
+	<div class="grid_container" @ref=gridbox>
+		@{
+			for (int j = 0; j<9; j++)
+			{
+				<GradientBoxBar></GradientBoxBar>
+			}
+			<div class="sidegrid"></div>
+		}
+	</div>
+
+	<div class="border"></div>
+	
+</root>
+
+@code {
+
+	private TimeSince lastRefresh = 0;
+	private Panel gridbox = null;
+	public bool CanAnimate = false;
+
+	private void ProcessGridChildren()
+	{
+		if (!CanAnimate || lastRefresh < 0.5f)
+			return;
+
+		foreach (var bar in gridbox.ChildrenOfType<GradientBoxBar>())
+		{
+			bar.PlayAnim();
+		}
+
+		lastRefresh = 0;
+	}
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		ProcessGridChildren();
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+}

@@ -258,6 +258,8 @@ public partial class StargateUniverse : Stargate
 				AddTask( symTime, () => {
 					SymbolOn( address[i_copy] );
 
+					CurDialingSymbol = address[i_copy];
+
 					var isLastChev = i_copy == addrLen - 1;
 					if (!isLastChev)
 					{
@@ -265,7 +267,12 @@ public partial class StargateUniverse : Stargate
 					}
 					else
 					{
-						Event.Run( StargateEvent.ChevronLocked, this, i_copy + 1, gateValidCheck() );
+						var isValid = gateValidCheck();
+
+						IsLocked = true;
+						IsLockedInvalid = !isValid;
+
+						Event.Run( StargateEvent.ChevronLocked, this, i_copy + 1, isValid );
 					}
 					
 				}, TimedTaskCategory.DIALING );
@@ -381,6 +388,9 @@ public partial class StargateUniverse : Stargate
 				{
 					SymbolOn( sym );
 					Bearing?.TurnOn(0.1f);
+
+					CurDialingSymbol = sym;
+
 					if (!isLastChev)
 					{
 						Bearing?.TurnOff( 0.6f );
@@ -388,7 +398,12 @@ public partial class StargateUniverse : Stargate
 					}
 					else
 					{
-						Event.Run( StargateEvent.ChevronLocked, this, address.IndexOf( sym ) + 1, gateValidCheck(true) );
+						var isValid = gateValidCheck( true );
+
+						IsLocked = true;
+						IsLockedInvalid = !isValid;
+
+						Event.Run( StargateEvent.ChevronLocked, this, address.IndexOf( sym ) + 1, isValid );
 					}
 				}
 

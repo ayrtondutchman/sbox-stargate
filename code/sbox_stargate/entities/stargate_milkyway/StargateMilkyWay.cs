@@ -299,6 +299,7 @@ public partial class StargateMilkyWay : Stargate
 					}
 
 					ActiveChevrons++;
+					CurDialingSymbol = address[i - 1];
 					Event.Run( StargateEvent.ChevronEncoded, this, i );
 				}
 
@@ -324,6 +325,11 @@ public partial class StargateMilkyWay : Stargate
 					if ( ChevronLightup )
 						topChev.TurnOn( 0.25f );
 				}
+
+				IsLocked = true;
+				IsLockedInvalid = !readyForOpen;
+
+				CurDialingSymbol = address[addrLen - 1];
 
 				Event.Run( StargateEvent.ChevronLocked, this, address.Length, readyForOpen );
 
@@ -515,6 +521,7 @@ public partial class StargateMilkyWay : Stargate
 						ChevronAnimLockUnlock( topChev, valid && ChevronLightup, true );
 					}
 
+					IsLocked = true;
 					IsLockedInvalid = !valid;
 
 					Event.Run( StargateEvent.ChevronLocked, this, chevNum, valid );

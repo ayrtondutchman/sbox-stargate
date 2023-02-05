@@ -1,6 +1,7 @@
 ﻿@using System;
-@using Sandbox;
 @using System.Collections.Generic;
+@using Sandbox;
+@using Sandbox.UI;
 
 <style>
 
@@ -97,6 +98,42 @@
 		transform-origin: 0% 50%;
 	}
 
+	@@keyframes blink_indicator {
+		  0% { opacity: 0; }
+		  50% { opacity: 1; }
+		  100% { opacity: 0; }
+	}
+
+	.gate_chevron_indicator {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image: url("materials/sbox_stargate/programs/dialing/gate_chevron_main_indicator.png");
+		background-image-tint: transparent;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+
+		&.blink {
+			background-image-tint: red;
+			animation-name: blink_indicator;
+			animation-duration: 0.33s;
+			animation-iteration-count: 3;
+			animation-direction: normal;
+		}
+	}
+
+	.gatebox_offworld {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-image: url("materials/sbox_stargate/programs/dialing/gatebox_offworld.png");
+		background-image-tint: red;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
 </style>
 
 <div class="frame">
@@ -118,7 +155,7 @@
 			for (int i = 0; i < 9; i++){
 				var chevClass = "gate_chevron";
 				var crystalClass = "gate_chevron_crystal";
-				var chevStyle = $"transform: rotate({chevronAngles[i]})";
+				var rotateStyle = $"transform: rotate({chevronAngles[i]})";
 
 				if (i == 6)
 					chevClass += " main";
@@ -129,52 +166,24 @@
 					crystalClass += " active";
 				}
 
-				<div class=@chevClass style=@chevStyle>
+				<div class=@chevClass style=@rotateStyle>
 					<img class=@crystalClass src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" />
 				</div>
+
+				<div class="gate_chevron_wings" style=@rotateStyle></div>
 			}
 		}
 
-		<!--
-		<div class="gate_chevron" style="transform: rotate(40)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-		<div class="gate_chevron" style="transform: rotate(80)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-		<div class="gate_chevron" style="transform: rotate(120)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-
-		<div class="gate_chevron" style="transform: rotate(240)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-		<div class="gate_chevron" style="transform: rotate(280)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-		<div class="gate_chevron" style="transform: rotate(320)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-
-		<div class="gate_chevron main">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-
-		<div class="gate_chevron" style="transform: rotate(160)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-		<div class="gate_chevron" style="transform: rotate(200)">
-			<img src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" class="gate_chevron_crystal" />
-		</div>
-		-->
-
-		@{
-			for (int i = 0; i<9; i++)
-			{
-				<div class="gate_chevron_wings" style="transform: rotate(@(i*40))"></div>
-			}
-		}
+		<div class="gate_chevron_indicator" @ref=indicator></div>
 	</div>
+
+	@{
+		if (Gate.IsValid() && Gate.Inbound)
+		{
+			var offworldStyle = $"opacity: {SGCComputer.GetSinFromTime()}";
+			<div class="gatebox_offworld" style=@offworldStyle></div>
+		}
+	}
 	
 </div>
 
@@ -182,6 +191,15 @@
 	public Stargate Gate;
 
 	private List<int> chevronAngles = new() { 40, 80, 120, 240, 280, 320, 0, 160, 200 };
+
+	Panel indicator;
+
+	public async void ChevronIndicatorBlink()
+	{
+		indicator.SetClass("blink", true);
+		await GameTask.DelaySeconds(1);
+		indicator.SetClass("blink", false);
+	}
 
 	protected override int BuildHash()
 	{
