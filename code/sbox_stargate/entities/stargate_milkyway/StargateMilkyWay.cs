@@ -541,7 +541,6 @@ public partial class StargateMilkyWay : Stargate
 				{
 					target.BeginInboundSlow( address.Length );
 					readyForOpen = true;
-					Log.Info("ready for open");
 				}
 
 				await Task.DelaySeconds( isLastChev && MovieDialingType ? 0.5f : 1.5f ); // wait a bit
