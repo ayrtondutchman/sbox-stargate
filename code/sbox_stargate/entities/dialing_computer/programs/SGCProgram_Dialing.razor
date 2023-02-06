@@ -288,7 +288,7 @@
 
 	char EncodingGlyph { get; set; } = ' ';
 	public string Address { get; set; } = "";
-	string Status = "";
+	string Status = "hidden";
 
 	private float TextScaleModifier = 0;
 
@@ -298,7 +298,7 @@
 
 		if (!Gate.IsValid())
 		{
-			Status = "";
+			Status = "disconnected";
 			return;
 		}
 
@@ -315,7 +315,7 @@
 			Status = Gate.IsLockedInvalid ? "nolock" : "complete";
 
 		if (Gate.Inbound)
-			Status = "";
+			Status = "hidden";
 	}
 
 	protected override void OnAfterTreeRender(bool firstTime)
@@ -323,11 +323,12 @@
 		float h = (this as Panel).Box.Rect.Height;
 		TextScaleModifier = h / 2048.0f;
 
+		addressbox.Address = Address;
+		statusbox.Status = Status;
+
 		if (!Gate.IsValid()) return;
 
 		gatebox.Gate = Gate;
-		addressbox.Address = Address;
-		statusbox.Status = Status;
 		gradientbox.CanAnimate = !Gate.Idle;
 		numberbox.Generating = !Gate.Idle;
 	}

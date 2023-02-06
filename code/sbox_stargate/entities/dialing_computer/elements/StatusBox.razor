@@ -11,26 +11,31 @@
 
 	.status {
 		background-image: url("materials/sbox_stargate/programs/dialing/status_idle.png");
-		background-image-tint: transparent;
+		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: center;
 		width: 100%;
 		height: 100%;
 
+		&.hidden {
+			background-image-tint: transparent;
+		}
+
+		&.disconnected {
+			background-image: url("materials/sbox_stargate/programs/dialing/status_disconnected.png");
+		}
+
 		&.idle {
 			background-image: url("materials/sbox_stargate/programs/dialing/status_idle.png");
-			background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
 		}
 
 		&.progress {
 			background-image: url("materials/sbox_stargate/programs/dialing/status_seq_progress.png");
-			background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
 		}
 
 		&.complete {
 			background-image: url("materials/sbox_stargate/programs/dialing/status_seq_complete.png");
-			background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
 		}
 
 		&.locked {
