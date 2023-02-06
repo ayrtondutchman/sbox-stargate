@@ -16,7 +16,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	public Stargate Gate { get; set; } = null;
 
 	[Net]
-	public List<SGCMonitor> Monitors { get; private set; } = new();
+	public IList<SGCMonitor> Monitors { get; private set; } = new();
 
 	public override void Spawn()
 	{
