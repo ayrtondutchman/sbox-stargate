@@ -79,6 +79,7 @@ public partial class SGCComputer : ModelEntity, IUse
 		return s * s;
 	}
 
+
 	// RPC's
 
 	[ClientRpc]
@@ -168,38 +169,10 @@ public partial class SGCComputer : ModelEntity, IUse
 
 	// Events
 
-	[StargateEvent.GateOpening]
-	private void GateOpening( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} is opening" );
-
-		//DialProgramStatusChange( To.Everyone, "locked" );
-	}
-
-	[StargateEvent.GateOpen]
-	private void GateOpen( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		//Log.Info( $"Stargate {gate} has opened" );
-	}
-
-	[StargateEvent.GateClosing]
-	private void GateClosing( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		//Log.Info( $"Stargate {gate} is closing" );
-	}
-
 	[StargateEvent.GateClosed]
 	private void GateClosed( Stargate gate )
 	{
 		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} has closed" );
 
 		DialProgramReturnToIdle( To.Everyone );
 	}
@@ -208,8 +181,6 @@ public partial class SGCComputer : ModelEntity, IUse
 	private void ChevronEncoded( Stargate gate, int num )
 	{
 		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} has chevron {num} encoded with {Gate.CurDialingSymbol}" );
 
 		if ( Gate.CurDialType == Stargate.DialType.SLOW )
 			DialProgramEncodeBoxMove( To.Everyone, num, false );
@@ -221,15 +192,12 @@ public partial class SGCComputer : ModelEntity, IUse
 			else if (num == 8)
 				DialProgramBox_89_Appear( To.Everyone, 9 );
 		}
-			
 	}
 
 	[StargateEvent.ChevronLocked]
 	private void ChevronLocked( Stargate gate, int num, bool valid )
 	{
 		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} has {(valid ? "valid" : "invalid")} chevron {num} locked with {Gate.CurDialingSymbol}" );
 
 		if ( valid )
 			if ( Gate.CurDialType == Stargate.DialType.SLOW )
@@ -265,31 +233,13 @@ public partial class SGCComputer : ModelEntity, IUse
 		Log.Info( $"Stargate {gate} has DHD chevron unlocked with sym {sym}" );
 	}
 
-	[StargateEvent.RingSpinUp]
-	private void RingSpinUp( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		//Log.Info( $"Stargate {gate} is spinning up ring" );
-	}
-
 	[StargateEvent.RingSpinDown]
 	private void RingSpinDown( Stargate gate )
 	{
 		if ( gate != Gate ) return;
 
-		//Log.Info( $"Stargate {gate} is spinning down ring" );
-
 		if ( !Gate.ShouldStopDialing && Gate.CurDialType == Stargate.DialType.SLOW )
 			DialProgramIndicatorBlink( To.Everyone );
-	}
-
-	[StargateEvent.RingStopped]
-	private void RingStopped( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		//Log.Info( $"Stargate {gate} ring stopped" );
 	}
 
 	[StargateEvent.ReachedDialingSymbol]
@@ -297,18 +247,8 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		if ( gate != Gate ) return;
 
-		Log.Info( $"Stargate {gate} has reached dialing symbol {sym}" );
-
 		if ( Gate.CurDialType == Stargate.DialType.SLOW )
 			DialProgramEncodeBoxAppear( To.Everyone, sym);
-	}
-
-	[StargateEvent.DialBegin]
-	private void DialBegin( Stargate gate, string address )
-	{
-		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} started dialing {address}" );
 	}
 
 	[StargateEvent.DialAbort]
@@ -316,33 +256,7 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		if ( gate != Gate ) return;
 
-		Log.Info( $"Stargate {gate} aborted dialing" );
-
 		DialProgramReturnToIdle( To.Everyone );
-	}
-
-	[StargateEvent.InboundBegin]
-	private void InboundBegin( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} has an incoming wormhole" );
-	}
-
-	[StargateEvent.Reset]
-	private void Reset( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		Log.Info( $"Stargate {gate} was reset" );
-	}
-
-	[Event.Tick.Server]
-	private void TickServer()
-	{
-		if ( !Gate.IsValid() ) return;
-
-		//Log.Info( Gate.DialingAddress );
 	}
 
 }
