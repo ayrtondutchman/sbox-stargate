@@ -11,24 +11,12 @@
 		height: 100%;
 	}
 
-	.gradient_bar {
-		position: absolute;
-		width: 98%;
-		height: 98%;
-		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
-		background-image: url("materials/sbox_stargate/programs/dialing/gradientbox_bar_smooth.png");
-		background-size: 100% 100%;
-		background-repeat: no-repeat;
-		background-position: bottom;
-		border-color: black;
-		border-width: 2%;
-	}
-
 	@@keyframes bar_cover_anim {
 		0% {transform: scaleY(1); opacity: 1;}
-		69% {transform: scaleY(0); opacity: 1;}
-		70% {transform: scaleY(0); opacity: 0;}
-		71% {transform: scaleY(1); opacity: 0;}
+		79% {transform: scaleY(0); opacity: 1;}
+		80% {transform: scaleY(0); opacity: 0;}
+		81% {transform: scaleY(1); opacity: 0;}
+		95% {transform: scaleY(1); opacity: 1;}
 		100% {transform: scaleY(1); opacity: 1;}
 	}
 
@@ -50,18 +38,17 @@
 
 <root class="frame">
 	@{
-		var coverStyle = $"animation-duration: {animDuration}s";
-		<div class="gradient_bar"></div>
+		var coverStyle = $"animation-duration: {AnimDuration}s";
 		<div class="gradient_bar_cover" style=@coverStyle @ref=cover></div>
 	}
-
 </root>
 
 @code {
 
 	private Random rnd = new Random();
 
-	private float animDuration = 0;
+	public float AnimDuration = 1;
+	public TimeSince LastRefresh = 0;
 
 	private Panel cover = null;
 
@@ -71,16 +58,8 @@
 			return;
 
 		cover.SetClass("animating", true);
-		await GameTask.DelaySeconds(animDuration);
+		await GameTask.DelaySeconds(AnimDuration-0.01f);
 		cover.SetClass("animating", false);
-	}
-
-	protected override void OnAfterTreeRender(bool firstTime)
-	{
-		if (firstTime)
-		{
-			animDuration = rnd.Float(0.4f, 1.2f);
-		}
 	}
 
 	protected override int BuildHash()

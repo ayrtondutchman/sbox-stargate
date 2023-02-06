@@ -13,15 +13,6 @@
 		justify-content: center;
 	}
 
-	.grid_container {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: row;
-		align-items: stretch;
-		justify-content: space-around;
-	}
-
 	.border {
 		position: absolute;
 		width: 100%;
@@ -31,10 +22,10 @@
 	}
 
 	.sidegrid {
-		width: 30%;
+		width: 33%;
 		height: 100%;
 		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
-		background-image: url("materials/sbox_stargate/programs/dialing/gradientbox_sidegrid.png");
+		background-image: url("materials/sbox_stargate/programs/elements/gradientbox/gradientbox_sidegrid.png");
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		background-position: center;
@@ -42,45 +33,75 @@
 		border-width: 2%;
 	}
 
+	.gradients {
+		width: auto;
+		height: 100%;
+		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		background-image: url("materials/sbox_stargate/programs/elements/gradientbox/gradientbox_gradients_9.png");
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		background-position: bottom;
+		display: flex;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-around;
+	}
+
 </style>
 
 <root class="frame">
 
-	<div class="grid_container" @ref=gridbox>
+	<div class="gradients" @ref=gridbox>
 		@{
 			for (int j = 0; j<9; j++)
 			{
 				<GradientBoxBar></GradientBoxBar>
 			}
-			<div class="sidegrid"></div>
 		}
 	</div>
 
+	<div class="sidegrid"></div>
 	<div class="border"></div>
 	
 </root>
 
 @code {
 
-	private TimeSince lastRefresh = 0;
+	//private TimeSince lastRefresh = 0;
 	private Panel gridbox = null;
 	public bool CanAnimate = false;
 
+	private List<float> Durations = new() { 0.52f, 0.74f, 0.82f, 0.54f, 0.48f, 0.82f, 0.45f, 1.1f, 0.67f };
+
 	private void ProcessGridChildren()
 	{
-		if (!CanAnimate || lastRefresh < 0.5f)
+		if (!CanAnimate)
 			return;
 
 		foreach (var bar in gridbox.ChildrenOfType<GradientBoxBar>())
 		{
-			bar.PlayAnim();
+			if (bar.LastRefresh > bar.AnimDuration)
+			{
+				bar.PlayAnim();
+				bar.LastRefresh = 0;
+			}
+			
 		}
 
-		lastRefresh = 0;
 	}
 
 	protected override void OnAfterTreeRender(bool firstTime)
 	{
+		if (firstTime)
+		{
+			var bars = gridbox.ChildrenOfType<GradientBoxBar>();
+			for (int i = 0; i < bars.Count(); i++)
+			{
+				var bar = bars.ElementAt(i);
+				bar.AnimDuration = Durations[i];
+			}
+		}
+
 		ProcessGridChildren();
 	}
 

@@ -3,6 +3,7 @@
 @using System.Linq;
 @using Sandbox;
 @using Sandbox.UI;
+@using Sandbox.UI.Tests;
 
 <style>
 
@@ -88,7 +89,7 @@
 		var textRows = textContainer.ChildrenOfType<Label>();
 		for (int i = 0; i < textRows.Count(); i++)
 		{
-			Label textRow = textRows.ElementAt(i);
+			var textRow = textRows.ElementAt(i);
 			var text = i < ScrollingTexts.Count ? ScrollingTexts[i] : "";
 			textRow.Text = text;
 		}
