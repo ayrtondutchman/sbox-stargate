@@ -38,6 +38,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 	private void CreatePrograms()
 	{
 		Programs.Add( new SGCProgram_Dialing() );
+		Programs.Add( new SGCProgram_Screensaver() );
 	}
 
 	[ClientRpc]

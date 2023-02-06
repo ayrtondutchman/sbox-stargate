@@ -90,7 +90,7 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		background-image: url("materials/sbox_stargate/programs/dialing/gate_chevron_wings.png");
+		background-image: url("materials/sbox_stargate/programs/dialing/gate_chevron_wings_all.png");
 		background-image-tint: @SGCComputer.Color_SG_Yellow.ToColor32(true).Rgb;
 		background-size: contain;
 		background-repeat: no-repeat;
@@ -152,7 +152,8 @@
 
 	<div class="gate_chevrons_container">
 		@{
-			for (int i = 0; i < 9; i++){
+			for (int i = 0; i < 9; i++)
+			{
 				var chevClass = "gate_chevron";
 				var crystalClass = "gate_chevron_crystal";
 				var rotateStyle = $"transform: rotate({chevronAngles[i]})";
@@ -169,10 +170,10 @@
 				<div class=@chevClass style=@rotateStyle>
 					<img class=@crystalClass src="materials/sbox_stargate/programs/dialing/gate_chevron_crystal.png" />
 				</div>
-
-				<div class="gate_chevron_wings" style=@rotateStyle></div>
 			}
 		}
+
+		<div class="gate_chevron_wings"></div>
 
 		<div class="gate_chevron_indicator" @ref=indicator></div>
 	</div>
