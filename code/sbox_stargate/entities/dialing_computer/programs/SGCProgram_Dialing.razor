@@ -314,14 +314,22 @@
 		float h = (this as Panel).Box.Rect.Height;
 		TextScaleModifier = h / 2048.0f;
 
-		addressbox.Address = Address;
-		statusbox.Status = Status;
+		if (addressbox.IsValid())
+			addressbox.Address = Address;
+
+		if (statusbox.IsValid())
+			statusbox.Status = Status;
 
 		if (!Gate.IsValid()) return;
 
-		gatebox.Gate = Gate;
-		gradientbox.CanAnimate = !Gate.Idle;
-		numberbox.Generating = !Gate.Idle;
+		if (gatebox.IsValid())
+			gatebox.Gate = Gate;
+
+		if (gradientbox.IsValid())
+			gradientbox.CanAnimate = !Gate.Idle;
+
+		if (numberbox.IsValid())
+			numberbox.Generating = !Gate.Idle;
 	}
 
 	protected override int BuildHash()
