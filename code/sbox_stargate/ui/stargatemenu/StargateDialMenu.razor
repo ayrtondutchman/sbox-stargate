@@ -332,8 +332,19 @@
                 <label class="input-label">Address:</label>
                 <TextEntry Value:bind=@DialAddress></TextEntry>
                 <Checkbox Value:bind=@FastDial tooltip="Enable Fast Dial"></Checkbox>
-                <icon class="can-click green" tooltip="Dial" onclick=@OpenGate>phone</icon>
-                <icon class="can-click red" tooltip="Abort/Close" onclick=@CloseGate>cancel</icon>
+                @{
+                    void dial()
+                    {
+                        OpenGate(); MenuPanel.CloseMenu();
+                    }
+
+                    void abort()
+                    {
+                        CloseGate(); MenuPanel.CloseMenu();
+                    }
+                }
+                <icon class="can-click green" tooltip="Dial" onclick=@dial>phone</icon>
+                <icon class="can-click red" tooltip="Abort/Close" onclick=@abort>cancel</icon>
             </div>
         </div>
 
@@ -351,6 +362,8 @@
 {
     private Stargate Gate;
     private Dhd DHD;
+
+    public StargateMenuV2 MenuPanel;
 
     private string _gateAddress = "";
     public string GateAddress
@@ -580,6 +593,7 @@
             {
                 DialAddress = address;
                 OpenGate();
+                MenuPanel.CloseMenu();
             });
         };
 

@@ -30,6 +30,7 @@ public class StargateMenuV2 : Panel
 		dialMenu = AddChild<StargateDialMenu>();
 		dialMenu.SetGate( gate );
 		dialMenu.SetDHD( dhd );
+		dialMenu.MenuPanel = this;
 	}
 
 	public void CloseMenu()
