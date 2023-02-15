@@ -90,6 +90,8 @@ public abstract partial class Dhd : Prop
 
 	protected virtual Vector3 ButtonPositionsOffset => new Vector3( -14.8088f, -1.75652f, 7.5f );
 
+	private List<DhdWorldPanel> WorldPanels = new List<DhdWorldPanel>();
+
 	public override void ClientSpawn()
 	{
 		base.ClientSpawn();
@@ -104,8 +106,16 @@ public abstract partial class Dhd : Prop
 			var sym = item.Key;
 			var pos = item.Value - ButtonPositionsOffset;
 
-			_ = new DhdWorldPanel( this, sym, pos );
+			var panel = new DhdWorldPanel( this, sym, pos );
+			WorldPanels.Add( panel );
 		}
+	}
+
+	public void DeleteWorldPanels()
+	{
+		foreach ( var panel in WorldPanels )
+			panel.Delete();
+		WorldPanels.Clear();
 	}
 
 	public override void Spawn()
@@ -388,6 +398,16 @@ public abstract partial class Dhd : Prop
 		{
 			PressedActions.Clear();
 		} 
+	}
+
+	[Event.Client.Frame]
+	private void WorldPanelThink()
+	{
+		var isNearDhd = Position.DistanceSquared( Camera.Position ) < (128 * 128);
+		if ( isNearDhd && WorldPanels.Count == 0 )
+			CreateWorldPanels();
+		else if ( !isNearDhd && WorldPanels.Count != 0 )
+			DeleteWorldPanels();
 	}
 
 }
