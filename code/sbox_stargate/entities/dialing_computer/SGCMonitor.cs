@@ -18,6 +18,9 @@ public partial class SGCMonitor : ModelEntity, IUse
 	public List<SGCProgram> Programs { get; private set; } = new();
 	private SGCProgram CurrentProgram;
 
+	[Net]
+	public Entity CurrentUser { get; private set; } = null;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -117,11 +120,114 @@ public partial class SGCMonitor : ModelEntity, IUse
 		DeleteBothPanels( To.Everyone );
 	}
 
+	[ClientRpc]
+	private void DisableWorldPanel()
+	{
+		CurrentProgram.Parent = null;
+	}
+
 	public bool OnUse( Entity user )
 	{
-		SwitchPanelViewing( To.Single( user ) );
+		//SwitchPanelViewing( To.Single( user ) );
+
+		if (CurrentUser.IsValid())
+		{
+			if (CurrentUser == user)
+			{
+				ViewPanelOnWorld( To.Single( CurrentUser ) );
+				CurrentUser = null;
+			}
+		}
+		else
+		{
+			CurrentUser = user;
+			//DisableWorldPanel( To.Single( CurrentUser ) );
+			ViewPanelOnHud( To.Single( CurrentUser ) );
+		}
 
 		return false;
+	}
+
+	public static bool IsPointBehindPlane( Vector3 point, Vector3 planeOrigin, Vector3 planeNormal )
+	{
+		return (point - planeOrigin).Dot( planeNormal ) < 0;
+	}
+
+	public bool IsWorldPanelInScreen()
+	{
+		var bounds = WorldPanel.PanelBounds;
+		var scaleFactor = (WorldPanel.ActualSize / WorldPanel.RenderSize) / 40.0f;
+		var heightScaleModifier = 0.65f;
+
+		var p1 = WorldPanel.Position + WorldPanel.Rotation.Up * (bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (bounds.Width * scaleFactor);
+		var p2 = WorldPanel.Position + WorldPanel.Rotation.Up * (bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (-bounds.Width * scaleFactor);
+		var p3 = WorldPanel.Position + WorldPanel.Rotation.Up * (-bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (bounds.Width * scaleFactor);
+		var p4 = WorldPanel.Position + WorldPanel.Rotation.Up * (-bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (-bounds.Width * scaleFactor);
+
+		var p1s = p1.ToScreen();
+		var p2s = p2.ToScreen();
+		var p3s = p3.ToScreen();
+		var p4s = p4.ToScreen();
+
+		// check if all points are not in screen, on the same side (so that if we stare at the center and points will be offscreen it won't hide our panel)
+		if ((p1s.x < 0 && p2s.x < 0 && p3s.x < 0 && p4s.x < 0) ||
+			(p1s.x > 1 && p2s.x > 1 && p3s.x > 1 && p4s.x > 1) ||
+			(p1s.y < 0 && p2s.y < 0 && p3s.y < 0 && p4s.y < 0) ||
+			(p1s.y > 1 && p2s.y > 1 && p3s.y > 1 && p4s.y > 1))
+			{
+				return false;
+			}
+
+		return true;
+	}
+
+	public bool IsWorldPanelBehindScreen()
+	{
+		var bounds = WorldPanel.PanelBounds;
+		var scaleFactor = (WorldPanel.ActualSize / WorldPanel.RenderSize) / 40.0f;
+		var heightScaleModifier = 0.65f;
+
+		var p1 = WorldPanel.Position + WorldPanel.Rotation.Up * (bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (bounds.Width * scaleFactor);
+		var p2 = WorldPanel.Position + WorldPanel.Rotation.Up * (bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (-bounds.Width * scaleFactor);
+		var p3 = WorldPanel.Position + WorldPanel.Rotation.Up * (-bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (bounds.Width * scaleFactor);
+		var p4 = WorldPanel.Position + WorldPanel.Rotation.Up * (-bounds.Height * heightScaleModifier * scaleFactor) + WorldPanel.Rotation.Right * (-bounds.Width * scaleFactor);
+
+		var p1s = p1.ToScreen();
+		var p2s = p2.ToScreen();
+		var p3s = p3.ToScreen();
+		var p4s = p4.ToScreen();
+
+		if ( p1s.z < 0 && p2s.z < 0 && p3s.z < 0 && p4s.z < 0 )
+			return true;
+
+		return false;
+	}
+
+	[Event.Client.Frame]
+	private void RenderLogic()
+	{
+		if ( !WorldPanel.IsValid() )
+			return;
+
+		var screenPos = WorldPanel.Position;
+		var screenDir = Rotation.Forward;
+
+		bool isWorldPanelBehindScreen = IsWorldPanelBehindScreen();
+		bool isPlayerBehindMonitor = IsPointBehindPlane( Camera.Position, screenPos, screenDir );
+		bool isPlayerFarAway = Camera.Position.DistanceSquared( screenPos ) > (512 * 512);
+		bool isWorldPanelOffScreen = !IsWorldPanelInScreen();
+
+		if ( (isPlayerBehindMonitor || isPlayerFarAway || isWorldPanelOffScreen || isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && CurrentProgram.Parent == WorldPanel )
+		{
+			CurrentProgram.Parent = null;
+			Log.Info("worldpanel hidden");
+		}
+
+		if ( (!isPlayerBehindMonitor && !isPlayerFarAway && !isWorldPanelOffScreen && !isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && CurrentProgram.Parent == null )
+		{
+			WorldPanel.AddChild( CurrentProgram );
+			Log.Info( "worldpanel unhidden" );
+		}
 	}
 
 	public bool IsUsable( Entity user )
