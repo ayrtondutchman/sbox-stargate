@@ -159,7 +159,7 @@ public partial class StargateMilkyWay : Stargate
 		if ( Dialing )
 		{
 			ShouldStopDialing = true;
-			await Task.DelaySeconds( Game.TickInterval * 4 ); // give the ring logic a chance to catch up
+			await GameTask.DelaySeconds( Game.TickInterval * 4 ); // give the ring logic a chance to catch up
 		}
 
 		base.DoStargateReset();
@@ -279,7 +279,7 @@ public partial class StargateMilkyWay : Stargate
 			var chevronAfterLastDelay = (addrLen == 9) ? 1.25f : ((addrLen == 8) ? 1.25f : 1.35f);
 			var chevronDelay = chevronsLoopDuration / (addrLen - 1);
 
-			await Task.DelaySeconds( chevronsStartDelay ); // wait 0.5 sec and start locking chevrons
+			await GameTask.DelaySeconds( chevronsStartDelay ); // wait 0.5 sec and start locking chevrons
 
 			// lets encode each chevron but the last
 			for ( var i = 1; i < addrLen; i++ )
@@ -305,12 +305,12 @@ public partial class StargateMilkyWay : Stargate
 
 				if ( i == addrLen - 1 ) Ring.SpinDown(); // stop rotating ring when the last looped chevron locks
 
-				await Task.DelaySeconds( chevronDelay );
+				await GameTask.DelaySeconds( chevronDelay );
 			}
 
 			if ( ShouldStopDialing ) { StopDialing(); return; } // check if we should stop dialing
 
-			await Task.DelaySeconds( chevronBeforeLastDelay ); // wait before locking the last chevron
+			await GameTask.DelaySeconds( chevronBeforeLastDelay ); // wait before locking the last chevron
 
 			if ( ShouldStopDialing ) { StopDialing(); return; } // check if we should stop dialing
 
@@ -346,7 +346,7 @@ public partial class StargateMilkyWay : Stargate
 				ActiveChevrons++;
 			}
 
-			await Task.DelaySeconds( chevronAfterLastDelay ); // wait after the last chevron, then open the gate or fail dial (if gate became invalid/was busy)
+			await GameTask.DelaySeconds( chevronAfterLastDelay ); // wait after the last chevron, then open the gate or fail dial (if gate became invalid/was busy)
 
 			if ( ShouldStopDialing ) { StopDialing(); return; } // check if we should stop dialing
 
@@ -358,7 +358,7 @@ public partial class StargateMilkyWay : Stargate
 			}
 			else
 			{
-				await Task.DelaySeconds( 0.25f ); // otherwise wait a bit, fail and stop dialing
+				await GameTask.DelaySeconds( 0.25f ); // otherwise wait a bit, fail and stop dialing
 				StopDialing();
 			}
 		}
@@ -391,7 +391,7 @@ public partial class StargateMilkyWay : Stargate
 			var chevronBeforeLastDelay = (numChevs == 9) ? 0.50f : ((numChevs == 8) ? 0.60f : 0.50f);
 			var chevronDelay = chevronsLoopDuration / (numChevs);
 
-			await Task.DelaySeconds( chevronsStartDelay ); // wait 0.5 sec and start locking chevrons
+			await GameTask.DelaySeconds( chevronsStartDelay ); // wait 0.5 sec and start locking chevrons
 
 			for ( var i = 1; i < numChevs; i++ )
 			{
@@ -412,10 +412,10 @@ public partial class StargateMilkyWay : Stargate
 					ActiveChevrons++;
 				}
 
-				await Task.DelaySeconds( chevronDelay ); // each chevron delay
+				await GameTask.DelaySeconds( chevronDelay ); // each chevron delay
 			}
 
-			await Task.DelaySeconds( chevronBeforeLastDelay - 0.4f ); // wait before locking the last chevron
+			await GameTask.DelaySeconds( chevronBeforeLastDelay - 0.4f ); // wait before locking the last chevron
 
 			var topChev = GetChevron( 7 );
 			if ( topChev.IsValid() )
@@ -462,7 +462,7 @@ public partial class StargateMilkyWay : Stargate
 			if ( address.Length == 9 )
 			{
 				PlaySound( this, GetSound( "dial_begin_9chev" ), 0.2f );
-				await Task.DelaySeconds( 1f ); // wait a bit
+				await GameTask.DelaySeconds( 1f ); // wait a bit
 			}
 
 			Stargate target = null;
@@ -486,7 +486,7 @@ public partial class StargateMilkyWay : Stargate
 					return;
 				}
 
-				await Task.DelaySeconds( MovieDialingType ? 0.15f : 0.65f ); // wait a bit
+				await GameTask.DelaySeconds( MovieDialingType ? 0.15f : 0.65f ); // wait a bit
 
 				if ( isLastChev ) target = FindDestinationGateByDialingAddress( this, address ); // if its last chevron, try to find the target gate
 
@@ -529,7 +529,7 @@ public partial class StargateMilkyWay : Stargate
 
 				ActiveChevrons++;
 
-				await Task.DelaySeconds( 0.5f );
+				await GameTask.DelaySeconds( 0.5f );
 
 				if ( ShouldStopDialing || !Dialing )
 				{
@@ -543,7 +543,7 @@ public partial class StargateMilkyWay : Stargate
 					readyForOpen = true;
 				}
 
-				await Task.DelaySeconds( isLastChev && MovieDialingType ? 0.5f : 1.5f ); // wait a bit
+				await GameTask.DelaySeconds( isLastChev && MovieDialingType ? 0.5f : 1.5f ); // wait a bit
 
 				chevNum++;
 			}
@@ -646,7 +646,7 @@ public partial class StargateMilkyWay : Stargate
 				}
 			}
 
-			await Task.DelaySeconds( 0.5f );
+			await GameTask.DelaySeconds( 0.5f );
 
 			EstablishWormholeTo( otherGate );
 		}
@@ -669,7 +669,7 @@ public partial class StargateMilkyWay : Stargate
 			CurGateState = GateState.DIALING;
 			CurDialType = DialType.DHD;
 
-			await Task.DelaySeconds( 0.35f );
+			await GameTask.DelaySeconds( 0.35f );
 
 			var otherGate = FindDestinationGateByDialingAddress( this, address );
 			if ( otherGate.IsValid() && otherGate != this && otherGate.IsStargateReadyForInboundDHD() )
@@ -682,7 +682,7 @@ public partial class StargateMilkyWay : Stargate
 				return;
 			}
 
-			await Task.DelaySeconds( 0.15f );
+			await GameTask.DelaySeconds( 0.15f );
 
 			EstablishWormholeTo( otherGate );
 		}

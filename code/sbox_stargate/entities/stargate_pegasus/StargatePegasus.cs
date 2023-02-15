@@ -237,7 +237,7 @@ public partial class StargatePegasus : Stargate
 				}
 				else
 				{
-					await Task.DelaySeconds( 0.25f ); // otherwise wait a bit, fail and stop dialing
+					await GameTask.DelaySeconds( 0.25f ); // otherwise wait a bit, fail and stop dialing
 					StopDialing();
 				}
 			}
@@ -411,7 +411,7 @@ public partial class StargatePegasus : Stargate
 				ChevronActivate( chev );
 			}
 
-			await Task.DelaySeconds( 0.5f );
+			await GameTask.DelaySeconds( 0.5f );
 
 			EstablishWormholeTo( otherGate );
 		}
@@ -434,7 +434,7 @@ public partial class StargatePegasus : Stargate
 			CurGateState = GateState.DIALING;
 			CurDialType = DialType.DHD;
 
-			await Task.DelaySeconds( 0.35f );
+			await GameTask.DelaySeconds( 0.35f );
 
 			var otherGate = FindDestinationGateByDialingAddress( this, address );
 			if ( otherGate.IsValid() && otherGate != this && otherGate.IsStargateReadyForInboundDHD() )
@@ -447,7 +447,7 @@ public partial class StargatePegasus : Stargate
 				return;
 			}
 
-			await Task.DelaySeconds( 0.15f );
+			await GameTask.DelaySeconds( 0.15f );
 
 			EstablishWormholeTo( otherGate );
 		}

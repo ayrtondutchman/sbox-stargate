@@ -78,7 +78,7 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		EstablishClientAnim(To.Everyone); // clientside animation stuff
 
-		await Task.DelaySeconds( 1.5f );
+		await GameTask.DelaySeconds( 1.5f );
 		if ( !this.IsValid() ) return;
 
 		WormholeLoop = Sound.FromEntity( "stargate.event_horizon.loop", this );
@@ -88,7 +88,7 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		CollapseClientAnim(To.Everyone); // clientside animation stuff
 
-		await Task.DelaySeconds( 1f );
+		await GameTask.DelaySeconds( 1f );
 		if ( !this.IsValid() ) return;
 
 		foreach ( var ent in BufferFront.Concat( BufferBack ) )

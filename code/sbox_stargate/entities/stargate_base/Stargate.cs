@@ -148,13 +148,13 @@ public abstract partial class Stargate : Prop, IUse
 
 	public async Task EstablishEventHorizon(float delay = 0)
 	{
-		await Task.DelaySeconds( delay );
+		await GameTask.DelaySeconds( delay );
 		if ( !this.IsValid() ) return;
 
 		CreateEventHorizon();
 		EventHorizon.Establish();
 
-		await Task.DelaySeconds( 2f );
+		await GameTask.DelaySeconds( 2f );
 		if ( !this.IsValid() || !EventHorizon.IsValid() ) return;
 
 		EventHorizon.IsFullyFormed = true;
@@ -162,13 +162,13 @@ public abstract partial class Stargate : Prop, IUse
 
 	public async Task CollapseEventHorizon( float sec = 0 )
 	{
-		await Task.DelaySeconds( sec );
+		await GameTask.DelaySeconds( sec );
 		if ( !this.IsValid() || !EventHorizon.IsValid() ) return;
 
 		EventHorizon.IsFullyFormed = false;
 		EventHorizon.Collapse();
 
-		await Task.DelaySeconds( sec + 2f );
+		await GameTask.DelaySeconds( sec + 2f );
 		if ( !this.IsValid() || !EventHorizon.IsValid() ) return;
 
 		DeleteEventHorizon();
@@ -352,7 +352,7 @@ public abstract partial class Stargate : Prop, IUse
 
 		OnStopDialingBegin();
 
-		await Task.DelaySeconds( 1.25f );
+		await GameTask.DelaySeconds( 1.25f );
 
 		OnStopDialingFinish();
 	}

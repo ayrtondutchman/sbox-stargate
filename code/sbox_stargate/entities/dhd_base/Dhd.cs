@@ -247,7 +247,7 @@ public abstract partial class Dhd : Prop
 
 	public async void TriggerAction( string action, Entity user, float delay = 0 ) // this gets called from the Button Trigger after pressing it
 	{
-		if ( delay > 0 ) await Task.DelaySeconds( delay );
+		if ( delay > 0 ) await GameTask.DelaySeconds( delay );
 
 		if ( !Gate.IsValid() ) return; // if we have no gate to control, cant do much
 

@@ -286,7 +286,7 @@ public partial class StargateUniverse : Stargate
 				}
 				else
 				{
-					await Task.DelaySeconds( 0.25f ); // otherwise wait a bit, fail and stop dialing
+					await GameTask.DelaySeconds( 0.25f ); // otherwise wait a bit, fail and stop dialing
 					StopDialing();
 				}
 			}
@@ -353,7 +353,7 @@ public partial class StargateUniverse : Stargate
 
 			DoPreRoll();
 
-			await Task.DelaySeconds( 1.5f );
+			await GameTask.DelaySeconds( 1.5f );
 
 			Stargate target = null;
 			var readyForOpen = false;
@@ -409,7 +409,7 @@ public partial class StargateUniverse : Stargate
 
 				AddTask( Time.Now + 0.65f, symbolAction, TimedTaskCategory.DIALING);
 
-				await Task.DelaySeconds( 1.25f );
+				await GameTask.DelaySeconds( 1.25f );
 
 				if ( isLastChev ) readyForOpen = gateValidCheck();
 			}
@@ -511,7 +511,7 @@ public partial class StargateUniverse : Stargate
 			CurGateState = GateState.DIALING;
 			CurDialType = DialType.DHD;
 
-			await Task.DelaySeconds( 0.35f );
+			await GameTask.DelaySeconds( 0.35f );
 
 			var otherGate = FindDestinationGateByDialingAddress( this, address );
 			if ( otherGate.IsValid() && otherGate != this && otherGate.IsStargateReadyForInboundDHD() )
@@ -524,7 +524,7 @@ public partial class StargateUniverse : Stargate
 				return;
 			}
 
-			await Task.DelaySeconds( 0.15f );
+			await GameTask.DelaySeconds( 0.15f );
 
 			EstablishWormholeTo( otherGate );
 		}

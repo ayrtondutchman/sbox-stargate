@@ -90,7 +90,7 @@ public partial class StargateRingUniverse : StargateRingMilkyWay
 	{
 		if ( delay > 0 )
 		{
-			await Task.DelaySeconds( delay );
+			await GameTask.DelaySeconds( delay );
 			if ( this.IsValid() ) return;
 		}
 

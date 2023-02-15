@@ -54,7 +54,7 @@ public partial class GateSpawner
 
 		UnloadGateSpawner(); // unload it before loading, we dont want to have multiple instances of loaded entities
 
-		await Task.Delay( 1000 );
+		await GameTask.Delay( 1000 );
 
 		//GetGatespawnerFileByName( Game.Server.MapIdent );
 

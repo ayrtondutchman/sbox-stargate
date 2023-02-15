@@ -35,7 +35,7 @@ public partial class RingPanel : Prop
 		SetButtonState( action, true );
 		PlaySound( action is not "DIAL" ? ButtonsSounds[1] : ButtonsSounds[0] );
 
-		await Task.DelaySeconds( ButtonGlowDelay );
+		await GameTask.DelaySeconds( ButtonGlowDelay );
 
 		SetButtonState( action, false );
 	}

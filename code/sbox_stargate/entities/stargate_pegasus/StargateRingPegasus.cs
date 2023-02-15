@@ -78,7 +78,7 @@ public partial class StargateRingPegasus : ModelEntity
 	{
 		if (delay > 0)
 		{
-			await Task.DelaySeconds( delay );
+			await GameTask.DelaySeconds( delay );
 			if ( this.IsValid() ) return;
 		}
 

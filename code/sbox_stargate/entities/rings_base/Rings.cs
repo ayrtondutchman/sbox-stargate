@@ -221,7 +221,7 @@ public partial class Rings : AnimatedEntity, IUse
 	{
 		CurrentSequence.Name = "idle_down";
 
-		await Task.DelaySeconds( 0.25f );
+		await GameTask.DelaySeconds( 0.25f );
 		RenderColor = RenderColor.WithAlpha( 0 );
 	}
 
@@ -303,7 +303,7 @@ public partial class Rings : AnimatedEntity, IUse
 		var y = 0;
 		foreach ( RingRing r in reversed )
 		{
-			await Task.Delay( times[y] );
+			await GameTask.Delay( times[y] );
 
 			if ( !this.IsValid() || !r.IsValid() ) return;
 
@@ -327,7 +327,7 @@ public partial class Rings : AnimatedEntity, IUse
 		List<Entity> toDest = new();
 		List<Entity> fromDest = new();
 
-		while ( !HasAllRingsReachedPosition || (DestinationRings.IsValid() && !DestinationRings.HasAllRingsReachedPosition) ) await Task.Delay( 10 );
+		while ( !HasAllRingsReachedPosition || (DestinationRings.IsValid() && !DestinationRings.HasAllRingsReachedPosition) ) await GameTask.Delay( 10 );
 
 		var testPos = Transform.PointToWorld( EndPos );
 		var toTp = Entity.All.Where( x => x.Position.Distance( testPos ) <= 80 );
@@ -377,12 +377,12 @@ public partial class Rings : AnimatedEntity, IUse
 		tempBody.Remove();
 		tempBody2.Remove();
 
-		await Task.Delay( 500 );
+		await GameTask.Delay( 500 );
 
 		particle.Destroy();
 		particle2.Destroy();
 
-		await Task.Delay( 500 );
+		await GameTask.Delay( 500 );
 
 		RetractRings();
 		DestinationRings.RetractRings();
@@ -402,7 +402,7 @@ public partial class Rings : AnimatedEntity, IUse
 		var i = 0;
 		foreach ( RingRing r in tRings )
 		{
-			await Task.Delay( times[i] );
+			await GameTask.Delay( times[i] );
 
 			r.desiredPos = LocalPosition.z;
 			r.Retract();

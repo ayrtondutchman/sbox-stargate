@@ -185,7 +185,7 @@ public partial class StargatePlatformEntity : KeyframeEntity
 			var lastTime = Time.Now;
 			for ( float f = CurrentRotation % moveDist / moveDist; f < 1; )
 			{
-				await Task.NextPhysicsFrame();
+				await GameTask.NextPhysicsFrame();
 				var diff = Math.Max( Time.Now - lastTime, 0 );
 				lastTime = Time.Now;
 
@@ -202,7 +202,7 @@ public partial class StargatePlatformEntity : KeyframeEntity
 			CurrentRotation = initialRotation + moveDist;
 			LocalRotation = finalRot;
 		}
-		else { Log.Warning( $"{this}: Unknown platform move type {MoveDirType}!" ); await Task.Delay( 100 ); }
+		else { Log.Warning( $"{this}: Unknown platform move type {MoveDirType}!" ); await GameTask.Delay( 100 ); }
 
 		if ( moveId != movement || !this.IsValid() ) return;
 
@@ -227,7 +227,7 @@ public partial class StargatePlatformEntity : KeyframeEntity
 
 		// ToggleMovement input during this time causes unexpected behavior
 		isWaitingToMove = true;
-		if ( TimeToHold > 0 ) await Task.DelaySeconds( TimeToHold );
+		if ( TimeToHold > 0 ) await GameTask.DelaySeconds( TimeToHold );
 		isWaitingToMove = false;
 
 		if ( moveId != movement || !this.IsValid() ) return;

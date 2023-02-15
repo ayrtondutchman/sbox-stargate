@@ -48,7 +48,7 @@ public partial class Stargate : IGateSpawner
 		var onRamp = data.GetProperty( nameof( StargateJsonModel.OnRamp ) ).GetBoolean();
 		if ( onRamp )
 		{
-			await Task.Delay( 1000 );
+			await GameTask.Delay( 1000 );
 			var ramp = IStargateRamp.GetClosest( Position, 100f );
 			if ( ramp is not null && (ramp as Entity).IsValid() )
 				PutGateOnRamp( this, ramp );

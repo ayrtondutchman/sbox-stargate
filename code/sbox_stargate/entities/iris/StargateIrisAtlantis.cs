@@ -28,12 +28,12 @@ public partial class StargateIrisAtlantis : StargateIris
 		EnableDrawing = true;
 		Sound.FromEntity("stargate.iris.atlantis.close", this);
 
-		await Task.DelaySeconds( OpenCloseDleay );
+		await GameTask.DelaySeconds( OpenCloseDleay );
 		if ( !this.IsValid() ) return;
 
 		Busy = false;
 
-		await Task.DelaySeconds( 0.6f );
+		await GameTask.DelaySeconds( 0.6f );
 		if ( !this.IsValid() ) return;
 
 		if ( !Closed ) return;
@@ -54,7 +54,7 @@ public partial class StargateIrisAtlantis : StargateIris
 		EnableDrawing = false;
 		Sound.FromEntity( "stargate.iris.atlantis.open", this);
 
-		await Task.DelaySeconds( OpenCloseDleay );
+		await GameTask.DelaySeconds( OpenCloseDleay );
 		if ( !this.IsValid() ) return;
 
 		Busy = false;
