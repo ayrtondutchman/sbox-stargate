@@ -557,12 +557,13 @@ public abstract partial class Stargate : Prop, IUse
 	}
 
 	[Event.Client.Frame]
-	public void CreateWorldPanels()
+	private void WorldPanelThink()
 	{
-		if (WorldPanel == null)
-		{
-			WorldPanel = new StargateWorldPanel(this);
-		}
+		var isNearGate = Position.DistanceSquared( Camera.Position ) < (512 * 512);
+		if ( isNearGate && !WorldPanel.IsValid() )
+			WorldPanel = new StargateWorldPanel( this );
+		else if ( !isNearGate && WorldPanel.IsValid() )
+			WorldPanel.Delete();
 	}
 
 	// UI Related stuff
