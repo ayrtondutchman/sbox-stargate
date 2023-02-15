@@ -25,12 +25,9 @@ public partial class SGCMonitor : ModelEntity, IUse
 	{
 		base.Spawn();
 
-		Scale = 4;
-
 		Transmit = TransmitType.Always;
-		SetModel( "models/editor/ortho.vmdl" );
+		SetModel( "models/sbox_stargate/tech/nec_multisync_lcd2080ux/nec_multisync_lcd2080ux.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
-		SetupPhysicsFromOBB( PhysicsMotionType.Dynamic, new Vector3( -5, -5, -5 ), new Vector3( 5, 5, 5 ) );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
 		RenderColor = Color.Black;
@@ -90,7 +87,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 	{
 		CurrentProgram.Parent = null;
 		HUDPanel?.Delete( true );
-		WorldPanel.AddChild( CurrentProgram );
+		WorldPanel.AddProgram( CurrentProgram );
 	}
 
 	[ClientRpc]
@@ -99,15 +96,6 @@ public partial class SGCMonitor : ModelEntity, IUse
 		CurrentProgram?.Delete( true );
 		HUDPanel?.Delete( true );
 		WorldPanel?.Delete( true );
-	}
-
-	[ClientRpc]
-	private void SwitchPanelViewing()
-	{
-		if ( !HUDPanel.IsValid() )
-			ViewPanelOnHud();
-		else
-			ViewPanelOnWorld();
 	}
 
 	protected override void OnDestroy()
@@ -128,8 +116,6 @@ public partial class SGCMonitor : ModelEntity, IUse
 
 	public bool OnUse( Entity user )
 	{
-		//SwitchPanelViewing( To.Single( user ) );
-
 		if (CurrentUser.IsValid())
 		{
 			if (CurrentUser == user)
@@ -141,7 +127,6 @@ public partial class SGCMonitor : ModelEntity, IUse
 		else
 		{
 			CurrentUser = user;
-			//DisableWorldPanel( To.Single( CurrentUser ) );
 			ViewPanelOnHud( To.Single( CurrentUser ) );
 		}
 
@@ -209,6 +194,15 @@ public partial class SGCMonitor : ModelEntity, IUse
 		if ( !WorldPanel.IsValid() )
 			return;
 
+		// if we are viewing it on HUD, we don't care about hiding world panel, and also remove HUDPanel if we dead
+		if ( HUDPanel.IsValid() )
+		{
+			if ( Game.LocalPawn.Health <= 0 )
+				ViewPanelOnWorld();
+
+			return;
+		}
+
 		var screenPos = WorldPanel.Position;
 		var screenDir = Rotation.Forward;
 
@@ -217,15 +211,15 @@ public partial class SGCMonitor : ModelEntity, IUse
 		bool isPlayerFarAway = Camera.Position.DistanceSquared( screenPos ) > (512 * 512);
 		bool isWorldPanelOffScreen = !IsWorldPanelInScreen();
 
-		if ( (isPlayerBehindMonitor || isPlayerFarAway || isWorldPanelOffScreen || isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && CurrentProgram.Parent == WorldPanel )
+		if ( (isPlayerBehindMonitor || isPlayerFarAway || isWorldPanelOffScreen || isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && CurrentProgram.Parent.IsValid() )
 		{
 			CurrentProgram.Parent = null;
 			Log.Info("worldpanel hidden");
 		}
 
-		if ( (!isPlayerBehindMonitor && !isPlayerFarAway && !isWorldPanelOffScreen && !isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && CurrentProgram.Parent == null )
+		if ( (!isPlayerBehindMonitor && !isPlayerFarAway && !isWorldPanelOffScreen && !isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && !CurrentProgram.Parent.IsValid() )
 		{
-			WorldPanel.AddChild( CurrentProgram );
+			WorldPanel.AddProgram( CurrentProgram );
 			Log.Info( "worldpanel unhidden" );
 		}
 	}
