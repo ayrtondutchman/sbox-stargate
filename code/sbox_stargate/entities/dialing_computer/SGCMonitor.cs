@@ -119,6 +119,9 @@ public partial class SGCMonitor : ModelEntity, IUse
 
 	public bool OnUse( Entity user )
 	{
+		if ( !user.IsValid() )
+			return false;
+
 		if ( CurrentUser.IsValid() )
 		{
 			if ( CurrentUser == user )
@@ -136,10 +139,17 @@ public partial class SGCMonitor : ModelEntity, IUse
 		return false;
 	}
 
+	[ConCmd.Server]
+	public static void KickCurrentUser(int monitorIdent)
+	{
+		var monitor = FindByIndex( monitorIdent ) as SGCMonitor;
+		monitor.OnUse( monitor.CurrentUser );
+	}
+
 	[Event.Tick.Server]
 	private void CurrentUserThink()
 	{
-		if ((!CurrentUser.IsValid() || CurrentUser.Health <= 0) && CurrentUser != null )
+		if ((!CurrentUser.IsValid() || CurrentUser.Health <= 0 || CurrentUser.Position.DistanceSquared(Position) > 120*120) && CurrentUser != null )
 		{
 			CurrentUser = null;
 		}
@@ -212,10 +222,10 @@ public partial class SGCMonitor : ModelEntity, IUse
 		if ( !WorldPanel.IsValid() )
 			return;
 
-		// if we are viewing it on HUD, we don't care about hiding world panel, and also remove HUDPanel if we dead
+		// if we are viewing it on HUD, we don't care about hiding world panel, and also remove HUDPanel if we arent active user
 		if ( HUDPanel.IsValid() )
 		{
-			if ( Game.LocalPawn.Health <= 0 )
+			if ( CurrentUser != Game.LocalPawn )
 				ViewPanelOnWorld();
 
 			return;

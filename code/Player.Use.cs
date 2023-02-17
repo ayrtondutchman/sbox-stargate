@@ -2,6 +2,8 @@
 
 partial class SandboxPlayer
 {
+	private int MaxUseDistance = 64;
+
 	public bool IsUseDisabled()
 	{
 		return ActiveChild is IUse use && use.IsUsable( this );
@@ -13,7 +15,7 @@ partial class SandboxPlayer
 			return null;
 
 		// First try a direct 0 width line
-		var tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * (85 * Scale) )
+		var tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * (MaxUseDistance * Scale) )
 			.WithoutTags( "trigger" )
 			.Ignore( this )
 			.Run();
@@ -28,7 +30,7 @@ partial class SandboxPlayer
 		// Nothing found, try a wider search
 		if ( !IsValidUseEntity( ent ) )
 		{
-			tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * (85 * Scale) )
+			tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * (MaxUseDistance * Scale) )
 			.WithoutTags( "trigger" )
 			.Radius( 2 )
 			.Ignore( this )

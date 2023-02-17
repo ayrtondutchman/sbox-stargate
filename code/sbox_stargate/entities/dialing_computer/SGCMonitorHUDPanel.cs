@@ -13,10 +13,9 @@ public class SGCMonitorHUDPanel : Panel
 
 		StyleSheet.Load( "sbox_stargate/entities/dialing_computer/SGCMonitorHUDPanel.scss" );
 		var programscreen = Add.Panel( "programscreen" );
-
 		programscreen.AddChild( program );
 
-		if (program is SGCProgram_Dialing dialprog)
+		if ( program is SGCProgram_Dialing dialprog )
 		{
 			Keyboard = new KeyboardDialing();
 			Keyboard.Program = dialprog;
@@ -26,6 +25,12 @@ public class SGCMonitorHUDPanel : Panel
 
 			AddKeyboardEvent();
 		}
+
+		AddEventListener( "onrightclick", () =>
+		{
+			SGCMonitor.KickCurrentUser( Monitor.NetworkIdent );
+		}
+		);
 	}
 
 	private async void AddKeyboardEvent()
