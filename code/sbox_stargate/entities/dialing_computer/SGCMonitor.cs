@@ -232,13 +232,11 @@ public partial class SGCMonitor : ModelEntity, IUse
 		if ( (isPlayerBehindMonitor || isPlayerFarAway || isWorldPanelOffScreen || isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && CurrentProgram.Parent.IsValid() )
 		{
 			CurrentProgram.Parent = null;
-			Log.Info("worldpanel hidden");
 		}
 
 		if ( (!isPlayerBehindMonitor && !isPlayerFarAway && !isWorldPanelOffScreen && !isWorldPanelBehindScreen) && CurrentUser != Game.LocalClient && !CurrentProgram.Parent.IsValid() )
 		{
 			WorldPanel.AddProgram( CurrentProgram );
-			Log.Info( "worldpanel unhidden" );
 		}
 	}
 
@@ -255,11 +253,8 @@ public partial class SGCMonitor : ModelEntity, IUse
 		if ( !monitor.IsValid() )
 			return;
 
-		Log.Info( $"requesting dial program address change for {monitor} by {ConsoleSystem.Caller}" );
-
 		monitor.DialProgramCurrentAddress = address;
 		monitor.ProgramDialUpdateAddressOnClient( To.Everyone, monitor, address );
-		//monitor.CurrentProgram.UpdateProgram( monitor, monitor.Computer );
 	}
 
 	[ClientRpc]
@@ -270,6 +265,5 @@ public partial class SGCMonitor : ModelEntity, IUse
 			return;
 
 		program.UpdateProgram( this, Computer );
-		Log.Info( "updated dial program address" );
 	}
 }
