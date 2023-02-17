@@ -226,8 +226,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 
 			if ( Gate.ShouldStopDialing )
 			{
-				SpinDown();
-				Gate.CurGateState = Stargate.GateState.IDLE;
+				Gate.StopDialing();
 				return false;
 			}
 		}
@@ -253,8 +252,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		{
 			if ( !ShouldDecc )
 			{
-				SpinDown();
-				Gate.CurGateState = Stargate.GateState.IDLE;
+				Gate.StopDialing();
 			}
 		}
 
