@@ -66,8 +66,8 @@ public partial class Stargate : Prop, IUse
 	private List<TimedTask> StargateActions = new();
 
 
-	public const string Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@"; // we wont use * and ? for now, since they arent on the DHD
-	public const string SymbolsForAddress = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	public const string Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*#@"; // symbol * (Aquila) isnt on the DHD, so gates using that symbol cant be dialed without a computer/other means
+	public const string SymbolsForAddress = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*";
 	public const string SymbolsForGroup = "@";
 	public const char PointOfOrigin = '#';
 
