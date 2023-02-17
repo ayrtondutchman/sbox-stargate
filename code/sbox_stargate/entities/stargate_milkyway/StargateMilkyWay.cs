@@ -470,6 +470,9 @@ public partial class StargateMilkyWay : Stargate
 					await GameTask.DelaySeconds( initialDelay );
 			}
 
+			if ( ShouldStopDialing || !Dialing )
+				return;
+
 			Stargate target = null;
 
 			var readyForOpen = false;

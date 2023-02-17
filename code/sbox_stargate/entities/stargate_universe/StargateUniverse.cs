@@ -354,6 +354,9 @@ public partial class StargateUniverse : Stargate
 			if ( initialDelay > 0 )
 				await GameTask.DelaySeconds( initialDelay );
 
+			if ( ShouldStopDialing || !Dialing )
+				return;
+
 			DoPreRoll();
 
 			await GameTask.DelaySeconds( 1.5f );
@@ -374,6 +377,9 @@ public partial class StargateUniverse : Stargate
 
 				return false;
 			}
+
+			if ( ShouldStopDialing || !Dialing )
+				return;
 
 			foreach ( var sym in address )
 			{

@@ -300,6 +300,9 @@ public partial class StargatePegasus : Stargate
 			if ( initialDelay > 0 )
 				await GameTask.DelaySeconds( initialDelay );
 
+			if ( ShouldStopDialing || !Dialing )
+				return;
+
 			var startTime = Time.Now;
 			var addrLen = address.Length;
 
