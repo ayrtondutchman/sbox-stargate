@@ -332,9 +332,9 @@ public partial class StargateUniverse : Stargate
 
 
 	// SLOW DIAL
-	public async override void BeginDialSlow( string address )
+	public async override void BeginDialSlow( string address, float initialDelay=0 )
 	{
-		base.BeginDialSlow( address );
+		base.BeginDialSlow( address, initialDelay );
 
 		if ( !CanStargateStartDial() ) return;
 
@@ -350,6 +350,9 @@ public partial class StargateUniverse : Stargate
 				StopDialing();
 				return;
 			}
+
+			if ( initialDelay > 0 )
+				await GameTask.DelaySeconds( initialDelay );
 
 			DoPreRoll();
 

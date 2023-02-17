@@ -278,9 +278,9 @@ public partial class StargatePegasus : Stargate
 	}
 
 	// SLOW DIAL
-	public override void BeginDialSlow( string address )
+	public async override void BeginDialSlow( string address, float initialDelay=0 )
 	{
-		base.BeginDialSlow( address );
+		base.BeginDialSlow( address, initialDelay );
 
 		if ( !CanStargateStartDial() ) return;
 
@@ -296,7 +296,10 @@ public partial class StargatePegasus : Stargate
 				StopDialing();
 				return;
 			}
-			
+
+			if ( initialDelay > 0 )
+				await GameTask.DelaySeconds( initialDelay );
+
 			var startTime = Time.Now;
 			var addrLen = address.Length;
 

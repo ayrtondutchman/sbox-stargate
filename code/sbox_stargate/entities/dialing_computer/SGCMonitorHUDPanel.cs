@@ -5,6 +5,7 @@ using System.Threading;
 public class SGCMonitorHUDPanel : Panel
 {
 	private SGCMonitor Monitor;
+	private KeyboardDialing Keyboard;
 
 	public SGCMonitorHUDPanel( SGCMonitor monitor, SGCProgram program )
 	{
@@ -14,6 +15,32 @@ public class SGCMonitorHUDPanel : Panel
 		var programscreen = Add.Panel( "programscreen" );
 
 		programscreen.AddChild( program );
+
+		if (program is SGCProgram_Dialing dialprog)
+		{
+			Keyboard = new KeyboardDialing();
+			Keyboard.Program = dialprog;
+			Keyboard.AddClass( "keyboard" );
+
+			programscreen.AddChild( Keyboard );
+
+			AddKeyboardEvent();
+		}
+	}
+
+	private async void AddKeyboardEvent()
+	{
+		await GameTask.DelaySeconds(0.1f);
+
+		var drawer = Keyboard.Drawer;
+		if ( !drawer.IsValid() )
+			return;
+
+		Keyboard.Drawer.AddEventListener( "onclick", () =>
+		{
+			Keyboard.SetClass( "hidden", !Keyboard.HasClass( "hidden" ) );
+		}
+		);
 	}
 
 	public override void Tick()

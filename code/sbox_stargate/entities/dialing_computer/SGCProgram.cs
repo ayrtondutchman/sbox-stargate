@@ -11,10 +11,16 @@ public class SGCProgram : Panel
 
 	protected Stargate Gate;
 
-	public void UpdateProgram( SGCMonitor monitor, SGCComputer computer)
+	public virtual void UpdateProgram( SGCMonitor monitor, SGCComputer computer)
 	{
 		Monitor = monitor;
 		Computer = computer;
+	}
+
+	[Event.Hotload]
+	private void UpdateProgram()
+	{
+		UpdateProgram( Monitor, Computer );
 	}
 
 	public override void Tick()

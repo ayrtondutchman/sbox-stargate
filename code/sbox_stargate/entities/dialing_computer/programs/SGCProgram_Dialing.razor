@@ -215,6 +215,34 @@
 		}
 	}
 
+	.input_accepted {
+		position: absolute;
+		border-color: @SGCComputer.Color_SG_Blue.Rgb;
+		border-width: 0.5%;
+		background-image: url("materials/sbox_stargate/programs/dialing/input_accepted.png");
+		background-image-tint: @SGCComputer.Color_SG_Blue.ToColor32(true).Rgb;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-color: black;
+		top: 31%;
+		bottom: 43%;
+		left: 25%;
+		right: 25%;
+		margin: auto;
+	}
+
+	.input_accepted_entry {
+		position: absolute;
+		background-image: url("materials/sbox_stargate/programs/dialing/input_accepted_entry.png");
+		background-image-tint: white;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 100%;
+		height: 100%;
+	}
+
 </style>
 
 <root>
@@ -262,8 +290,18 @@
 			imgname = "materials/sbox_stargate/glyphs/mw/glyph_1.png";
 		}
 		<image src=@imgname class=@c/>
-	}
+		}
 	</div>
+
+	@{
+		if (Gate.Idle && Stargate.IsValidFullAddress(Address))
+		{
+			var entryStyle = $"opacity: {SGCComputer.GetSinFromTime() * 2}";
+			<div class="input_accepted">
+				<div class="input_accepted_entry" style=@entryStyle></div>
+			</div>
+		}
+	}
 
 </root>
 
@@ -282,6 +320,12 @@
 	string Status = "hidden";
 
 	private float TextScaleModifier = 0;
+
+	public override void UpdateProgram(SGCMonitor monitor, SGCComputer computer)
+	{
+		base.UpdateProgram(monitor, computer);
+		Address = Monitor.DialProgramCurrentAddress;
+	}
 
 	public override void Tick()
 	{

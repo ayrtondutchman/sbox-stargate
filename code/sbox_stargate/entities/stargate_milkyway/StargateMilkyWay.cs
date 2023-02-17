@@ -440,9 +440,9 @@ public partial class StargateMilkyWay : Stargate
 
 
 	// SLOW DIAL
-	public async override void BeginDialSlow( string address )
+	public async override void BeginDialSlow( string address, float initialDelay=0 )
 	{
-		base.BeginDialSlow( address );
+		base.BeginDialSlow( address, initialDelay );
 
 		if ( !CanStargateStartDial() ) return;
 
@@ -463,6 +463,11 @@ public partial class StargateMilkyWay : Stargate
 			{
 				PlaySound( this, GetSound( "dial_begin_9chev" ), 0.2f );
 				await GameTask.DelaySeconds( 1f ); // wait a bit
+			}
+			else
+			{
+				if ( initialDelay > 0 )
+					await GameTask.DelaySeconds( initialDelay );
 			}
 
 			Stargate target = null;

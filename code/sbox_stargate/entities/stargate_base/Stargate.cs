@@ -325,7 +325,7 @@ public abstract partial class Stargate : Prop, IUse
 
 	// begin dial
 	public virtual void BeginDialFast( string address ) { }
-	public virtual void BeginDialSlow( string address ) { }
+	public virtual void BeginDialSlow( string address, float initialDelay=0 ) { }
 	public virtual void BeginDialInstant( string address ) { } // instant gate open, with kawoosh
 	public virtual void BeginDialNox( string address ) { } // instant gate open without kawoosh - asgard/ancient/nox style
 
@@ -585,7 +585,7 @@ public abstract partial class Stargate : Prop, IUse
 	}
 
 	[ConCmd.Server]
-	public static void RequestDial(DialType type, string address, int gate) {
+	public static void RequestDial(DialType type, string address, int gate, float initialDelay=0) {
 		if (FindByIndex( gate ) is Stargate g && g.IsValid()) {
 			switch ( type ) {
 				case DialType.FAST:
@@ -593,7 +593,7 @@ public abstract partial class Stargate : Prop, IUse
 					break;
 
 				case DialType.SLOW:
-					g.BeginDialSlow( address );
+					g.BeginDialSlow( address, initialDelay );
 					break;
 
 				case DialType.INSTANT:

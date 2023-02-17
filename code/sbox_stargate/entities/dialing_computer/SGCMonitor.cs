@@ -16,10 +16,13 @@ public partial class SGCMonitor : ModelEntity, IUse
 	private SGCMonitorWorldPanel WorldPanel;
 
 	public List<SGCProgram> Programs { get; private set; } = new();
-	private SGCProgram CurrentProgram;
+	public SGCProgram CurrentProgram { get; private set; } = null;
 
 	[Net]
 	public Entity CurrentUser { get; private set; } = null;
+
+	[Net]
+	public string DialProgramCurrentAddress { get; private set; } = "";
 
 	public override void Spawn()
 	{
@@ -42,7 +45,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 	}
 
 	[ClientRpc]
-	private void UpdatePrograms(SGCComputer computer, SGCMonitor monitor)
+	private void UpdatePrograms( SGCComputer computer, SGCMonitor monitor )
 	{
 		foreach ( var program in Programs )
 		{
@@ -102,7 +105,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 	{
 		base.OnDestroy();
 
-		if (Computer.IsValid())
+		if ( Computer.IsValid() )
 			Computer.RemoveMonitor( this );
 
 		DeleteBothPanels( To.Everyone );
@@ -116,9 +119,9 @@ public partial class SGCMonitor : ModelEntity, IUse
 
 	public bool OnUse( Entity user )
 	{
-		if (CurrentUser.IsValid())
+		if ( CurrentUser.IsValid() )
 		{
-			if (CurrentUser == user)
+			if ( CurrentUser == user )
 			{
 				ViewPanelOnWorld( To.Single( CurrentUser ) );
 				CurrentUser = null;
@@ -131,6 +134,21 @@ public partial class SGCMonitor : ModelEntity, IUse
 		}
 
 		return false;
+	}
+
+	[Event.Tick.Server]
+	private void CurrentUserThink()
+	{
+		if ((!CurrentUser.IsValid() || CurrentUser.Health <= 0) && CurrentUser != null )
+		{
+			CurrentUser = null;
+		}
+	}
+
+	[Event.Hotload]
+	private void Hotloaded()
+	{
+		CurrentUser = null;
 	}
 
 	public static bool IsPointBehindPlane( Vector3 point, Vector3 planeOrigin, Vector3 planeNormal )
@@ -229,4 +247,29 @@ public partial class SGCMonitor : ModelEntity, IUse
 		return true;
 	}
 
+	// networking for program shit
+	[ConCmd.Server]
+	public static void ProgramDialUpdateAddressOnServer( int monitorIdent, string address )
+	{
+		var monitor = FindByIndex( monitorIdent ) as SGCMonitor;
+		if ( !monitor.IsValid() )
+			return;
+
+		Log.Info( $"requesting dial program address change for {monitor} by {ConsoleSystem.Caller}" );
+
+		monitor.DialProgramCurrentAddress = address;
+		monitor.ProgramDialUpdateAddressOnClient( To.Everyone, monitor, address );
+		//monitor.CurrentProgram.UpdateProgram( monitor, monitor.Computer );
+	}
+
+	[ClientRpc]
+	public void ProgramDialUpdateAddressOnClient( SGCMonitor monitor, string address )
+	{
+		var program = Programs.OfType<SGCProgram_Dialing>().FirstOrDefault();
+		if ( !program.IsValid() )
+			return;
+
+		program.UpdateProgram( this, Computer );
+		Log.Info( "updated dial program address" );
+	}
 }
