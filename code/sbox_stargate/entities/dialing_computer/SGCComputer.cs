@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,6 +74,13 @@ public partial class SGCComputer : ModelEntity, IUse
 	public bool IsUsable( Entity user )
 	{
 		return true;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+
+		StopAlarmSound();
 	}
 
 	public static float GetSinFromTime()

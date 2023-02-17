@@ -498,6 +498,9 @@
 	{
 		for (int i = 0; i < 2; i++)
 		{
+			if (!Computer.IsValid())
+				return;
+
 			addressbox.BlinkBoxes();
 			Sound.FromWorld("sg.program.dial.lock_beep", Computer.Position);
 
