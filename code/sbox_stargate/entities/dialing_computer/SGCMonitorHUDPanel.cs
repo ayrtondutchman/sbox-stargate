@@ -20,7 +20,7 @@ public class SGCMonitorHUDPanel : Panel
 		{
 			Keyboard = new KeyboardDialing();
 			Keyboard.Program = dialprog;
-			Keyboard.AddClass( "keyboard" );
+			Keyboard.AddClass( "keyboard hidden" );
 
 			programscreen.AddChild( Keyboard );
 
