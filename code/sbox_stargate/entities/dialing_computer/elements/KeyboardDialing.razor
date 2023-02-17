@@ -61,7 +61,7 @@
 	.kb_key {
 		border-radius: 4%;
 		background-image-tint: white;
-		background-size: 60% 80%;
+		background-size: 75% 80%;
 		background-repeat: no-repeat;
 		background-position: center;
 		background-color: rgba(grey, 0.75);
@@ -86,11 +86,13 @@
 
 		&.alt_win {
 			width: 8%;
+			background-size: 65% 80%;
 		}
 
 		&.ctrl {
 			width: auto;
 			flex-grow: 1;
+			background-size: 50% 80%;
 		}
 
 		&.escape {
@@ -111,7 +113,6 @@
 				opacity: 0;
 			}
 		}
-
 	}
 
 	.key_text {
@@ -129,8 +130,8 @@
 		<div class="drawer" @ref=Drawer><label class="key_text" text="Keyboard" style="font-size: @(100 * TextScaleModifier)%"></label></div>
 
 		<div class="keys_row row1">
-			<div class="kb_key escape" @onclick=@(()=>{DoKeyboardAction("esc");})><label class="key_text" text="Esc" style="font-size: @(150 * TextScaleModifier)%"></label></div>
-			<div class="kb_key backspace" @onclick=@(()=>{DoKeyboardAction("back");})><label class="key_text" text="<--" style="font-size: @(150 * TextScaleModifier)%"></label></div>
+			<div class="kb_key escape" @onclick=@(()=>{DoKeyboardAction("esc");})><label class="key_text" text="Esc" style="font-size: @(100 * TextScaleModifier)%"></label></div>
+			<div class="kb_key backspace" @onclick=@(()=>{DoKeyboardAction("back");})><label class="key_text" text="<--" style="font-size: @(100 * TextScaleModifier)%"></label></div>
 		</div>
 		
 		<div class="keys_row">
@@ -161,7 +162,7 @@
 			<div class="kb_key" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_21.png');" @onclick=@(()=>{DoKeyboardAction("symbol_@");})></div>
 			<div class="kb_key" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_22.png');" @onclick=@(()=>{DoKeyboardAction("symbol_Q");})></div>
 			<div class="kb_key" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_23.png');" @onclick=@(()=>{DoKeyboardAction("symbol_F");})></div>
-			<div class="kb_key enter" @onclick=@(()=>{DoKeyboardAction("enter");})><label class="key_text" text="Enter" style="font-size: @(150 * TextScaleModifier)%"></label></div>
+			<div class="kb_key enter" @onclick=@(()=>{DoKeyboardAction("enter");})><label class="key_text" text="Enter" style="font-size: @(100 * TextScaleModifier)%"></label></div>
 		</div>
 
 		<div class="keys_row">
@@ -181,7 +182,7 @@
 			<div class="kb_key ctrl" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_34.png');" @onclick=@(()=>{DoKeyboardAction("symbol_W");})></div>
 			<div class="kb_key alt_win" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_35.png');" @onclick=@(()=>{DoKeyboardAction("symbol_7");})></div>
 			<div class="kb_key alt_win" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_36.png');" @onclick=@(()=>{DoKeyboardAction("symbol_2");})></div>
-			<div class="kb_key spacebar" @onclick=@(()=>{DoKeyboardAction("space");})><label class="key_text" text="Abort / Shutdown" style="font-size: @(150 * TextScaleModifier)%"></label></div>
+			<div class="kb_key spacebar" @onclick=@(()=>{DoKeyboardAction("space");})><label class="key_text" text="Abort / Shutdown" style="font-size: @(100 * TextScaleModifier)%"></label></div>
 			<div class="kb_key alt_win" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_37.png');" @onclick=@(()=>{DoKeyboardAction("symbol_Y");})></div>
 			<div class="kb_key alt_win" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_38.png');" @onclick=@(()=>{DoKeyboardAction("symbol_V");})></div>
 			<div class="kb_key ctrl" style="background-image: url('materials/sbox_stargate/glyphs/mw/glyph_39.png');" @onclick=@(()=>{DoKeyboardAction("symbol_D");})></div>
