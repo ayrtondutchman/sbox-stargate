@@ -265,17 +265,11 @@ public partial class SGCComputer : ModelEntity, IUse
 			DialProgramEncodeBoxAppear( To.Everyone, sym);
 	}
 
-	[StargateEvent.DialAbort]
-	private void DialAbort( Stargate gate )
-	{
-		if ( gate != Gate ) return;
-
-		//DialProgramReturnToIdle( To.Everyone );
-	}
-
 	[StargateEvent.DialBegin]
 	private void DialBegin(Stargate gate, string address)
 	{
+		if ( gate != Gate ) return;
+
 		PlayAlarmSound();
 		DialProgramReturnToIdle( To.Everyone );
 	}
@@ -283,6 +277,8 @@ public partial class SGCComputer : ModelEntity, IUse
 	[StargateEvent.InboundBegin]
 	private void InboundBegin( Stargate gate )
 	{
+		if ( gate != Gate ) return;
+
 		PlayAlarmSound();
 		DialProgramReturnToIdle( To.Everyone );
 	}
