@@ -18,6 +18,8 @@ public partial class SGCComputer : ModelEntity, IUse
 	[Net]
 	public IList<SGCMonitor> Monitors { get; private set; } = new();
 
+	private Sound AlarmSound;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -79,6 +81,17 @@ public partial class SGCComputer : ModelEntity, IUse
 		return s * s;
 	}
 
+	// Alarm sound
+	private void PlayAlarmSound()
+	{
+		StopAlarmSound();
+		AlarmSound = Sound.FromEntity( "sg.alarm.sgc", this );
+	}
+
+	private void StopAlarmSound()
+	{
+		AlarmSound.Stop();
+	}
 
 	// RPC's
 
@@ -175,6 +188,7 @@ public partial class SGCComputer : ModelEntity, IUse
 		if ( gate != Gate ) return;
 
 		DialProgramReturnToIdle( To.Everyone );
+		StopAlarmSound();
 	}
 
 	[StargateEvent.ChevronEncoded]
@@ -256,6 +270,38 @@ public partial class SGCComputer : ModelEntity, IUse
 	{
 		if ( gate != Gate ) return;
 
+		//DialProgramReturnToIdle( To.Everyone );
+	}
+
+	[StargateEvent.DialBegin]
+	private void DialBegin(Stargate gate, string address)
+	{
+		PlayAlarmSound();
+		DialProgramReturnToIdle( To.Everyone );
+	}
+
+	[StargateEvent.InboundBegin]
+	private void InboundBegin( Stargate gate )
+	{
+		PlayAlarmSound();
+		DialProgramReturnToIdle( To.Everyone );
+	}
+
+	[StargateEvent.DialAbortFinished]
+	private void DialAbortFinished( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		StopAlarmSound();
+		DialProgramReturnToIdle( To.Everyone );
+	}
+
+	[StargateEvent.Reset]
+	private void Reset( Stargate gate )
+	{
+		if ( gate != Gate ) return;
+
+		StopAlarmSound();
 		DialProgramReturnToIdle( To.Everyone );
 	}
 

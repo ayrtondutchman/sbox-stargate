@@ -294,7 +294,7 @@
 	</div>
 
 	@{
-		if (Gate.Idle && Stargate.IsValidFullAddress(Address))
+		if (Gate.IsValid() && Gate.Idle && Stargate.IsValidFullAddress(Address))
 		{
 			var entryStyle = $"opacity: {SGCComputer.GetSinFromTime() * 2}";
 			<div class="input_accepted">

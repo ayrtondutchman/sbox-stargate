@@ -384,6 +384,7 @@ public abstract partial class Stargate : Prop, IUse
 	public virtual void OnStopDialingFinish()
 	{
 		ResetGateVariablesToIdle();
+		Event.Run( StargateEvent.DialAbortFinished, this );
 	}
 
 	// opening

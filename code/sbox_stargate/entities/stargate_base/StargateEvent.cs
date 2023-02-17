@@ -27,6 +27,12 @@ public static class StargateEvent
 		public DialAbortAttribute() : base( DialAbort ) { }
 	}
 
+	public const string DialAbortFinished = "stargate.dialabortfinished";
+	public class DialAbortFinishedAttribute : EventAttribute
+	{
+		public DialAbortFinishedAttribute() : base( DialAbortFinished ) { }
+	}
+
 	public const string InboundBegin = "stargate.inboundbegin";
 	public class InboundBeginAttribute : EventAttribute
 	{
