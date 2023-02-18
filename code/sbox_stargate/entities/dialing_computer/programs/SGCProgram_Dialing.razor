@@ -334,6 +334,8 @@
 		if (!Gate.IsValid())
 		{
 			Status = "disconnected";
+			if (Address != "")
+				Address = "";
 			return;
 		}
 
