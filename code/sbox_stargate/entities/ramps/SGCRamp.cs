@@ -2,7 +2,9 @@ using System.Numerics;
 using System;
 using Sandbox;
 using System.Collections.Generic;
+using Editor;
 
+[HammerEntity, SupportsSolid, EditorModel( "models/sbox_stargate/ramps/sgc_ramp/sgc_ramp.vmdl" )]
 [Title( "SGC Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class SGCRamp : Prop, IStargateRamp
 {
