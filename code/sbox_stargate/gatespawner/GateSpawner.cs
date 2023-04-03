@@ -24,6 +24,7 @@ public partial class GateSpawner
 			model.Entities.Add( e.ToJson() );
 		}
 		FileSystem.Data.WriteAllText( $"data/gatespawner/{fileName}.json", JsonSerializer.Serialize( model, new JsonSerializerOptions() { WriteIndented = true } ) );
+		Log.Info("Created GateSpawner file.");
 	}
 
 	//[Event.Hotload]

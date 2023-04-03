@@ -3,10 +3,11 @@ using System;
 using Sandbox;
 using System.Collections.Generic;
 using Editor;
+using System.Text.Json;
 
 [HammerEntity, SupportsSolid, EditorModel( "models/sbox_stargate/ramps/sgc_ramp/sgc_ramp.vmdl" )]
 [Title( "SGC Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
-public partial class SGCRamp : Prop, IStargateRamp
+public partial class SGCRamp : Prop, IStargateRamp, IGateSpawner
 {
 	[Net]
 	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 148 );
@@ -34,5 +35,23 @@ public partial class SGCRamp : Prop, IStargateRamp
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 
 		Tags.Add( "solid" );
+	}
+
+	public void FromJson( JsonElement data )
+	{
+		Position = Vector3.Parse( data.GetProperty( "Position" ).ToString() );
+		Rotation = Rotation.Parse( data.GetProperty( "Rotation" ).ToString() );
+
+		PhysicsBody.BodyType = PhysicsBodyType.Static;
+	}
+
+	public object ToJson()
+	{
+		return new JsonModel()
+		{
+			EntityName = ClassName,
+			Position = Position,
+			Rotation = Rotation
+		};
 	}
 }
