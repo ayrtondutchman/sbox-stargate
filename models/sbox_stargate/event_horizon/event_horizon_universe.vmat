@@ -2,7 +2,7 @@
 
 Layer0
 {
-	shader "complex.vfx"
+	shader "shaders/complex.shader_c"
 
 	//---- Animation ----
 	F_TEXTURE_ANIMATION 1
@@ -13,10 +13,9 @@ Layer0
 	//---- Translucent ----
 	F_TRANSLUCENT 1
 
-	//---- Unlit ----
-	F_UNLIT 1
-
 	//---- Ambient Occlusion ----
+	g_flAmbientOcclusionDirectDiffuse "0.000"
+	g_flAmbientOcclusionDirectSpecular "0.000"
 	TextureAmbientOcclusion "materials/default/default_ao.tga"
 
 	//---- Color ----
@@ -37,6 +36,7 @@ Layer0
 	TextureNormal "materials/default/default_normal.tga"
 
 	//---- Roughness ----
+	g_flRoughnessScaleFactor "1.000"
 	TextureRoughness "[0.000000 0.000000 0.000000 0.000000]"
 
 	//---- Self Illum ----
@@ -62,7 +62,7 @@ Layer0
 
 	//---- Translucent ----
 	g_flOpacityScale "1.000"
-	TextureTranslucency "[1.000000 1.000000 1.000000 0.000000]"
+	TextureTranslucency "materials/default/default_trans.tga"
 
 	Attributes
 	{
