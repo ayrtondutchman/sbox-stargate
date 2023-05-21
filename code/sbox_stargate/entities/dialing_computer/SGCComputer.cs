@@ -33,7 +33,7 @@ public partial class SGCComputer : ModelEntity, IUse
 		SetupPhysicsFromOBB( PhysicsMotionType.Dynamic, new Vector3( -5, -5, -5 ), new Vector3( 5, 5, 5 ) );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
-		RenderColor = Color.Red;
+		RenderColor = Color.Black;
 
 		Tags.Add( "solid" );
 	}
