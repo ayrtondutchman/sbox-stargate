@@ -557,6 +557,7 @@ public abstract partial class Stargate : Prop, IUse
 		DhdDialTimerThink();
 	}
 
+	/*
 	[Event.Client.Frame]
 	private void WorldPanelThink()
 	{
@@ -566,6 +567,7 @@ public abstract partial class Stargate : Prop, IUse
 		else if ( !isNearGate && WorldPanel.IsValid() )
 			WorldPanel.Delete();
 	}
+	*/
 
 	// UI Related stuff
 
