@@ -68,7 +68,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 	{
 		base.StartTouch( other );
 
-		if ( other is SGCComputer computer )
+		if ( other is SGCComputer computer && Computer != computer)
 		{
 			Computer = computer;
 			Computer.AddMonitor( this );
