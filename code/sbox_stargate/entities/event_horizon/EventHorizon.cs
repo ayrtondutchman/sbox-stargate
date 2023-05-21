@@ -597,10 +597,10 @@ public partial class EventHorizon : AnimatedEntity
 
 		//Log.Info( $"Setting MC state of {ent} to {enabled}" );
 
-		var obj = m.SceneObject;
-		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
-		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
-		obj.Attributes.Set( "translucent", enabled );
+		//var obj = m.SceneObject;
+		//obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
+		//obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
+		//obj.Attributes.Set( "translucent", enabled );
 	}
 
 	public void UpdateClipPlaneForEntity( Entity ent, Plane p ) // only update plane, not the enabled state
@@ -614,7 +614,7 @@ public partial class EventHorizon : AnimatedEntity
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 	}
 
-	[Event.Client.Frame]
+	//[Event.Client.Frame]
 	public void Draw()
 	{
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
