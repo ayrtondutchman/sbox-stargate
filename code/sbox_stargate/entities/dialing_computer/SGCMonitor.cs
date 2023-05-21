@@ -30,6 +30,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 
 		Transmit = TransmitType.Always;
 		SetModel( "models/sbox_stargate/tech/nec_multisync_lcd2080ux/nec_multisync_lcd2080ux.vmdl" );
+		Scale = 0.6f;
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
@@ -37,6 +38,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 
 		Tags.Add( "solid" );
 	}
+
 
 	private void CreatePrograms()
 	{

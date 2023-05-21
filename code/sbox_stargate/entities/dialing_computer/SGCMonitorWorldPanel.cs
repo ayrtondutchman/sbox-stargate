@@ -8,7 +8,7 @@ public class SGCMonitorWorldPanel : WorldPanel
 	private SGCMonitor Monitor;
 
 	public float RenderSize = 1600;
-	public float ActualSize = 800;
+	public float ActualSize = 496;
 
 	private Panel ProgramScreen = null;
 
