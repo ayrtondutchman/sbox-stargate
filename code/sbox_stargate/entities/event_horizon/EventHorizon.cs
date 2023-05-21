@@ -423,8 +423,7 @@ public partial class EventHorizon : AnimatedEntity
 
 			async void tpFunc()
 			{
-				var otherEH = GetOther();
-				otherEH.BufferFront.Add( ent );
+				GetOther().OnEntityEntered( ent, false );
 
 				ent.EnableDrawing = false;
 				TeleportEntity( ent );
