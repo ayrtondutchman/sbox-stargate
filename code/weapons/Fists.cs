@@ -65,6 +65,7 @@ partial class Fists : Weapon
 
 		ViewModelEntity.SetModel( ViewModelPath );
 		ViewModelEntity.SetAnimGraph( "models/first_person/first_person_arms_punching.vanmgrph" );
+		ViewModelEntity.EnableDrawing = false;
 	}
 
 	private bool MeleeAttack()
