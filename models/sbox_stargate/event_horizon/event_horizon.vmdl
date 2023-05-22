@@ -44,6 +44,17 @@
 							},
 						]
 					},
+					{
+						_class = "MaterialGroup"
+						name = "pegasus"
+						remaps = 
+						[
+							{
+								from = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_pegasus.vmat"
+							},
+						]
+					},
 				]
 			},
 			{

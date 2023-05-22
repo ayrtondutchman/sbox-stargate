@@ -30,6 +30,8 @@ public partial class StargatePegasus : Stargate
 		};
 
 		GateGlyphType = GlyphType.PEGASUS;
+
+		EventHorizonSkinGroup = 3;
 	}
 
 	// SPAWN
