@@ -165,6 +165,8 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void ClientAnimLogic()
 	{
+		SceneObject.Batchable = false;
+
 		if ( shouldBeOn && !isOn )
 		{
 			curFrame = MathX.Approach( curFrame, maxFrame, Time.Delta * 30 );
