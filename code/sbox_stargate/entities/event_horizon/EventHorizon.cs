@@ -39,7 +39,7 @@ public partial class EventHorizon : AnimatedEntity
 	bool shouldCollapse = false;
 	bool isCollapsed = false;
 
-	float lastSoundTime = 0f;
+	TimeSince lastSoundTime = 0;
 
 	[Net]
 	private IList<Entity> BufferFront { get; set; } = new ();
@@ -130,9 +130,9 @@ public partial class EventHorizon : AnimatedEntity
 	// UTILITY
 	public void PlayTeleportSound()
 	{
-		if ( lastSoundTime + 0.1f < Time.Now ) // delay for playing sounds to avoid constant spam
+		if ( lastSoundTime > 0.1f ) // delay for playing sounds to avoid constant spam
 		{
-			lastSoundTime = Time.Now;
+			lastSoundTime = 0;
 			Sound.FromEntity( "stargate.event_horizon.enter", this );
 		}
 	}
