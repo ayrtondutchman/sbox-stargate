@@ -570,9 +570,9 @@ public partial class EventHorizon : AnimatedEntity
 		}
 
 		// for now only players and props get teleported
-		if ( other is Prop ) // props get handled differently (aka model clipping)
+		if ( other is ModelEntity modelEnt) // props get handled differently (aka model clipping)
 		{
-			OnEntityEntered( other as ModelEntity, IsEntityBehindEventHorizon( other ) );
+			OnEntityEntered( modelEnt, IsEntityBehindEventHorizon( modelEnt ) );
 		}
 
 		if ( other is Player ) // players should get teleported instantly on EH touch
@@ -591,7 +591,7 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !Game.IsServer )
 			return;
 
-		if (BufferFront.Contains(other)) // entered from front
+		if ( BufferFront.Contains( other ) ) // entered from front
 		{
 			if ( IsEntityBehindEventHorizon( other ) ) // entered from front and exited behind the gate (should teleport)
 			{
