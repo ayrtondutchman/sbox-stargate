@@ -146,7 +146,7 @@ public partial class EventHorizon : AnimatedEntity
 	public bool IsEntityBehindEventHorizon( Entity ent )
 	{
 		if ( !this.IsValid() || !ent.IsValid() ) return false;
-		return IsPointBehindEventHorizon( ent.Position );
+		return IsPointBehindEventHorizon( (ent as ModelEntity).PhysicsBody.MassCenter ); // check masscenter instead
 	}
 
 	public bool IsPawnBehindEventHorizon( Entity pawn )
@@ -478,38 +478,28 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void OnEntityTriggerStartTouch(EventHorizonTrigger trigger, Entity ent)
 	{
-		//var which = trigger == BackTrigger ? "back" : "front";
-		//Log.Info( $"{ent} started touching {which} trigger" );
-
 		if ( trigger == BackTrigger && !InTriggerFront.Contains(ent))
 		{
 			InTriggerBack.Add( ent );
-			Log.Info( $"{ent} entered back trigger" );
 			ent.Tags.Add( StargateTags.BehindGate );
 		}
 
 		else if ( trigger == FrontTrigger && !InTriggerBack.Contains( ent ) )
 		{
 			InTriggerFront.Add( ent );
-			Log.Info( $"{ent} entered front trigger" );
 			ent.Tags.Add( StargateTags.BeforeGate );
 		}
 	}
 	public void OnEntityTriggerEndTouch( EventHorizonTrigger trigger, Entity ent )
 	{
-		//var which = trigger == BackTrigger ? "back" : "front";
-		//Log.Info( $"{ent} stopped touching {which} trigger" );
-
 		if ( trigger == BackTrigger && InTriggerBack.Contains( ent ) )
 		{
 			InTriggerBack.Remove( ent );
-			Log.Info( $"{ent} exited back trigger" );
 			ent.Tags.Remove( StargateTags.BehindGate );
 		}
 		else if ( trigger == FrontTrigger && InTriggerFront.Contains( ent ) )
 		{
 			InTriggerFront.Remove( ent );
-			Log.Info( $"{ent} exited front trigger" );
 			ent.Tags.Remove( StargateTags.BeforeGate );
 		}
 	}
