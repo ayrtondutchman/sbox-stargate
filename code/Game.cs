@@ -10,8 +10,22 @@ partial class SandboxGame : GameManager
 		{
 			// Create the HUD
 			_ = new SandboxHud();
+
+			//Log.Info( $"The world is {Game.WorldEntity}" );
+
+			//Game.WorldEntity.Tags.Remove( "solid" );
 		}
 	}
+
+	//[Event.Hotload]
+	//private static void TestLoadWorld()
+	//{
+		//Game.WorldEntity.Tags.Remove( "solid" );
+
+		//Log.Info( Game.WorldEntity.Tags.Has("solid") );
+
+		//Log.Info("hotloaded...");
+	//}
 
 	public override void ClientJoined( IClient cl )
 	{

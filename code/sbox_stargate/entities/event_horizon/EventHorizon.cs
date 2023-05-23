@@ -51,6 +51,12 @@ public partial class EventHorizon : AnimatedEntity
 	[Net]
 	public int EventHorizonSkinGroup { get; set; } = 0;
 
+	private EventHorizonTrigger FrontTrigger = null;
+	private EventHorizonTrigger BackTrigger = null;
+
+	private List<Entity> InTriggerFront { get; set; } = new();
+	private List<Entity> InTriggerBack { get; set; } = new();
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -67,6 +73,27 @@ public partial class EventHorizon : AnimatedEntity
 		EnableAllCollisions = false;
 		EnableTraceAndQueries = true;
 		EnableTouch = true;
+
+		PostSpawn();
+	}
+
+	private async void PostSpawn()
+	{
+		await GameTask.NextPhysicsFrame();
+
+		FrontTrigger = new(this)
+		{
+			Position = Position + Rotation.Forward * 2,
+			Rotation = Rotation,
+			Parent = Gate
+		};
+
+		BackTrigger = new(this)
+		{
+			Position = Position - Rotation.Forward * 2,
+			Rotation = Rotation.RotateAroundAxis( Vector3.Up, 180 ),
+			Parent = Gate
+		};
 	}
 
 	public virtual void SkinEventHorizon() { SetMaterialGroup( EventHorizonSkinGroup ); }
@@ -376,6 +403,8 @@ public partial class EventHorizon : AnimatedEntity
 
 		(fromBack ? BufferBack : BufferFront ).Add( ent );
 
+		ent.Tags.Add( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
+
 		var phys = ent.PhysicsBody;
 		if ( phys.IsValid() )
 			phys.GravityEnabled = false;
@@ -395,6 +424,8 @@ public partial class EventHorizon : AnimatedEntity
 			return;
 
 		(fromBack ? BufferBack : BufferFront).Remove( ent );
+
+		ent.Tags.Remove( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
 
 		var phys = ent.PhysicsBody;
 		if ( phys.IsValid() )
@@ -425,7 +456,9 @@ public partial class EventHorizon : AnimatedEntity
 
 			async void tpFunc()
 			{
-				GetOther().OnEntityEntered( ent, false );
+				var otherEH = GetOther();
+				otherEH.OnEntityEntered( ent, false );
+				otherEH.OnEntityTriggerStartTouch( otherEH.FrontTrigger, ent );
 
 				ent.EnableDrawing = false;
 				TeleportEntity( ent );
@@ -441,6 +474,44 @@ public partial class EventHorizon : AnimatedEntity
 		}
 
 		PlayTeleportSound(); // event horizon always plays sound if something entered it
+	}
+
+	public void OnEntityTriggerStartTouch(EventHorizonTrigger trigger, Entity ent)
+	{
+		//var which = trigger == BackTrigger ? "back" : "front";
+		//Log.Info( $"{ent} started touching {which} trigger" );
+
+		if ( trigger == BackTrigger && !InTriggerFront.Contains(ent))
+		{
+			InTriggerBack.Add( ent );
+			Log.Info( $"{ent} entered back trigger" );
+			ent.Tags.Add( StargateTags.BehindGate );
+		}
+
+		else if ( trigger == FrontTrigger && !InTriggerBack.Contains( ent ) )
+		{
+			InTriggerFront.Add( ent );
+			Log.Info( $"{ent} entered front trigger" );
+			ent.Tags.Add( StargateTags.BeforeGate );
+		}
+	}
+	public void OnEntityTriggerEndTouch( EventHorizonTrigger trigger, Entity ent )
+	{
+		//var which = trigger == BackTrigger ? "back" : "front";
+		//Log.Info( $"{ent} stopped touching {which} trigger" );
+
+		if ( trigger == BackTrigger && InTriggerBack.Contains( ent ) )
+		{
+			InTriggerBack.Remove( ent );
+			Log.Info( $"{ent} exited back trigger" );
+			ent.Tags.Remove( StargateTags.BehindGate );
+		}
+		else if ( trigger == FrontTrigger && InTriggerFront.Contains( ent ) )
+		{
+			InTriggerFront.Remove( ent );
+			Log.Info( $"{ent} exited front trigger" );
+			ent.Tags.Remove( StargateTags.BeforeGate );
+		}
 	}
 
 	public void TeleportLogic( Entity other, Action teleportFunc, bool skipSideChecks = false )
@@ -556,6 +627,9 @@ public partial class EventHorizon : AnimatedEntity
 		base.OnDestroy();
 
 		WormholeLoop.Stop();
+
+		FrontTrigger?.Delete();
+		BackTrigger?.Delete();
 	}
 
 	[Event( "server.tick" )]
@@ -565,6 +639,8 @@ public partial class EventHorizon : AnimatedEntity
 
 		BufferCleanupLogic( BufferFront );
 		BufferCleanupLogic( BufferBack );
+
+		//EntitySideCheckLogic();
 	}
 
 	public void BufferCleanupLogic( IList<Entity> buffer )
@@ -585,6 +661,20 @@ public partial class EventHorizon : AnimatedEntity
 						}
 					}
 				}
+			}
+		}
+	}
+
+	private void EntitySideCheckLogic()
+	{
+		foreach ( var ent in FindInSphere( Position, 256 ) )
+		{
+			if ( ent.IsValid() && ent != this && ent != Gate )
+			{
+				if ( IsEntityBehindEventHorizon( ent ) )
+					ent.Tags.Add( StargateTags.BehindGate );
+				else
+					ent.Tags.Add( StargateTags.BeforeGate );
 			}
 		}
 	}
