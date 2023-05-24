@@ -680,7 +680,10 @@ public partial class EventHorizon : AnimatedEntity
 
 		//Log.Info( $"Setting MC state of {ent} to {enabled}" );
 
-		//var obj = m.SceneObject;
+		var obj = m.SceneObject;
+		if ( !obj.IsValid() ) return;
+
+		//obj.Batchable = false;
 		//obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 		//obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
 		//obj.Attributes.Set( "translucent", enabled );
@@ -694,6 +697,8 @@ public partial class EventHorizon : AnimatedEntity
 			return;
 
 		var obj = m.SceneObject;
+		if ( !obj.IsValid() ) return;
+
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 	}
 
