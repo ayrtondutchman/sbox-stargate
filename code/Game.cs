@@ -257,7 +257,7 @@ partial class SandboxGame : GameManager
 		if ( ent.IsValid() )
 		{
 			(caller.Pawn as Entity)?.PlaySound( "balloon_pop_cute" );
-			ent.Delete();
+			ent?.Delete();
 		}
 	}
 
