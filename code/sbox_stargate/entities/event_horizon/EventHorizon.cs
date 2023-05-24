@@ -146,7 +146,9 @@ public partial class EventHorizon : AnimatedEntity
 	public bool IsEntityBehindEventHorizon( Entity ent )
 	{
 		if ( !this.IsValid() || !ent.IsValid() ) return false;
-		return IsPointBehindEventHorizon( (ent as ModelEntity).PhysicsBody.MassCenter ); // check masscenter instead
+		var model = (ent as ModelEntity);
+		if ( !model.PhysicsBody.IsValid() ) return false;
+		return IsPointBehindEventHorizon( model.PhysicsBody.MassCenter ); // check masscenter instead
 	}
 
 	public bool IsPawnBehindEventHorizon( Entity pawn )
@@ -405,9 +407,9 @@ public partial class EventHorizon : AnimatedEntity
 
 		ent.Tags.Add( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
 
-		var phys = ent.PhysicsBody;
-		if ( phys.IsValid() )
-			phys.GravityEnabled = false;
+		//var phys = ent.PhysicsBody;
+		//if ( phys.IsValid() )
+		//	phys.GravityEnabled = false;
 
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
@@ -427,9 +429,9 @@ public partial class EventHorizon : AnimatedEntity
 
 		ent.Tags.Remove( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
 
-		var phys = ent.PhysicsBody;
-		if ( phys.IsValid() )
-			phys.GravityEnabled = true;
+		//var phys = ent.PhysicsBody;
+		//if ( phys.IsValid() )
+		//	phys.GravityEnabled = true;
 
 		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
 		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
