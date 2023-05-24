@@ -631,8 +631,6 @@ public partial class EventHorizon : AnimatedEntity
 
 		BufferCleanupLogic( BufferFront );
 		BufferCleanupLogic( BufferBack );
-
-		//EntitySideCheckLogic();
 	}
 
 	public void BufferCleanupLogic( IList<Entity> buffer )
@@ -653,20 +651,6 @@ public partial class EventHorizon : AnimatedEntity
 						}
 					}
 				}
-			}
-		}
-	}
-
-	private void EntitySideCheckLogic()
-	{
-		foreach ( var ent in FindInSphere( Position, 256 ) )
-		{
-			if ( ent.IsValid() && ent != this && ent != Gate )
-			{
-				if ( IsEntityBehindEventHorizon( ent ) )
-					ent.Tags.Add( StargateTags.BehindGate );
-				else
-					ent.Tags.Add( StargateTags.BeforeGate );
 			}
 		}
 	}
