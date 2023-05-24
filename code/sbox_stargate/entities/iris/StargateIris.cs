@@ -21,6 +21,7 @@ public partial class StargateIris : AnimatedEntity
 
 		Transmit = TransmitType.Always;
 		Tags.Add( "solid" );
+		Tags.Add( StargateTags.BeforeGate );
 	}
 
 	public async virtual void Close() {
