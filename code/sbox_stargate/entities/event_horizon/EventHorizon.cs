@@ -42,10 +42,10 @@ public partial class EventHorizon : AnimatedEntity
 	TimeSince lastSoundTime = 0;
 
 	[Net]
-	private IList<Entity> BufferFront { get; set; } = new ();
+	private IList<Entity> BufferFront { get; set; } = new();
 	[Net]
 	private IList<Entity> BufferBack { get; set; } = new();
-	
+
 	public List<Entity> InTransitPlayers { get; set; } = new();
 
 	[Net]
@@ -81,14 +81,14 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		await GameTask.NextPhysicsFrame();
 
-		FrontTrigger = new(this)
+		FrontTrigger = new( this )
 		{
 			Position = Position + Rotation.Forward * 2,
 			Rotation = Rotation,
 			Parent = Gate
 		};
 
-		BackTrigger = new(this)
+		BackTrigger = new( this )
 		{
 			Position = Position - Rotation.Forward * 2,
 			Rotation = Rotation.RotateAroundAxis( Vector3.Up, 180 ),
@@ -103,7 +103,7 @@ public partial class EventHorizon : AnimatedEntity
 
 	public async void Establish()
 	{
-		EstablishClientAnim(To.Everyone); // clientside animation stuff
+		EstablishClientAnim( To.Everyone ); // clientside animation stuff
 
 		await GameTask.DelaySeconds( 1.5f );
 		if ( !this.IsValid() ) return;
@@ -113,7 +113,7 @@ public partial class EventHorizon : AnimatedEntity
 
 	public async void Collapse()
 	{
-		CollapseClientAnim(To.Everyone); // clientside animation stuff
+		CollapseClientAnim( To.Everyone ); // clientside animation stuff
 
 		await GameTask.DelaySeconds( 1f );
 		if ( !this.IsValid() ) return;
@@ -245,7 +245,7 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		// draw the EH at 0.6 alpha when looking at it from behind
 		var pawn = Game.LocalPawn;
-		if ( pawn.IsValid() ) RenderColor = RenderColor.WithAlpha(IsPawnBehindEventHorizon(pawn) ? 0.6f : 1f);
+		if ( pawn.IsValid() ) RenderColor = RenderColor.WithAlpha( IsPawnBehindEventHorizon( pawn ) ? 0.6f : 1f );
 	}
 
 	// CLIENT LOGIC
@@ -264,11 +264,11 @@ public partial class EventHorizon : AnimatedEntity
 		return Gate.OtherGate.EventHorizon;
 	}
 
-	public Tuple<Vector3, Vector3> CalcExitPointAndDir(Vector3 entryPoint, Vector3 entryDir)
+	public Tuple<Vector3, Vector3> CalcExitPointAndDir( Vector3 entryPoint, Vector3 entryDir )
 	{
 		var other = GetOther();
 
-		if (!other.IsValid())
+		if ( !other.IsValid() )
 			return Tuple.Create( entryPoint, entryDir );
 
 		var newPos = Transform.PointToLocal( entryPoint );
@@ -280,7 +280,7 @@ public partial class EventHorizon : AnimatedEntity
 		newDir = other.Position - other.Transform.PointToWorld( newDir );
 		newDir = -newDir;
 
-		return Tuple.Create(newPos, newDir);
+		return Tuple.Create( newPos, newDir );
 	}
 
 	[ClientRpc]
@@ -302,7 +302,7 @@ public partial class EventHorizon : AnimatedEntity
 	}
 
 	[ConCmd.Server]
-	private static void OnPlayerEndWormhole(int netId)
+	private static void OnPlayerEndWormhole( int netId )
 	{
 		var eh = FindByIndex<EventHorizon>( netId );
 		if ( !eh.IsValid() ) return;
@@ -316,7 +316,7 @@ public partial class EventHorizon : AnimatedEntity
 	}
 
 	// TELEPORT
-	public void TeleportEntity(Entity ent)
+	public void TeleportEntity( Entity ent )
 	{
 		if ( !Gate.IsValid() || !Gate.OtherGate.IsValid() ) return;
 
@@ -339,9 +339,9 @@ public partial class EventHorizon : AnimatedEntity
 		var otherPos = otherEH.Transform.PointToWorld( localPos.WithY( -localPos.y ) * scaleDiff );
 
 		var localRot = Transform.RotationToLocal( ent.Rotation );
-		var otherRot = otherEH.Transform.RotationToWorld( localRot.RotateAroundAxis(localRot.Up, 180f) );
+		var otherRot = otherEH.Transform.RotationToWorld( localRot.RotateAroundAxis( localRot.Up, 180f ) );
 
-		if (ent is SandboxPlayer ply)
+		if ( ent is SandboxPlayer ply )
 		{
 			TeleportScreenOverlay( To.Single( ply ) );
 			var DeltaAngleEH = otherEH.Rotation.Angles() - Rotation.Angles();
@@ -370,7 +370,7 @@ public partial class EventHorizon : AnimatedEntity
 	}
 
 	[ClientRpc]
-	public void RemoveDeathRagdoll(Player ply)
+	public void RemoveDeathRagdoll( Player ply )
 	{
 		ply.Corpse?.Delete();
 	}
@@ -385,7 +385,7 @@ public partial class EventHorizon : AnimatedEntity
 			dmg.Damage = 100;
 			ply.TakeDamage( dmg );
 
-			RemoveDeathRagdoll( To.Single( ply ), ply);
+			RemoveDeathRagdoll( To.Single( ply ), ply );
 
 			PlayTeleportSound();
 		}
@@ -395,7 +395,7 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
-	public void OnEntityEntered( ModelEntity ent, bool fromBack=false )
+	public void OnEntityEntered( ModelEntity ent, bool fromBack = false )
 	{
 		if ( !ent.IsValid() )
 			return;
@@ -403,7 +403,7 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !fromBack && Gate.IsIrisClosed() ) // prevent shit accidentaly touching EH from front if our iris is closed
 			return;
 
-		(fromBack ? BufferBack : BufferFront ).Add( ent );
+		(fromBack ? BufferBack : BufferFront).Add( ent );
 
 		ent.Tags.Add( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
 
@@ -411,13 +411,13 @@ public partial class EventHorizon : AnimatedEntity
 		//if ( phys.IsValid() )
 		//	phys.GravityEnabled = false;
 
-		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
-		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
+		//var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
+		//var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
 
-		//var alpha = ent.RenderColor.a;
-		//ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
+		var alpha = ent.RenderColor.a;
+		ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
 
-		SetModelClippingForEntity( To.Everyone, ent, true, fromBack ? clipPlaneBack : clipPlaneFront );
+		SetModelClippingForEntity( To.Everyone, ent, true, fromBack ? ClipPlaneBack : ClipPlaneFront );
 	}
 
 	public void OnEntityExited( ModelEntity ent, bool fromBack = false )
@@ -433,10 +433,10 @@ public partial class EventHorizon : AnimatedEntity
 		//if ( phys.IsValid() )
 		//	phys.GravityEnabled = true;
 
-		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
-		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
+		//var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
+		//var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
 
-		SetModelClippingForEntity( To.Everyone, ent, false, fromBack ? clipPlaneBack : clipPlaneFront );
+		SetModelClippingForEntity( To.Everyone, ent, false, fromBack ? ClipPlaneBack : ClipPlaneFront );
 
 		if ( ent == CurrentTeleportingEntity )
 		{
@@ -478,9 +478,9 @@ public partial class EventHorizon : AnimatedEntity
 		PlayTeleportSound(); // event horizon always plays sound if something entered it
 	}
 
-	public void OnEntityTriggerStartTouch(EventHorizonTrigger trigger, Entity ent)
+	public void OnEntityTriggerStartTouch( EventHorizonTrigger trigger, Entity ent )
 	{
-		if ( trigger == BackTrigger && !InTriggerFront.Contains(ent))
+		if ( trigger == BackTrigger && !InTriggerFront.Contains( ent ) )
 		{
 			InTriggerBack.Add( ent );
 			ent.Tags.Add( StargateTags.BehindGate );
@@ -556,13 +556,13 @@ public partial class EventHorizon : AnimatedEntity
 		if ( other == CurrentTeleportingEntity )
 			return;
 
-		if (!IsFullyFormed)
+		if ( !IsFullyFormed )
 		{
 			DissolveEntity( other );
 		}
 
 		// for now only players and props get teleported
-		if ( other is ModelEntity modelEnt) // props get handled differently (aka model clipping)
+		if ( other is ModelEntity modelEnt ) // props get handled differently (aka model clipping)
 		{
 			OnEntityEntered( modelEnt, IsEntityBehindEventHorizon( modelEnt ) );
 		}
@@ -655,6 +655,17 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
+	private Plane ClipPlaneFront
+	{
+		get => new Plane( Position - Camera.Position, Rotation.Forward.Normal );
+		
+	}
+
+	private Plane ClipPlaneBack
+	{
+		get => new Plane( Position - Camera.Position, -Rotation.Forward.Normal );
+	}
+
 	[ClientRpc]
 	public void SetModelClippingForEntity( Entity ent, bool enabled, Plane p )
 	{
@@ -667,9 +678,9 @@ public partial class EventHorizon : AnimatedEntity
 		var obj = m.SceneObject;
 		if ( !obj.IsValid() ) return;
 
-		//obj.Batchable = false;
-		//obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
-		//obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
+		obj.Batchable = false;
+		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
+		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
 		//obj.Attributes.Set( "translucent", enabled );
 	}
 
@@ -686,17 +697,17 @@ public partial class EventHorizon : AnimatedEntity
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 	}
 
-	//[Event.Client.Frame]
+	[Event.Client.Frame]
 	public void Draw()
 	{
-		var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
-		var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
+		//var clipPlaneFront = ClipPlaneFront;
+		//var clipPlaneBack = ClipPlaneBack;
 
 		foreach ( var e in BufferFront )
-			UpdateClipPlaneForEntity( e, clipPlaneFront );
+			UpdateClipPlaneForEntity( e, ClipPlaneFront );
 
 		foreach ( var e in BufferBack )
-			UpdateClipPlaneForEntity( e, clipPlaneBack );
+			UpdateClipPlaneForEntity( e, ClipPlaneBack );
 	}
 	
 }
