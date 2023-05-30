@@ -36,7 +36,7 @@ partial class SandboxPlayer : Player
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
 
-		Controller = new WalkController();
+		Controller = new PlayerWalkController();
 
 		if ( DevController is NoclipController )
 		{
@@ -223,6 +223,35 @@ partial class SandboxPlayer : Player
 		if ( timeSinceDropped < 1 ) return;
 
 		base.StartTouch( other );
+	}
+
+	TimeSince timeSinceLastFootstep = 0;
+	public override void OnAnimEventFootstep( Vector3 pos, int foot, float volume )
+	{
+		if ( LifeState != LifeState.Alive )
+			return;
+
+		if ( !Game.IsClient )
+			return;
+
+		if ( timeSinceLastFootstep < 0.2f )
+			return;
+
+		volume *= FootstepVolume();
+
+		timeSinceLastFootstep = 0;
+
+		var trace = Trace.Ray( pos, pos + Vector3.Down * 20 )
+			.Radius( 1 )
+			.Ignore( this );
+
+		trace = Stargate.GetAdjustedTraceForClipping( this, trace );
+		
+		var tr = trace.Run();
+
+		if ( !tr.Hit ) return;
+
+		tr.Surface.DoFootstep( this, tr, foot, volume );
 	}
 
 	public override float FootstepVolume()

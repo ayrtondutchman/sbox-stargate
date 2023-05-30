@@ -550,4 +550,15 @@ public partial class Stargate : Prop, IUse
 		return false;
 	}
 
+	public static Trace GetAdjustedTraceForClipping( Entity ent, Trace trace )
+	{
+		if ( ent.Tags.Has( StargateTags.BehindGate ) )
+			trace = trace.WithoutTags( StargateTags.InBufferFront );
+
+		if ( ent.Tags.Has( StargateTags.BeforeGate ) )
+			trace = trace.WithoutTags( StargateTags.InBufferBack );
+
+		return trace;
+	}
+
 }
