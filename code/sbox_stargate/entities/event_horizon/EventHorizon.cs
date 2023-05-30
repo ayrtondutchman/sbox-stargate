@@ -561,16 +561,15 @@ public partial class EventHorizon : AnimatedEntity
 			DissolveEntity( other );
 		}
 
-		// for now only players and props get teleported
-		if ( other is ModelEntity modelEnt ) // props get handled differently (aka model clipping)
-		{
-			OnEntityEntered( modelEnt, IsEntityBehindEventHorizon( modelEnt ) );
-		}
-
 		if ( other is Player ) // players should get teleported instantly on EH touch
 		{
 			TeleportLogic( other, () => TeleportEntity( other ) );
 		}
+		else if ( other is ModelEntity modelEnt ) // props get handled differently (aka model clipping)
+		{
+			OnEntityEntered( modelEnt, IsEntityBehindEventHorizon( modelEnt ) );
+		}
+
 	}
 
 	public override void EndTouch( Entity other )
