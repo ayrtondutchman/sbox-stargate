@@ -261,4 +261,128 @@ partial class SandboxGame : GameManager
 		}
 	}
 
+	private SceneObject dragSceneObject;
+
+	private Vector3 GetBoundsOffset( BBox bounds, Vector3 dir )
+	{
+		Vector3 point = bounds.Center + -dir * bounds.Volume;
+		return dir * Vector3.Zero.Distance( bounds.ClosestPoint( point ) );
+	}
+
+	
+	public override bool OnDragDropped( string text, Ray ray, string action )
+	{
+		if ( action == "leave" )
+		{
+			dragSceneObject?.Delete();
+			dragSceneObject = null;
+			return true;
+		}
+
+		float distance = 2000f;
+		TraceResult traceResult = Trace.Ray( in ray, in distance ).WithAnyTags( "world", "static", "solid" ).WithoutTags( "player", "npc" )
+			.Run();
+		Vector3 hitPosition = traceResult.HitPosition;
+		Rotation rotation = Rotation.From( new Angles( 0f, Rotation.LookAt( ray.Forward, traceResult.Normal ).Angles().yaw, 0f ) ) * Rotation.FromAxis( Vector3.Up, 180f );
+		text = text.Split( '\n', '\r' ).FirstOrDefault();
+		if ( text.EndsWith( "_c" ) )
+		{
+			string text2 = text;
+			text = text2.Substring( 0, text2.Length - 2 );
+		}
+
+		if ( text.EndsWith( ".vmdl" ) )
+		{
+			if ( action == "hover" )
+			{
+				if ( dragSceneObject == null )
+				{
+					dragSceneObject = new SceneObject( Game.SceneWorld, text );
+				}
+
+				dragSceneObject.Position = hitPosition + GetBoundsOffset( dragSceneObject.LocalBounds, traceResult.Normal );
+				dragSceneObject.Rotation = rotation;
+			}
+
+			if ( action == "drop" )
+			{
+				Prop modelEntity = new Prop();
+				modelEntity.SetModel( text );
+				modelEntity.Position = hitPosition + GetBoundsOffset( dragSceneObject.LocalBounds, traceResult.Normal );
+				modelEntity.Rotation = rotation;
+				modelEntity.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+				modelEntity.Tags.Add( "undoable" );
+			}
+
+			return true;
+		}
+
+		if ( text.EndsWith( ".prefab" ) )
+		{
+			if ( action == "hover" )
+			{
+			}
+
+			if ( action == "drop" )
+			{
+				Entity entity = PrefabLibrary.Spawn<Entity>( text );
+				if ( entity != null )
+				{
+					entity.Position = hitPosition;
+					entity.Rotation = rotation;
+				}
+			}
+
+			return true;
+		}
+
+		if ( text.StartsWith( "https://asset.party/" ) )
+		{
+			if ( !Package.TryGetCached( text, out var package, allowPartial: false ) )
+			{
+				Package.FetchAsync( text, partial: false );
+				return true;
+			}
+
+			if ( package.PackageType == Package.Type.Model )
+			{
+				string meta = package.GetMeta( "PrimaryAsset", "models/dev/error.vmdl" );
+				Vector3 meta2 = package.GetMeta( "RenderMins", Vector3.Zero );
+				Vector3 meta3 = package.GetMeta( "RenderMaxs", Vector3.Zero );
+				if ( action == "hover" )
+				{
+					if ( package.IsMounted( downloadAndMount: true ) )
+					{
+						if ( dragSceneObject == null )
+						{
+							dragSceneObject = new SceneObject( Game.SceneWorld, meta );
+						}
+
+						dragSceneObject.Position = hitPosition + GetBoundsOffset( dragSceneObject.LocalBounds, traceResult.Normal );
+						dragSceneObject.Rotation = rotation;
+						dragSceneObject.ColorTint = Color.White.WithAlpha( 0.6f );
+					}
+					else
+					{
+						DebugOverlay.Box( hitPosition, rotation, meta2, meta3, Color.White, 0.01f );
+					}
+				}
+
+				if ( action == "drop" )
+				{
+					Prop modelEntity2 = new Prop();
+					modelEntity2.SetModel( meta );
+					modelEntity2.Position = hitPosition + GetBoundsOffset( dragSceneObject.LocalBounds, traceResult.Normal );
+					modelEntity2.Rotation = rotation;
+					modelEntity2.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+					modelEntity2.Tags.Add( "undoable" );
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
