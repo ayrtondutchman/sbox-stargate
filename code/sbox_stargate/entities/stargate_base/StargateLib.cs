@@ -561,7 +561,6 @@ public partial class Stargate : Prop, IUse
 		return trace;
 	}
 
-
 	public static bool IsPointBehindEventHorizon( Vector3 point, Stargate gate )
 	{
 		if ( !gate.IsValid() ) return false;
@@ -572,4 +571,44 @@ public partial class Stargate : Prop, IUse
 		return (point - eh.Position).Dot( eh.Rotation.Forward ) < 0;
 	}
 
+	public static bool IsAllowedForGateTeleport( Entity e )
+	{
+		if ( !e.IsValid() )
+			return false;
+
+		if ( e.Parent != null )
+			return false;
+
+		if ( e is StargateIris || e is GateBearing || e is PickupTrigger )
+			return false;
+
+		return true;
+	}
+
+	public static List<Entity> GetAllChildrenRecursive( Entity e )
+	{
+		var l = new List<Entity>();
+
+		foreach ( var c1 in e.Children )
+		{
+			l.Add( c1 );
+
+			if ( c1.Children.Count > 0 )
+			{
+				foreach ( var c2 in GetAllChildrenRecursive( c1 ) )
+				{
+					l.Add( c2 );
+				}
+			}
+		}
+
+		return l;
+	}
+
+	public static List<Entity> GetSelfWithAllChildrenRecursive( Entity e )
+	{
+		var l = GetAllChildrenRecursive( e );
+		l.Add( e );
+		return l;
+	}
 }

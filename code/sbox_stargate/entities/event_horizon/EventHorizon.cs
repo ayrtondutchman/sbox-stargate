@@ -403,14 +403,20 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !fromBack && Gate.IsIrisClosed() ) // prevent shit accidentaly touching EH from front if our iris is closed
 			return;
 
-		(fromBack ? BufferBack : BufferFront).Add( ent );
+		foreach (var c in Stargate.GetSelfWithAllChildrenRecursive(ent))
+		{
+			var mdl = c as ModelEntity;
+			if ( !mdl.IsValid() )
+				continue;
 
-		ent.Tags.Add( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
+			(fromBack ? BufferBack : BufferFront).Add( mdl );
 
-		var alpha = ent.RenderColor.a;
-		ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
+			mdl.Tags.Add( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
 
-		SetModelClippingForEntity( To.Everyone, ent, true, fromBack ? ClipPlaneBack : ClipPlaneFront );
+			SetModelClippingForEntity( To.Everyone, mdl, true, fromBack ? ClipPlaneBack : ClipPlaneFront );
+
+			mdl.RenderColor = mdl.RenderColor.WithAlpha( mdl.RenderColor.a.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
+		}
 	}
 
 	public void OnEntityExited( ModelEntity ent, bool fromBack = false )
@@ -418,11 +424,18 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !ent.IsValid() )
 			return;
 
-		(fromBack ? BufferBack : BufferFront).Remove( ent );
+		foreach ( var c in Stargate.GetSelfWithAllChildrenRecursive( ent ) )
+		{
+			var mdl = c as ModelEntity;
+			if ( !mdl.IsValid() )
+				continue;
 
-		ent.Tags.Remove( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
+			(fromBack ? BufferBack : BufferFront).Remove( mdl );
 
-		SetModelClippingForEntity( To.Everyone, ent, false, fromBack ? ClipPlaneBack : ClipPlaneFront );
+			mdl.Tags.Remove( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
+
+			SetModelClippingForEntity( To.Everyone, mdl, false, fromBack ? ClipPlaneBack : ClipPlaneFront );
+		}
 
 		if ( ent == CurrentTeleportingEntity )
 		{
@@ -529,17 +542,16 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
+
+
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
 
-		if ( !Game.IsServer )
+		if ( !Game.IsServer || other == CurrentTeleportingEntity )
 			return;
 
-		if ( other is StargateIris )
-			return;
-
-		if ( other == CurrentTeleportingEntity )
+		if ( !Stargate.IsAllowedForGateTeleport( other ) )
 			return;
 
 		if ( !IsFullyFormed )
@@ -561,10 +573,10 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.EndTouch( other );
 
-		if ( !other.IsValid() )
+		if ( !Game.IsServer || !other.IsValid() )
 			return;
 
-		if ( !Game.IsServer )
+		if ( !Stargate.IsAllowedForGateTeleport( other ) )
 			return;
 
 		if ( BufferFront.Contains( other ) ) // entered from front
