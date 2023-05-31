@@ -480,13 +480,13 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void OnEntityTriggerStartTouch( EventHorizonTrigger trigger, Entity ent )
 	{
-		if ( trigger == BackTrigger && !InTriggerFront.Contains( ent ) )
+		if ( trigger == BackTrigger )
 		{
 			InTriggerBack.Add( ent );
 			ent.Tags.Add( StargateTags.BehindGate );
 		}
 
-		else if ( trigger == FrontTrigger && !InTriggerBack.Contains( ent ) )
+		else if ( trigger == FrontTrigger )
 		{
 			InTriggerFront.Add( ent );
 			ent.Tags.Add( StargateTags.BeforeGate );
@@ -494,12 +494,12 @@ public partial class EventHorizon : AnimatedEntity
 	}
 	public void OnEntityTriggerEndTouch( EventHorizonTrigger trigger, Entity ent )
 	{
-		if ( trigger == BackTrigger && InTriggerBack.Contains( ent ) )
+		if ( trigger == BackTrigger )
 		{
 			InTriggerBack.Remove( ent );
 			ent.Tags.Remove( StargateTags.BehindGate );
 		}
-		else if ( trigger == FrontTrigger && InTriggerFront.Contains( ent ) )
+		else if ( trigger == FrontTrigger )
 		{
 			InTriggerFront.Remove( ent );
 			ent.Tags.Remove( StargateTags.BeforeGate );
