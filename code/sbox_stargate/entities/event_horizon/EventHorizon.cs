@@ -407,13 +407,6 @@ public partial class EventHorizon : AnimatedEntity
 
 		ent.Tags.Add( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
 
-		//var phys = ent.PhysicsBody;
-		//if ( phys.IsValid() )
-		//	phys.GravityEnabled = false;
-
-		//var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
-		//var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
-
 		var alpha = ent.RenderColor.a;
 		ent.RenderColor = ent.RenderColor.WithAlpha( alpha.Clamp( 0, 0.99f ) ); // hack to fix MC (doesnt fix it all the times, job for sbox devs)
 
@@ -428,13 +421,6 @@ public partial class EventHorizon : AnimatedEntity
 		(fromBack ? BufferBack : BufferFront).Remove( ent );
 
 		ent.Tags.Remove( fromBack ? StargateTags.InBufferBack : StargateTags.InBufferFront );
-
-		//var phys = ent.PhysicsBody;
-		//if ( phys.IsValid() )
-		//	phys.GravityEnabled = true;
-
-		//var clipPlaneFront = new Plane( Position, Rotation.Forward.Normal );
-		//var clipPlaneBack = new Plane( Position, -Rotation.Forward.Normal );
 
 		SetModelClippingForEntity( To.Everyone, ent, false, fromBack ? ClipPlaneBack : ClipPlaneFront );
 
@@ -569,7 +555,6 @@ public partial class EventHorizon : AnimatedEntity
 		{
 			OnEntityEntered( modelEnt, IsEntityBehindEventHorizon( modelEnt ) );
 		}
-
 	}
 
 	public override void EndTouch( Entity other )
@@ -646,7 +631,6 @@ public partial class EventHorizon : AnimatedEntity
 						if ( buffer.Count > i )
 						{
 							buffer.RemoveAt( i );
-							//Log.Info("cleaned up item from buffer");
 						}
 					}
 				}
@@ -657,7 +641,6 @@ public partial class EventHorizon : AnimatedEntity
 	private Plane ClipPlaneFront
 	{
 		get => new Plane( Position - Camera.Position, Rotation.Forward.Normal );
-		
 	}
 
 	private Plane ClipPlaneBack
@@ -672,20 +655,16 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !m.IsValid() )
 			return;
 
-		//Log.Info( $"Setting MC state of {ent} to {enabled}" );
-
 		var obj = m.SceneObject;
 		if ( !obj.IsValid() ) return;
 
 		obj.Batchable = false;
 		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
 		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
-		//obj.Attributes.Set( "translucent", enabled );
 	}
 
 	public void UpdateClipPlaneForEntity( Entity ent, Plane p ) // only update plane, not the enabled state
 	{
-		//Log.Info( $"Updating MC plane of {ent} to {p.Normal}" );
 		var m = ent as ModelEntity;
 		if ( !m.IsValid() )
 			return;
@@ -699,9 +678,6 @@ public partial class EventHorizon : AnimatedEntity
 	[Event.Client.Frame]
 	public void Draw()
 	{
-		//var clipPlaneFront = ClipPlaneFront;
-		//var clipPlaneBack = ClipPlaneBack;
-
 		foreach ( var e in BufferFront )
 			UpdateClipPlaneForEntity( e, ClipPlaneFront );
 
