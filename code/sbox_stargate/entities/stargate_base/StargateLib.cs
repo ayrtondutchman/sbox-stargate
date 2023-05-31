@@ -561,4 +561,15 @@ public partial class Stargate : Prop, IUse
 		return trace;
 	}
 
+
+	public static bool IsPointBehindEventHorizon( Vector3 point, Stargate gate )
+	{
+		if ( !gate.IsValid() ) return false;
+
+		var eh = gate.EventHorizon;
+		if ( !eh.IsValid() ) return false;
+
+		return (point - eh.Position).Dot( eh.Rotation.Forward ) < 0;
+	}
+
 }

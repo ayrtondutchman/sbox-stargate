@@ -6,4 +6,5 @@ public static class StargateTags
 	public static string BehindGate => "behindgate";
 	public static string InBufferFront => "gatebufferfront";
 	public static string InBufferBack => "gatebufferback";
+	public static string EventHorizon => "eventhorizon";
 }

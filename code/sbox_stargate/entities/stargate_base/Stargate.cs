@@ -737,7 +737,11 @@ public abstract partial class Stargate : Prop, IUse
 				continue;
 
 			float currDist = gate.Position.Distance(postition);
-			if (distance > currDist && (max_distance > 0 && currDist <= max_distance)) {
+			if (distance > currDist) {
+
+				if ( max_distance > 0 && currDist > max_distance )
+					continue;
+
 				distance = currDist;
 				current = gate;
 			}

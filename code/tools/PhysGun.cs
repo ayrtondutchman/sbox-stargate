@@ -154,13 +154,40 @@ public partial class PhysGun : Carriable
 
 	private void TryStartGrab( Player owner, Vector3 eyePos, Rotation eyeRot, Vector3 eyeDir )
 	{
-		var tr = Trace.Ray( eyePos, eyePos + eyeDir * MaxTargetDistance )
+		var startPos = eyePos;
+		var endPos = eyePos + eyeDir * MaxTargetDistance;
+
+		// pre check if we will be hitting an entity thats in the gate buffer
+		var trCheck = Trace.Ray( startPos, endPos )
 			.UseHitboxes()
 			.WithTag( "solid" )
+			.WithAnyTags( StargateTags.InBufferFront, StargateTags.InBufferBack )
 			.Ignore( this )
 			.Run();
 
+		// real trace for getting the target entity
+		var trace = Trace.Ray( startPos, endPos )
+			.UseHitboxes()
+			.WithAnyTags( "solid", StargateTags.EventHorizon )
+			.Ignore( this );
+
+		// if we hit buffer ent, check on which side we hit it and exclude from real trace if necessary
+		if (trCheck.Hit)
+		{
+			var trEnd = trCheck.EndPosition;
+			var closestGate = Stargate.FindClosestGate( trEnd );
+			var isEndBehind = Stargate.IsPointBehindEventHorizon( trEnd, closestGate );
+
+			trace = trace.WithoutTags( isEndBehind ? StargateTags.InBufferFront : StargateTags.InBufferBack );
+		}
+
+		// run the real trace
+		var tr = trace.Run();
+
 		if ( !tr.Hit || !tr.Entity.IsValid() || tr.Entity.IsWorld || tr.StartedSolid ) return;
+
+		// if we hit EH, dont grab anything
+		if ( tr.Entity is EventHorizon ) return;
 
 		var rootEnt = tr.Entity.Root;
 		var body = tr.Body;

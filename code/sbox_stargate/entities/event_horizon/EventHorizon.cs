@@ -68,7 +68,7 @@ public partial class EventHorizon : AnimatedEntity
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 		EnableShadowCasting = false;
 
-		Tags.Add( "trigger", "eventhorizon" );
+		Tags.Add( "trigger", StargateTags.EventHorizon );
 
 		EnableAllCollisions = false;
 		EnableTraceAndQueries = true;
