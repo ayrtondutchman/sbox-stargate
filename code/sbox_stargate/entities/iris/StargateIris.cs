@@ -3,9 +3,8 @@ using Sandbox;
 
 public partial class StargateIris : AnimatedEntity
 {
-	public Stargate Gate;
-	[Net]
-	public bool Closed { get; private set; } = false;
+	[Net] public Stargate Gate { get; set; } = null;
+	[Net] public bool Closed { get; private set; } = false;
 	public bool Busy = false;
 
 	private float OpenCloseDleay = 3f;
@@ -73,9 +72,10 @@ public partial class StargateIris : AnimatedEntity
 		if (Gate.IsValid()) Gate.Iris = null;
 	}
 
-	[Event( "server.tick" )]
+	[GameEvent.Tick.Server]
 	public void IrisTick()
 	{
 		if ( Gate.IsValid() && Scale != Gate.Scale ) Scale = Gate.Scale; // always keep the same scale as gate
+		if ( Gate.IsValid() && Gate is StargateUniverse gate ) LocalRotation = new Angles( 0, 0, -gate.Ring.RingAngle ).ToRotation(); // rotate iris with Universe gate
 	}
 }
