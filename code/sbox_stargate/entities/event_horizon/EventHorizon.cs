@@ -479,13 +479,13 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void OnEntityTriggerStartTouch( EventHorizonTrigger trigger, Entity ent )
 	{
-		if ( trigger == BackTrigger )
+		if ( trigger == BackTrigger && !BufferFront.Contains( ent ) )
 		{
 			InTriggerBack.Add( ent );
 			ent.Tags.Add( StargateTags.BehindGate );
 		}
 
-		else if ( trigger == FrontTrigger )
+		else if ( trigger == FrontTrigger && !BufferBack.Contains( ent ) )
 		{
 			InTriggerFront.Add( ent );
 			ent.Tags.Add( StargateTags.BeforeGate );
