@@ -47,16 +47,17 @@
 		{
 			var ent = new Prop
 			{
-				Position = Owner.EyePosition + Owner.EyeRotation.Forward * 50,
+				Position = Owner.EyePosition + Owner.EyeRotation.Forward * 64,
 				Rotation = Owner.EyeRotation
 			};
 
 			ent.SetModel( modelToShoot );
-			ent.Velocity = Owner.EyeRotation.Forward * 10000;
+			ent.Velocity = Owner.EyeRotation.Forward * 1000;
+			//ent.PhysicsBody.GravityEnabled = false;
 
 			ent.Tags.Add( "undoable" );
 
-			ent.DeleteAsync( 30 );
+			ent.DeleteAsync( 10 );
 		}
 	}
 }

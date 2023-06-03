@@ -579,7 +579,7 @@ public partial class Stargate : Prop, IUse
 		if ( e.Parent != null )
 			return false;
 
-		if ( e is StargateIris || e is GateBearing || e is PickupTrigger )
+		if ( e is StargateIris || e is GateBearing || e is PickupTrigger || e is EventHorizonTrigger || e is EventHorizonCollider )
 			return false;
 
 		return true;

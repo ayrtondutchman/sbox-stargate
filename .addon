@@ -40,7 +40,8 @@
         "beforegate": "Unset",
         "gatebufferfront": "Unset",
         "gatebufferback": "Unset",
-        "world": "Unset"
+        "world": "Unset",
+        "fakeworld": "Ignore"
       },
       "Pairs": [
         {
@@ -140,6 +141,16 @@
           "a": "gatebufferback",
           "b": "world",
           "r": "Ignore"
+        },
+        {
+          "a": "gatebufferfront",
+          "b": "fakeworld",
+          "r": "Collide"
+        },
+        {
+          "a": "gatebufferback",
+          "b": "fakeworld",
+          "r": "Collide"
         }
       ]
     },

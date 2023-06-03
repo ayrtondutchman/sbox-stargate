@@ -57,6 +57,8 @@ public partial class EventHorizon : AnimatedEntity
 	private List<Entity> InTriggerFront { get; set; } = new();
 	private List<Entity> InTriggerBack { get; set; } = new();
 
+	private EventHorizonCollider ColliderFloor = null;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -94,6 +96,32 @@ public partial class EventHorizon : AnimatedEntity
 			Rotation = Rotation.RotateAroundAxis( Vector3.Up, 180 ),
 			Parent = Gate
 		};
+
+		//ColliderFloor = new()
+		//{
+		//	Position = Gate.Position,
+		//	Rotation = Gate.Rotation,
+		//	Parent = Gate
+		//};
+	}
+
+	//[GameEvent.Physics.PostStep]
+	private void UpdateCollider()
+	{
+		foreach ( var eh in All.OfType<EventHorizon>().Where( x => x.Gate.IsValid() && x.ColliderFloor.IsValid() ) )
+		{
+			var tr = Trace.Ray( eh.Position + eh.Rotation.Up * 110, eh.Position - eh.Rotation.Up * 110 ).WithTag( "world" ).Run();
+
+			var collider = eh.ColliderFloor;
+			if (collider.PhysicsBody.IsValid())
+				collider.PhysicsBody.Enabled = tr.Hit;
+
+			if ( tr.Hit )
+			{
+				collider.LocalPosition = Vector3.Zero - eh.Rotation.Up * tr.HitPosition.Distance( eh.Position );
+				collider.Rotation = Rotation.From( tr.Normal.EulerAngles ).RotateAroundAxis( Vector3.Right, -90 ).RotateAroundAxis( Vector3.Up, -90 );
+			}
+		}
 	}
 
 	public virtual void SkinEventHorizon() { SetMaterialGroup( EventHorizonSkinGroup ); }
@@ -439,6 +467,8 @@ public partial class EventHorizon : AnimatedEntity
 			SetModelClippingForEntity( To.Everyone, mdl, false, fromBack ? ClipPlaneBack : ClipPlaneFront );
 		}
 
+		ent.Tags.Remove( StargateTags.ExittingFromEventHorizon );
+
 		if ( ent == CurrentTeleportingEntity )
 		{
 			CurrentTeleportingEntity = null;
@@ -465,6 +495,8 @@ public partial class EventHorizon : AnimatedEntity
 
 				ent.EnableDrawing = false;
 				TeleportEntity( ent );
+
+				ent.Tags.Add( StargateTags.ExittingFromEventHorizon );
 
 				await GameTask.NextPhysicsFrame(); // cheap trick to avoid seeing the entity on the wrong side of the EH for a few frames
 				if ( !this.IsValid() )
@@ -589,6 +621,13 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !Stargate.IsAllowedForGateTeleport( other ) )
 			return;
 
+		if ( other == CurrentTeleportingEntity && other is Player )
+		{
+			CurrentTeleportingEntity = null;
+			Gate.OtherGate.EventHorizon.CurrentTeleportingEntity = null;
+			return;
+		}
+
 		if ( !fromBack ) // entered from front
 		{
 			if ( IsEntityBehindEventHorizon( other ) ) // entered from front and exited behind the gate (should teleport)
@@ -611,12 +650,6 @@ public partial class EventHorizon : AnimatedEntity
 				OnEntityFullyEntered( other as ModelEntity, true );
 			}
 		}
-
-		if ( other == CurrentTeleportingEntity && other is Player )
-		{
-			CurrentTeleportingEntity = null;
-			Gate.OtherGate.EventHorizon.CurrentTeleportingEntity = null;
-		}
 	}
 
 	protected override void OnDestroy()
@@ -627,6 +660,7 @@ public partial class EventHorizon : AnimatedEntity
 
 		FrontTrigger?.Delete();
 		BackTrigger?.Delete();
+		ColliderFloor?.Delete();
 	}
 
 	[Event( "server.tick" )]
@@ -708,6 +742,7 @@ public partial class EventHorizon : AnimatedEntity
 
 	private static Dictionary<Entity, Vector3> EntityPositionsPrevious = new Dictionary<Entity, Vector3>();
 	private static Dictionary<Entity, TimeSince> EntityTimeSinceTeleported = new Dictionary<Entity, TimeSince>();
+	private const float FastMovingVelocityThresholdSqr = 400*400; // entities with velocity lower than 400 shouldn't be handled
 
 	private void SetEntLastTeleportTime(Entity ent, float lastTime)
 	{
@@ -723,15 +758,18 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !Game.IsServer )
 			return;
 
-		foreach ( var ent in All.OfType<ModelEntity>().Where( x => (x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) && Stargate.IsAllowedForGateTeleport( x ) ) )
+		foreach ( var ent in All.OfType<ModelEntity>().Where( x => x is not Player && (x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) && Stargate.IsAllowedForGateTeleport( x ) ) )
 		{
+			if ( ent.Tags.Has( StargateTags.ExittingFromEventHorizon ) )
+				continue;
+
 			if ( EntityPositionsPrevious.ContainsKey( ent ) )
 			{
 				if ( !ent.PhysicsBody.IsValid() )
-				{
-					//Log.Info( "invalid physobj" );
 					continue;
-				}
+
+				if ( ent.Velocity.LengthSquared < FastMovingVelocityThresholdSqr )
+					continue;
 
 				var oldPos = EntityPositionsPrevious[ent];
 				var newPos = ent.PhysicsBody.MassCenter;
@@ -747,29 +785,20 @@ public partial class EventHorizon : AnimatedEntity
 						TimeSince timeSinceTp = -1;
 						EntityTimeSinceTeleported.TryGetValue( ent, out timeSinceTp );
 
-						if ( timeSinceTp > 0.05 || timeSinceTp == -1 )
+						if ( timeSinceTp > 0.1 || timeSinceTp == -1 )
 						{
 							var eh = tr.Entity as EventHorizon;
 							if ( eh.CurrentTeleportingEntity == ent || eh.BufferBack.Contains(ent) || eh.BufferFront.Contains(ent) ) // if we already touched the EH, dont do anything
 								continue;
 
 							var fromBack = Stargate.IsPointBehindEventHorizon( oldPos, eh.Gate );
-							//var txt = fromBack ? "B" : "F";
-
-							//DebugOverlay.Text( txt, tr.HitPosition, 5 );
-							//DebugOverlay.Line( oldPos, newPos, duration: 5, depthTest: false );
-							//DebugOverlay.Sphere( tr.HitPosition, 0.25f, Color.Red, 5, false );
-
 							var gate = eh.Gate;
 							if ( !fromBack && gate.IsValid() && !gate.Inbound )
 							{
 								async void tpFunc()
 								{
-									//var otherEH = GetOther();
-									//otherEH.OnEntityEntered( ent, false );
-									//otherEH.OnEntityTriggerStartTouch( otherEH.FrontTrigger, ent );
-
 									ent.EnableDrawing = false;
+									ent.Tags.Add( StargateTags.ExittingFromEventHorizon );
 									eh.TeleportEntity( ent );
 
 									await GameTask.NextPhysicsFrame(); // cheap trick to avoid seeing the entity on the wrong side of the EH for a few frames
@@ -780,13 +809,13 @@ public partial class EventHorizon : AnimatedEntity
 								}
 
 								eh.TeleportLogic( ent, () => tpFunc(), true );
-								eh.PlayTeleportSound();
 							}
 							else
 							{
 								eh.DissolveEntity( ent );
 							}
-							
+
+							eh.PlayTeleportSound();
 						}
 					}
 				}
