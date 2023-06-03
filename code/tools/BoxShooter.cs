@@ -52,7 +52,7 @@
 			};
 
 			ent.SetModel( modelToShoot );
-			ent.Velocity = Owner.EyeRotation.Forward * 1000;
+			ent.Velocity = Owner.EyeRotation.Forward * 10000;
 			//ent.PhysicsBody.GravityEnabled = false;
 
 			ent.Tags.Add( "undoable" );

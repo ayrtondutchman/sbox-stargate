@@ -114,13 +114,15 @@ public partial class EventHorizon : AnimatedEntity
 			var endPos = eh.Position - eh.Rotation.Up * 110;
 			var tr = Trace.Ray( startPos, endPos ).WithTag( "world" ).Run();
 
+			var shouldUseCollider = tr.Hit && (Math.Abs( eh.Rotation.Angles().pitch )) < 15;
+
 			var collider = eh.ColliderFloor;
 			if (collider.PhysicsBody.IsValid())
-				collider.PhysicsBody.Enabled = tr.Hit;
+				collider.PhysicsBody.Enabled = shouldUseCollider;
 
-			if ( tr.Hit )
+			if ( shouldUseCollider )
 			{
-				DebugOverlay.TraceResult( tr );
+				//DebugOverlay.TraceResult( tr );
 
 				collider.Position = tr.HitPosition;
 				collider.Rotation = Rotation.From( tr.Normal.EulerAngles )

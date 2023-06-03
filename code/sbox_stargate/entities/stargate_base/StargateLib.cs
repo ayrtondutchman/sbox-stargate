@@ -582,6 +582,9 @@ public partial class Stargate : Prop, IUse
 		if ( e is StargateIris || e is GateBearing || e is PickupTrigger || e is EventHorizonTrigger || e is EventHorizonCollider )
 			return false;
 
+		if ( e is Water || e is WaterController || e is WaterFunc )
+			return false;
+
 		return true;
 	}
 
