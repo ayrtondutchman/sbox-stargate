@@ -365,6 +365,8 @@ public partial class EventHorizon : AnimatedEntity
 		ent.ResetInterpolation();
 		ent.Velocity = newVel;
 
+		SetEntLastTeleportTime( ent, 0 );
+
 		// after any successful teleport, start autoclose timer if gate should autoclose
 		if ( Gate.AutoClose ) Gate.AutoCloseTime = Time.Now + Stargate.AutoCloseTimerDuration + (Gate.ShowWormholeCinematic ? 7 : 0);
 	}
@@ -542,13 +544,16 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
-
-
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
 
-		if ( !Game.IsServer || other == CurrentTeleportingEntity )
+		StartTouchEH( other, IsEntityBehindEventHorizon( other ) );
+	}
+
+	public void StartTouchEH( Entity other, bool fromBack )
+	{
+		if ( !Game.IsServer || !other.IsValid() || other == CurrentTeleportingEntity )
 			return;
 
 		if ( !Stargate.IsAllowedForGateTeleport( other ) )
@@ -565,7 +570,7 @@ public partial class EventHorizon : AnimatedEntity
 		}
 		else if ( other is ModelEntity modelEnt ) // props get handled differently (aka model clipping)
 		{
-			OnEntityEntered( modelEnt, IsEntityBehindEventHorizon( modelEnt ) );
+			OnEntityEntered( modelEnt, fromBack );
 		}
 	}
 
@@ -573,13 +578,18 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.EndTouch( other );
 
+		EndTouchEH( other, BufferBack.Contains( other ) );
+	}
+
+	public void EndTouchEH( Entity other, bool fromBack = false )
+	{
 		if ( !Game.IsServer || !other.IsValid() )
 			return;
 
 		if ( !Stargate.IsAllowedForGateTeleport( other ) )
 			return;
 
-		if ( BufferFront.Contains( other ) ) // entered from front
+		if ( !fromBack ) // entered from front
 		{
 			if ( IsEntityBehindEventHorizon( other ) ) // entered from front and exited behind the gate (should teleport)
 			{
@@ -590,8 +600,7 @@ public partial class EventHorizon : AnimatedEntity
 				OnEntityExited( other as ModelEntity );
 			}
 		}
-
-		if ( BufferBack.Contains( other ) ) // entered from back
+		else // entered from back
 		{
 			if ( IsEntityBehindEventHorizon( other ) ) // entered from back and exited behind the gate (should just exit)
 			{
@@ -696,5 +705,99 @@ public partial class EventHorizon : AnimatedEntity
 		foreach ( var e in BufferBack )
 			UpdateClipPlaneForEntity( e, ClipPlaneBack );
 	}
-	
+
+	private static Dictionary<Entity, Vector3> EntityPositionsPrevious = new Dictionary<Entity, Vector3>();
+	private static Dictionary<Entity, TimeSince> EntityTimeSinceTeleported = new Dictionary<Entity, TimeSince>();
+
+	private void SetEntLastTeleportTime(Entity ent, float lastTime)
+	{
+		if ( EntityTimeSinceTeleported.ContainsKey( ent ) )
+			EntityTimeSinceTeleported[ent] = lastTime;
+		else
+			EntityTimeSinceTeleported.Add( ent, lastTime );
+	}
+
+	[GameEvent.Physics.PostStep]
+	private static void HandleFastMovingEntities() // fix for fast moving objects
+	{
+		if ( !Game.IsServer )
+			return;
+
+		foreach ( var ent in All.OfType<ModelEntity>().Where( x => (x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) && Stargate.IsAllowedForGateTeleport( x ) ) )
+		{
+			if ( EntityPositionsPrevious.ContainsKey( ent ) )
+			{
+				if ( !ent.PhysicsBody.IsValid() )
+				{
+					//Log.Info( "invalid physobj" );
+					continue;
+				}
+
+				var oldPos = EntityPositionsPrevious[ent];
+				var newPos = ent.PhysicsBody.MassCenter;
+
+				// dont do nothing if we arent moving
+				if (oldPos != newPos)
+				{
+					// trace between old and new position to check if we passed through the EH
+					var tr = Trace.Ray( oldPos, newPos ).WithTag( StargateTags.EventHorizon ).Run();
+
+					if (tr.Hit)
+					{
+						TimeSince timeSinceTp = -1;
+						EntityTimeSinceTeleported.TryGetValue( ent, out timeSinceTp );
+
+						if ( timeSinceTp > 0.05 || timeSinceTp == -1 )
+						{
+							var eh = tr.Entity as EventHorizon;
+							if ( eh.CurrentTeleportingEntity == ent || eh.BufferBack.Contains(ent) || eh.BufferFront.Contains(ent) ) // if we already touched the EH, dont do anything
+								continue;
+
+							var fromBack = Stargate.IsPointBehindEventHorizon( oldPos, eh.Gate );
+							//var txt = fromBack ? "B" : "F";
+
+							//DebugOverlay.Text( txt, tr.HitPosition, 5 );
+							//DebugOverlay.Line( oldPos, newPos, duration: 5, depthTest: false );
+							//DebugOverlay.Sphere( tr.HitPosition, 0.25f, Color.Red, 5, false );
+
+							var gate = eh.Gate;
+							if ( !fromBack && gate.IsValid() && !gate.Inbound )
+							{
+								async void tpFunc()
+								{
+									//var otherEH = GetOther();
+									//otherEH.OnEntityEntered( ent, false );
+									//otherEH.OnEntityTriggerStartTouch( otherEH.FrontTrigger, ent );
+
+									ent.EnableDrawing = false;
+									eh.TeleportEntity( ent );
+
+									await GameTask.NextPhysicsFrame(); // cheap trick to avoid seeing the entity on the wrong side of the EH for a few frames
+									if ( !eh.IsValid() )
+										return;
+
+									ent.EnableDrawing = true;
+								}
+
+								eh.TeleportLogic( ent, () => tpFunc(), true );
+								eh.PlayTeleportSound();
+							}
+							else
+							{
+								eh.DissolveEntity( ent );
+							}
+							
+						}
+					}
+				}
+			}
+
+			var prevPos = ent.PhysicsBody.IsValid() ? ent.PhysicsBody.MassCenter : ent.Position;
+			if ( EntityPositionsPrevious.ContainsKey( ent ) )
+				EntityPositionsPrevious[ent] = prevPos;
+			else
+				EntityPositionsPrevious.TryAdd( ent, prevPos );
+		}
+		
+	}
 }
