@@ -7,6 +7,8 @@
 
 		string modelToShoot = "models/citizen_props/crate01.vmdl";
 
+		static bool IsWorldSlow = false;
+
 		public override void Simulate()
 		{
 			if ( Game.IsServer )
@@ -32,6 +34,12 @@
 					timeSinceShoot = 0;
 					ShootBox();
 				}
+
+				if ( Input.Pressed( InputButton.Walk ) )
+				{
+					Game.PhysicsWorld.TimeScale = IsWorldSlow ? 1 : 0.05f;
+					IsWorldSlow = !IsWorldSlow;
+				}
 			}
 		}
 
@@ -44,7 +52,11 @@
 			};
 
 			ent.SetModel( modelToShoot );
-			ent.Velocity = Owner.EyeRotation.Forward * 1000;
+			ent.Velocity = Owner.EyeRotation.Forward * 10000;
+
+			ent.Tags.Add( "undoable" );
+
+			ent.DeleteAsync( 30 );
 		}
 	}
 }
