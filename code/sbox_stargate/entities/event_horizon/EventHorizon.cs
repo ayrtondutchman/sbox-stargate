@@ -550,6 +550,9 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void TeleportLogic( Entity other, Action teleportFunc, bool skipSideChecks = false )
 	{
+		if ( !IsEntityBehindEventHorizon( other ) && Gate.IsIrisClosed() ) // if we try to enter any gate from front and it has an active iris, do nothing
+			return;
+
 		if ( Gate.Inbound || !IsFullyFormed ) // if we entered inbound gate from any direction, dissolve
 		{
 			DissolveEntity( other );
