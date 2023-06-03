@@ -168,7 +168,7 @@ public partial class PhysGun : Carriable
 		// real trace for getting the target entity
 		var trace = Trace.Ray( startPos, endPos )
 			.UseHitboxes()
-			.WithAnyTags( "solid", StargateTags.EventHorizon )
+			.WithAnyTags( "solid", StargateTags.EventHorizon, "debris" )
 			.Ignore( this );
 
 		// if we hit buffer ent, check on which side we hit it and exclude from real trace if necessary
