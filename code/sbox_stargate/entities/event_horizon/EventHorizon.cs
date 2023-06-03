@@ -97,20 +97,22 @@ public partial class EventHorizon : AnimatedEntity
 			Parent = Gate
 		};
 
-		//ColliderFloor = new()
-		//{
-		//	Position = Gate.Position,
-		//	Rotation = Gate.Rotation,
-		//	Parent = Gate
-		//};
+		ColliderFloor = new()
+		{
+			Position = Gate.Position,
+			Rotation = Gate.Rotation,
+			Parent = Gate
+		};
 	}
 
-	//[GameEvent.Physics.PostStep]
+	[GameEvent.Physics.PostStep]
 	private void UpdateCollider()
 	{
 		foreach ( var eh in All.OfType<EventHorizon>().Where( x => x.Gate.IsValid() && x.ColliderFloor.IsValid() ) )
 		{
-			var tr = Trace.Ray( eh.Position + eh.Rotation.Up * 110, eh.Position - eh.Rotation.Up * 110 ).WithTag( "world" ).Run();
+			var startPos = eh.Position + eh.Rotation.Up * 110;
+			var endPos = eh.Position - eh.Rotation.Up * 110;
+			var tr = Trace.Ray( startPos, endPos ).WithTag( "world" ).Run();
 
 			var collider = eh.ColliderFloor;
 			if (collider.PhysicsBody.IsValid())
@@ -118,8 +120,13 @@ public partial class EventHorizon : AnimatedEntity
 
 			if ( tr.Hit )
 			{
-				collider.LocalPosition = Vector3.Zero - eh.Rotation.Up * tr.HitPosition.Distance( eh.Position );
-				collider.Rotation = Rotation.From( tr.Normal.EulerAngles ).RotateAroundAxis( Vector3.Right, -90 ).RotateAroundAxis( Vector3.Up, -90 );
+				DebugOverlay.TraceResult( tr );
+
+				collider.Position = tr.HitPosition;
+				collider.Rotation = Rotation.From( tr.Normal.EulerAngles )
+					.RotateAroundAxis( Vector3.Right, -90 )
+					.RotateAroundAxis( Vector3.Up, 90 )
+					.RotateAroundAxis(Vector3.Up, eh.Rotation.Angles().yaw - 90);
 			}
 		}
 	}
