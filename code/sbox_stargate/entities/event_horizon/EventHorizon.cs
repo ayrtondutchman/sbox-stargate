@@ -726,8 +726,8 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !obj.IsValid() ) return;
 
 		obj.Batchable = false;
-		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
-		obj.Attributes.SetCombo( "D_ENABLE_USER_CLIP_PLANE", enabled ); // <-- thanks @MuffinTastic for this line of code
+		obj.ClipPlane = p;
+		obj.ClipPlaneEnabled = enabled;
 	}
 
 	public void UpdateClipPlaneForEntity( Entity ent, Plane p ) // only update plane, not the enabled state
@@ -739,7 +739,7 @@ public partial class EventHorizon : AnimatedEntity
 		var obj = m.SceneObject;
 		if ( !obj.IsValid() ) return;
 
-		obj.Attributes.Set( "ClipPlane0", new Vector4( p.Normal, p.Distance ) );
+		obj.ClipPlane = p;
 	}
 
 	[Event.Client.Frame]
