@@ -16,6 +16,7 @@ public partial class StargateIrisAtlantis : StargateIris
 
 		Transmit = TransmitType.Always;
 		Tags.Add( "solid" );
+		Tags.Add( StargateTags.BeforeGate );
 	}
 
 	public async override void Close() {

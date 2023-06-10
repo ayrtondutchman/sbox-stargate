@@ -35,7 +35,13 @@
         "water": "Trigger",
         "debris": "Unset",
         "player": "Unset",
-        "glass": "Unset"
+        "glass": "Unset",
+        "behindgate": "Unset",
+        "beforegate": "Unset",
+        "gatebufferfront": "Unset",
+        "gatebufferback": "Unset",
+        "world": "Unset",
+        "fakeworld": "Ignore"
       },
       "Pairs": [
         {
@@ -105,6 +111,46 @@
         {
           "a": "water",
           "b": "glass"
+        },
+        {
+          "a": "behindgate",
+          "b": "gatebufferfront",
+          "r": "Ignore"
+        },
+        {
+          "a": "gatebufferfront",
+          "b": "gatebufferback",
+          "r": "Ignore"
+        },
+        {
+          "a": "beforegate",
+          "b": "gatebufferback",
+          "r": "Ignore"
+        },
+        {
+          "a": "behindgate",
+          "b": "beforegate",
+          "r": "Ignore"
+        },
+        {
+          "a": "gatebufferfront",
+          "b": "world",
+          "r": "Ignore"
+        },
+        {
+          "a": "gatebufferback",
+          "b": "world",
+          "r": "Ignore"
+        },
+        {
+          "a": "gatebufferfront",
+          "b": "fakeworld",
+          "r": "Collide"
+        },
+        {
+          "a": "gatebufferback",
+          "b": "fakeworld",
+          "r": "Collide"
         }
       ]
     },

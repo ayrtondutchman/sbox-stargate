@@ -7,6 +7,8 @@
 
 		string modelToShoot = "models/citizen_props/crate01.vmdl";
 
+		static bool IsWorldSlow = false;
+
 		public override void Simulate()
 		{
 			if ( Game.IsServer )
@@ -32,6 +34,12 @@
 					timeSinceShoot = 0;
 					ShootBox();
 				}
+
+				if ( Input.Pressed( InputButton.Walk ) )
+				{
+					Game.PhysicsWorld.TimeScale = IsWorldSlow ? 1 : 0.05f;
+					IsWorldSlow = !IsWorldSlow;
+				}
 			}
 		}
 
@@ -39,12 +47,17 @@
 		{
 			var ent = new Prop
 			{
-				Position = Owner.EyePosition + Owner.EyeRotation.Forward * 50,
+				Position = Owner.EyePosition + Owner.EyeRotation.Forward * 64,
 				Rotation = Owner.EyeRotation
 			};
 
 			ent.SetModel( modelToShoot );
-			ent.Velocity = Owner.EyeRotation.Forward * 1000;
+			ent.Velocity = Owner.EyeRotation.Forward * 10000;
+			//ent.PhysicsBody.GravityEnabled = false;
+
+			ent.Tags.Add( "undoable" );
+
+			ent.DeleteAsync( 10 );
 		}
 	}
 }
