@@ -1,6 +1,5 @@
 
-.loadingpanel
-{
+.loadingpanel {
 	background-color: #222;
 	background-size: cover;
 	width: 100%;
@@ -13,39 +12,41 @@
 	font-family: Poppins;
 	pointer-events: all;
 
-	> .title
-	{
+	> .title {
 		font-size: 80px;
 		color: #888;
 		font-weight: bolder;
 	}
 
-	> .subtitle
-	{
+	> .subtitle {
 		font-size: 30px;
 		color: #888;
 		font-weight: 100;
 	}
 
-	> .controls
-	{
-		position: absolute;
-		bottom: 100px;
-		right: 200px;
+	> .controls {
+		//position: absolute;
+		//bottom: 100px;
+		//right: 200px;
 
-		.button
-		{
+		.button {
 			font-size: 20px;
 			padding: 10px 50px;
 			background-color: #333;
 			color: #222;
 			font-weight: bold;
 			cursor: pointer;
+			margin-top: 40px;
 
-			&:hover
-			{
+			&:hover {
 				background-color: #888;
 			}
 		}
+	}
+
+	> .modelpanel {
+		position: absolute;
+		aspect-ratio: 1;
+		height: 100%;
 	}
 }
