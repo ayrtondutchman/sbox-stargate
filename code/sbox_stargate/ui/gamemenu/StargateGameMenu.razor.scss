@@ -1,6 +1,5 @@
 
-.gamemainmenu
-{
+.gamemainmenu {
 	background-color: #343948;
 	padding: 0 170px;
 	opacity: 1;
@@ -12,15 +11,21 @@
 	transition: all 0.3s ease-out;
 	color: white;
 
-	&:intro
-	{
+	&:intro {
 		opacity: 0;
 		transform: scaleX( 1.1 );
 	}
 
-	&.ingame
-	{
+	&.ingame {
 		background-color: #151313ee;
+	}
+
+	> .modelpanel {
+		position: absolute;
+		aspect-ratio: 1;
+		height: 100%;
+		right: 0;
+		mask: linear-gradient( to left, white, black ) left / 25% 10px;
 	}
 }
 

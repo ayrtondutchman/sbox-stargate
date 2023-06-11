@@ -2,14 +2,14 @@
 using Sandbox.UI;
 using System;
 
-public class StargateGameLoadingModel : Panel
+public class StargateGameMenuModel : Panel
 {
 	readonly ScenePanel scenePanel;
 
 	private SceneModel GateModel;
 	private SceneModel RingModel;
 
-	public StargateGameLoadingModel()
+	public StargateGameMenuModel()
 	{
 		Style.FlexWrap = Wrap.Wrap;
 		Style.JustifyContent = Justify.Center;
@@ -40,7 +40,9 @@ public class StargateGameLoadingModel : Panel
 
 		//new SceneSkyBox( world, Material.Load( "models/sbox_stargate/wormhole/skybox.vmat" ) );
 
-		GateModel = new SceneModel( world, "models/sbox_stargate/sg_mw/sg_mw_gate.vmdl", Transform.Zero );
+		var tg = Transform.Zero;
+		tg.Rotation = tg.Rotation.RotateAroundAxis( Vector3.Forward, 5 );
+		GateModel = new SceneModel( world, "models/sbox_stargate/sg_mw/sg_mw_gate.vmdl", tg );
 		RingModel = new SceneModel( world, "models/sbox_stargate/sg_mw/sg_mw_ring.vmdl", Transform.Zero );
 
 		GateModel.Batchable = false;
@@ -49,11 +51,11 @@ public class StargateGameLoadingModel : Panel
 		for (var i = 0; i < 9; i++)
 		{
 			var t = Transform.Zero;
-			t.Rotation = t.Rotation.RotateAroundAxis( Vector3.Forward, 40 * i );
+			t.Rotation = t.Rotation.RotateAroundAxis( Vector3.Forward, 40 * i + GateModel.Rotation.Roll() );
 			var cmodel = new SceneModel( world, "models/sbox_stargate/sg_mw/sg_mw_chevron.vmdl", t );
 			new SceneLight( world, cmodel.Position + cmodel.Rotation.Up * 64 + cmodel.Rotation.Forward * 32, 200, Color.White * 1.0f );
 
-			cmodel.Attributes.Set( "selfillumscale", 0 );
+			//cmodel.Attributes.Set( "selfillumscale", 1 );
 			cmodel.Batchable = false;
 		}
 
@@ -73,11 +75,12 @@ public class StargateGameLoadingModel : Panel
 
 		RingModel.Rotation = GateModel.Rotation.RotateAroundAxis( Vector3.Forward, Time.Now * -16 );
 
-		
-		scenePanel.Camera.Position = Vector3.Forward * 256;
+
+		var distFromCenter = 90;
+		scenePanel.Camera.Position = Vector3.Forward * 256 + Vector3.Up * distFromCenter + Vector3.Right * distFromCenter;
 		scenePanel.Camera.Rotation = Rotation.From( new Angles( 180, 0, 180 ) );
 
-		scenePanel.Camera.OrthoHeight = 280;
+		scenePanel.Camera.OrthoHeight = 60;
 		scenePanel.Camera.OrthoWidth = scenePanel.Camera.OrthoHeight;
 
 		//scenePanel.Camera.OrthoWidth = 160;
