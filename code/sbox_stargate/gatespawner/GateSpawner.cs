@@ -57,21 +57,29 @@ public partial class GateSpawner
 
 		await GameTask.Delay( 1000 );
 
-		//GetGatespawnerFileByName( Game.Server.MapIdent );
+		var mapName = Game.Server.MapIdent;
 
-		var filepath = $"{Game.Server.MapIdent}.json";
+		Log.Info( $"Trying to load GateSpawner for map: {mapName}" );
 
-		bool isData = FileSystem.Data.FileExists( $"data/gatespawner/{filepath}" );
-		bool isRoot = !isData && FileSystem.Mounted.FileExists( $"code/sbox_stargate/gatespawner/maps/{filepath}" );
+		var fileToLoad = "";
+		var foundGatespawnerFile = false;
 
-		if ( !isData && !isRoot )
+		foreach ( var fileName in FileSystem.Mounted.FindFile( "", recursive: true ).Where( f => f.Contains( $"{mapName}.json" ) ) )
+		{
+			fileToLoad = fileName;
+			foundGatespawnerFile = true;
+		}
+
+		if ( !foundGatespawnerFile )
+		{
+			Log.Warning( $"Can't find GateSpawner file for {Game.Server.MapIdent}" );
 			return;
+		}
 
-		// Gatespawners in data folder will always have priority
-		filepath = (isRoot ? "code/sbox_stargate/gatespawner/maps/" : "data/gatespawner/") + filepath;
+		Log.Info( $"Found GateSpawner file: {fileToLoad}" );
 
-		var file = isRoot ? FileSystem.Mounted.ReadAllText( filepath ) : FileSystem.Data.ReadAllText( filepath );
-		var data = JsonSerializer.Deserialize<GatespawnerModel>( file );
+		var rawData = FileSystem.Mounted.ReadAllText( fileToLoad );
+		var data = JsonSerializer.Deserialize<GatespawnerModel>( rawData );
 
 		foreach ( JsonElement o in data.Entities )
 		{
