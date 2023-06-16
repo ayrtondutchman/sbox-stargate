@@ -29,7 +29,7 @@
 						[
 							{
 								from = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
-								to = "models/sbox_stargate/event_horizon/event_horizon_universe.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_new_universe.vmat"
 							},
 						]
 					},
@@ -51,7 +51,7 @@
 						[
 							{
 								from = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
-								to = "models/sbox_stargate/event_horizon/event_horizon_pegasus.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_new_pegasus.vmat"
 							},
 						]
 					},

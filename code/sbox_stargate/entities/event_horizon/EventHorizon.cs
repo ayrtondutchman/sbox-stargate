@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
+using Sandbox.Internal;
 
 public partial class EventHorizon : AnimatedEntity
 {
@@ -742,6 +743,28 @@ public partial class EventHorizon : AnimatedEntity
 		obj.ClipPlane = p;
 	}
 
+	private VideoPlayer EventHorizonVideo = new VideoPlayer();
+	private bool EventHorizonVideoInitialized = false;
+
+	public void UseVideoAsTexture()
+	{
+		if (!EventHorizonVideoInitialized )
+		{
+			EventHorizonVideo.Play( FileSystem.Mounted, "videos/event_horizon/event_horizon_loop.mp4" );
+			EventHorizonVideo.Muted = true;
+			EventHorizonVideo.Repeat = true;
+
+			EventHorizonVideoInitialized = true;
+		}
+
+		EventHorizonVideo?.Present();
+
+		if ( SceneObject.IsValid() && EventHorizonVideo.Texture.IsLoaded )
+		{
+			SceneObject.Attributes.Set( "texture", EventHorizonVideo.Texture );
+		}
+	}
+
 	[Event.Client.Frame]
 	public void Draw()
 	{
@@ -750,6 +773,8 @@ public partial class EventHorizon : AnimatedEntity
 
 		foreach ( var e in BufferBack )
 			UpdateClipPlaneForEntity( e, ClipPlaneBack );
+
+		UseVideoAsTexture();
 	}
 
 	private static Dictionary<Entity, Vector3> EntityPositionsPrevious = new Dictionary<Entity, Vector3>();
