@@ -15,7 +15,11 @@
 						remaps = 
 						[
 							{
-								from = "effect_02.vmat"
+								from = "eh_back.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_new_back.vmat"
+							},
+							{
+								from = "eh_front.vmat"
 								to = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
 							},
 						]
@@ -31,6 +35,10 @@
 								from = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
 								to = "models/sbox_stargate/event_horizon/event_horizon_new_universe.vmat"
 							},
+							{
+								from = "models/sbox_stargate/event_horizon/event_horizon_new_back.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_new_universe_back.vmat"
+							},
 						]
 					},
 					{
@@ -40,6 +48,10 @@
 						[
 							{
 								from = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_establish.vmat"
+							},
+							{
+								from = "models/sbox_stargate/event_horizon/event_horizon_new_back.vmat"
 								to = "models/sbox_stargate/event_horizon/event_horizon_establish.vmat"
 							},
 						]
@@ -52,6 +64,10 @@
 							{
 								from = "models/sbox_stargate/event_horizon/event_horizon_new.vmat"
 								to = "models/sbox_stargate/event_horizon/event_horizon_new_pegasus.vmat"
+							},
+							{
+								from = "models/sbox_stargate/event_horizon/event_horizon_new_back.vmat"
+								to = "models/sbox_stargate/event_horizon/event_horizon_new_pegasus_back.vmat"
 							},
 						]
 					},

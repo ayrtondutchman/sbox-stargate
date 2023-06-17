@@ -154,7 +154,7 @@ public abstract partial class Stargate : Prop, IUse
 		CreateEventHorizon();
 		EventHorizon.Establish();
 
-		await GameTask.DelaySeconds( 2f );
+		await GameTask.DelaySeconds( 3f );
 		if ( !this.IsValid() || !EventHorizon.IsValid() ) return;
 
 		EventHorizon.IsFullyFormed = true;

@@ -2,7 +2,7 @@
 
 Layer0
 {
-	shader "shaders/eventhorizon.shader_c"
+	shader "shaders/eventhorizon_back.shader_c"
 
 	//---- Rendering ----
 	F_DO_NOT_CAST_SHADOWS 1
@@ -18,6 +18,9 @@ Layer0
 
 	//---- Fog ----
 	g_bFogEnabled "1"
+
+	//---- Translucent ----
+	g_flOpacityScale "1.000"
 
 	Attributes
 	{

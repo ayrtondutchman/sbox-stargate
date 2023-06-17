@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 using Sandbox.Internal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public partial class EventHorizon : AnimatedEntity
 {
@@ -230,7 +231,20 @@ public partial class EventHorizon : AnimatedEntity
 		SkinEventHorizon();
 	}
 
-	public void ClientAnimLogic()
+	private Particles Kawoosh;
+
+	public async void CreateKawoosh()
+	{
+		var a = Rotation.RotateAroundAxis( Vector3.Right, -90 ).Angles();
+		Kawoosh = Particles.Create( "particles/sbox_stargate/kawoosh.vpcf", Position );
+		Kawoosh.SetPosition( 1, Rotation.Forward );
+		Kawoosh.SetPosition( 2, new Vector3( a.roll, a.pitch, a.yaw ) );
+
+		await GameTask.DelaySeconds( 3f );
+		Kawoosh?.Destroy( true );
+	}
+
+	public async void ClientAnimLogic()
 	{
 		SceneObject.Batchable = false;
 
@@ -246,7 +260,10 @@ public partial class EventHorizon : AnimatedEntity
 				curBrightness = maxBrightness;
 				SkinEventHorizon();
 
-				//Particles.Create( "particles/water_squirt.vpcf", this, "center", true ); // only test, kawoosh particle will be made at some point
+				if ( !Gate.IsIrisClosed() )
+				{
+					CreateKawoosh();
+				}
 			}
 		}
 
@@ -260,14 +277,14 @@ public partial class EventHorizon : AnimatedEntity
 		if ( shouldEstablish && !isEstablished )
 		{
 			SceneObject.Attributes.Set( "illumbrightness", curBrightness );
-			curBrightness = MathX.Approach( curBrightness, minBrightness, Time.Delta * 5 );
+			curBrightness = MathX.Approach( curBrightness, minBrightness, Time.Delta * 3f );
 			if ( curBrightness == minBrightness ) isEstablished = true;
 		}
 
 		if ( shouldCollapse && !isCollapsed )
 		{
 			SceneObject.Attributes.Set( "illumbrightness", curBrightness );
-			curBrightness = MathX.Approach( curBrightness, maxBrightness, Time.Delta * 5 );
+			curBrightness = MathX.Approach( curBrightness, maxBrightness, Time.Delta * 5f );
 
 			if ( curBrightness == maxBrightness )
 			{
