@@ -655,11 +655,11 @@
 					[
 						{
 							m_flPosition = 0.0
-							m_Color = [ 104, 144, 146, 255 ]
+							m_Color = [ 152, 191, 194, 255 ]
 						},
 						{
 							m_flPosition = 1.0
-							m_Color = [ 37, 109, 146, 255 ]
+							m_Color = [ 37, 195, 227, 255 ]
 						},
 					]
 				}
@@ -941,7 +941,7 @@
 	[
 		{
 			_class = "C_OP_RenderSprites"
-			m_hTexture = resource:"materials/particles/particle_smokegrenade_color_tga_22f7b665.generated.vtex"
+			m_hTexture = resource:"materials/sbox_stargate/kawoosh/kawoosh_particle_color_tga_b8d445bc.generated.vtex"
 			m_flRadiusScale = 
 			{
 				m_nType = "PF_TYPE_LITERAL"
@@ -989,6 +989,7 @@
 				}
 			}
 			m_bAdditive = true
+			m_hNormalTexture = resource:"materials/sbox_stargate/kawoosh/kawoosh_particle_normal_tga_92d4cedb.generated.vtex"
 		},
 	]
 }
