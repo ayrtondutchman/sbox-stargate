@@ -55,6 +55,7 @@ public partial class EventHorizon : AnimatedEntity
 
 	private EventHorizonTrigger FrontTrigger = null;
 	private EventHorizonTrigger BackTrigger = null;
+	private EventHorizonTrigger KawooshTrigger = null;
 
 	private List<Entity> InTriggerFront { get; set; } = new();
 	private List<Entity> InTriggerBack { get; set; } = new();
@@ -107,6 +108,20 @@ public partial class EventHorizon : AnimatedEntity
 		};
 	}
 
+	public async void CreateKawooshTrigger( float delay )
+	{
+		await GameTask.DelaySeconds( delay );
+
+		KawooshTrigger = new( this, "models/sbox_stargate/event_horizon/event_horizon_trigger_kawoosh.vmdl" )
+		{
+			Position = Position + Rotation.Forward * 2,
+			Rotation = Rotation,
+			Parent = Gate
+		};
+
+		KawooshTrigger?.DeleteAsync( 2.2f );
+	}
+
 	[GameEvent.Physics.PostStep]
 	private void UpdateCollider()
 	{
@@ -143,6 +158,8 @@ public partial class EventHorizon : AnimatedEntity
 	public async void Establish()
 	{
 		EstablishClientAnim( To.Everyone ); // clientside animation stuff
+
+		CreateKawooshTrigger( 0.5f );
 
 		await GameTask.DelaySeconds( 1.5f );
 		if ( !this.IsValid() ) return;
@@ -551,6 +568,11 @@ public partial class EventHorizon : AnimatedEntity
 			InTriggerFront.Add( ent );
 			ent.Tags.Add( StargateTags.BeforeGate );
 		}
+
+		else if ( trigger == KawooshTrigger )
+		{
+			DissolveEntity( ent );
+		}
 	}
 	public void OnEntityTriggerEndTouch( EventHorizonTrigger trigger, Entity ent )
 	{
@@ -691,6 +713,7 @@ public partial class EventHorizon : AnimatedEntity
 		FrontTrigger?.Delete();
 		BackTrigger?.Delete();
 		ColliderFloor?.Delete();
+		KawooshTrigger?.Delete();
 	}
 
 	[Event( "server.tick" )]

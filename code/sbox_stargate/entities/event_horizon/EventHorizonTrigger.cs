@@ -8,6 +8,7 @@ using Sandbox;
 public partial class EventHorizonTrigger : ModelEntity
 {
 	private EventHorizon EventHorizon = null;
+	public string TriggerModel = "models/sbox_stargate/event_horizon/event_horizon_trigger.vmdl";
 
 	public EventHorizonTrigger()
 	{
@@ -18,14 +19,22 @@ public partial class EventHorizonTrigger : ModelEntity
 		EventHorizon = eh;
 	}
 
+	public EventHorizonTrigger( EventHorizon eh, string model )
+	{
+		EventHorizon = eh;
+		TriggerModel = model;
+
+		Spawn();
+	}
+
 	public override void Spawn()
 	{
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
 
-		SetModel("models/sbox_stargate/event_horizon/event_horizon_trigger.vmdl");
-		SetupPhysicsFromModel(PhysicsMotionType.Static, true);
+		SetModel( TriggerModel );
+		SetupPhysicsFromModel( PhysicsMotionType.Static, true );
 
 		Tags.Add( "trigger" );
 
