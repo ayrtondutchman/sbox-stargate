@@ -644,13 +644,19 @@ public partial class StargateMilkyWay : Stargate
 
 			otherGate.BeginInboundSlow( address.Length );
 
-			for ( var i = 1; i <= address.Length; i++ )
+			if ( MovieDialingType )
 			{
-				var chev = GetChevronBasedOnAddressLength( i, address.Length );
-				if ( chev.IsValid() )
+				ChevronAnimLockAll( address.Length, 0, ChevronLightup );
+			}
+			else
+			{
+				for ( var i = 1; i <= address.Length; i++ )
 				{
-					chev.TurnOn();
-					PlaySound( chev, GetSound( "chevron_open" ) );
+					var chev = GetChevronBasedOnAddressLength( i, address.Length );
+					if ( chev.IsValid() )
+					{
+						ChevronActivate( chev, 0, ChevronLightup );
+					}
 				}
 			}
 
