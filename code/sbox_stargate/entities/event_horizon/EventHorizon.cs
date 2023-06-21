@@ -155,11 +155,12 @@ public partial class EventHorizon : AnimatedEntity
 
 	// SERVER CONTROL
 
-	public async void Establish()
+	public async void Establish(bool doKawoosh = true)
 	{
 		EstablishClientAnim( To.Everyone ); // clientside animation stuff
 
-		CreateKawooshTrigger( 0.5f );
+		if ( !Gate.IsIrisClosed() && doKawoosh )
+			CreateKawooshTrigger( 0.5f );
 
 		await GameTask.DelaySeconds( 1.5f );
 		if ( !this.IsValid() ) return;
