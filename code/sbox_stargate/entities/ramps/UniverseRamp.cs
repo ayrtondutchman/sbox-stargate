@@ -10,7 +10,8 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 0 );
 	public int AmountOfGates => 1;
 
-	public List<CapsuleLightEntity> Lights = new();
+	public List<PointLightEntity> Lights = new();
+	public PointLightEntity CenterLight;
 
 	public Vector3[] StargatePositionOffset => new Vector3[] {
 		new Vector3( -108.75f, 0, 135 )
@@ -39,13 +40,16 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 	{
 		await GameTask.NextPhysicsFrame();
 
+		Transform t;
+		CapsuleLightEntity light;
+
 		for (var i = 1; i <= 4; i++)
 		{
-			var t = (Transform)GetAttachment( $"light{i}" );
-			var light = new CapsuleLightEntity();
-			light.Color = Color.FromBytes( 230, 215, 240 );
+			t = (Transform)GetAttachment( $"light{i}" );
+			light = new CapsuleLightEntity();
+			light.Color = Color.FromBytes( 230, 215, 240 ) * 0.2f;
 			light.CapsuleLength = 48;
-			light.LightSize = 0.2f;
+			light.LightSize = 0.05f;
 			light.Position = t.Position;
 			light.Rotation = t.Rotation;
 			light.Brightness = 0;
@@ -55,17 +59,28 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 
 		for ( var i = 5; i <= 8; i++ )
 		{
-			var t = (Transform)GetAttachment( $"light{i}" );
-			var light = new CapsuleLightEntity();
-			light.Color = Color.FromBytes( 230, 215, 240 );
+			t = (Transform)GetAttachment( $"light{i}" );
+			light = new CapsuleLightEntity();
+			light.Color = Color.FromBytes( 230, 215, 240 ) * 0.2f;
 			light.CapsuleLength = 22;
-			light.LightSize = 0.2f;
+			light.LightSize = 0.05f;
 			light.Position = t.Position;
 			light.Rotation = t.Rotation;
 			light.Brightness = 0;
 			light.SetParent( this );
 			Lights.Add( light );
 		}
+
+		// center ramp light
+		var t_c = (Transform)GetAttachment( $"light9" );
+		var light_c = new PointLightEntity();
+		light_c.Color = Color.FromBytes(230, 215, 240) * 0.2f;
+		light_c.LightSize = 0.2f;
+		light_c.Position = t_c.Position;
+		light_c.Rotation = t_c.Rotation;
+		light_c.Brightness = 0;
+		light_c.SetParent( this );
+		CenterLight = light_c;
 	}
 
 	protected override void OnDestroy()
@@ -83,11 +98,19 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 	{
 		var gate = Gate.FirstOrDefault();
 		var shouldGlow = gate.IsValid() ? !gate.Idle : false;
+		var shouldCenterGlow = gate.IsValid() ? (gate.Open || gate.Opening || gate.Closing) : false;
 
 		foreach ( var light in Lights )
 		{
 			light.Brightness = light.Brightness.LerpTo( shouldGlow ? 0.1f : 0f, Time.Delta * (shouldGlow ? 4 : 16) );
 		}
+
+		if ( CenterLight.IsValid() )
+		{
+			CenterLight.Brightness = CenterLight.Brightness.LerpTo( shouldCenterGlow ? 0.1f : 0f, Time.Delta * (shouldCenterGlow ? 4 : 16) );
+		}
+
+		SetMaterialGroup( shouldGlow ? (shouldCenterGlow ? 2 : 1) : 0 );
 	}
 
 	public void FromJson( JsonElement data )
