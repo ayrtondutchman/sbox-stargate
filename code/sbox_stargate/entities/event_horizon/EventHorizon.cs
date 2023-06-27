@@ -254,7 +254,8 @@ public partial class EventHorizon : AnimatedEntity
 	public async void CreateKawoosh()
 	{
 		var a = Rotation.RotateAroundAxis( Vector3.Right, -90 ).Angles();
-		Kawoosh = Particles.Create( "particles/sbox_stargate/kawoosh.vpcf", Position );
+		var type = Gate is StargateUniverse ? "_universe" : "";
+		Kawoosh = Particles.Create( $"particles/sbox_stargate/kawoosh{type}.vpcf", Position );
 		Kawoosh.SetPosition( 1, Rotation.Forward );
 		Kawoosh.SetPosition( 2, new Vector3( a.roll, a.pitch, a.yaw ) );
 
