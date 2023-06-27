@@ -629,6 +629,14 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
+	public bool ShouldTeleportInstantly(Entity ent)
+	{
+		if ( ent is Player ) return true;
+		if ( ent is EnergyProjectile ) return true;
+
+		return false;
+	}
+
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
@@ -649,7 +657,7 @@ public partial class EventHorizon : AnimatedEntity
 			DissolveEntity( other );
 		}
 
-		if ( other is Player ) // players should get teleported instantly on EH touch
+		if ( ShouldTeleportInstantly( other ) ) // players, projectiles and whatnot should get teleported instantly on EH touch
 		{
 			TeleportLogic( other, () => TeleportEntity( other ) );
 		}
