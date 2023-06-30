@@ -502,7 +502,7 @@ public partial class StargateUniverse : Stargate
 			{
 				foreach ( var sym in address )
 				{
-					SymbolOn( sym, true );
+					SymbolOn( sym, sym != address.Last() );
 				}
 			}
 
