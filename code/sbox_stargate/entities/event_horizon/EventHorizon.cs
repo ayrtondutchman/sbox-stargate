@@ -112,6 +112,8 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		await GameTask.DelaySeconds( delay );
 
+		if ( !this.IsValid() ) return;
+
 		KawooshTrigger = new( this, "models/sbox_stargate/event_horizon/event_horizon_trigger_kawoosh.vmdl" )
 		{
 			Position = Position + Rotation.Forward * 2,
