@@ -498,6 +498,16 @@ public partial class StargateUniverse : Stargate
 			DoPreRoll();
 			otherGate.BeginInboundSlow( address.Length );
 
+			void activateSymbols()
+			{
+				foreach ( var sym in address )
+				{
+					SymbolOn( sym, true );
+				}
+			}
+
+			AddTask( Time.Now + 0.2f, activateSymbols, TimedTaskCategory.DIALING );
+
 			AddTask( Time.Now + 0.5f, () => EstablishWormholeTo( otherGate ), TimedTaskCategory.DIALING );
 
 		}
