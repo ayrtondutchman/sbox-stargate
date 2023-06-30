@@ -11,7 +11,7 @@ public partial class BrickRamp : Prop, IStargateRamp, IGateSpawner
 	public int AmountOfGates => 1;
 
 	public Vector3[] StargatePositionOffset => new Vector3[] {
-		new Vector3( 0, 0, -10 )
+		new Vector3( 0, 0, 90 )
 	};
 
 	public Angles[] StargateRotationOffset => new Angles[] {
