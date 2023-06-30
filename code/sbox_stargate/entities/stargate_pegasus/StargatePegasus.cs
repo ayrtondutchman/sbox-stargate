@@ -164,11 +164,11 @@ public partial class StargatePegasus : Stargate
 
 	// CHEVRON ANIMS & SOUNDS
 
-	public void ChevronActivate( Chevron chev, float delay = 0, bool turnon = true, bool chevLock = false, bool longer = false, bool shorter = false )
+	public void ChevronActivate( Chevron chev, float delay = 0, bool turnon = true, bool chevLock = false, bool longer = false, bool shorter = false, bool nosound = false )
 	{
 		if ( chev.IsValid() )
 		{
-			Stargate.PlaySound( chev, GetSound( "chevron" + (chevLock ? "_lock" : "") + (Inbound ? "_inbound" : "") + ( longer ? "_longer" : "" ) + (shorter ? "_shorter" : "") ), delay );
+			if (!nosound) Stargate.PlaySound( chev, GetSound( "chevron" + (chevLock ? "_lock" : "") + (Inbound ? "_inbound" : "") + ( longer ? "_longer" : "" ) + (shorter ? "_shorter" : "") ), delay );
 			if (turnon) chev.TurnOn( delay );
 		}
 	}
@@ -416,8 +416,10 @@ public partial class StargatePegasus : Stargate
 			for ( var i = 1; i <= address.Length; i++ )
 			{
 				var chev = GetChevronBasedOnAddressLength( i, address.Length );
-				ChevronActivate( chev );
+				ChevronActivate( chev, nosound: true );
 			}
+
+			PlaySound( this, GetSound( "chevron_lock_inbound" ) );
 
 			await GameTask.DelaySeconds( 0.5f );
 
