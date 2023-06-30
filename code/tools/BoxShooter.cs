@@ -7,8 +7,6 @@
 
 		string modelToShoot = "models/citizen_props/crate01.vmdl";
 
-		static bool IsWorldSlow = false;
-
 		public override void Simulate()
 		{
 			if ( Game.IsServer )
@@ -33,12 +31,6 @@
 				{
 					timeSinceShoot = 0;
 					ShootBox();
-				}
-
-				if ( Input.Pressed( InputButton.Walk ) )
-				{
-					Game.PhysicsWorld.TimeScale = IsWorldSlow ? 1 : 0.05f;
-					IsWorldSlow = !IsWorldSlow;
 				}
 			}
 		}
