@@ -7,7 +7,7 @@ public partial class BrickRamp : Prop, IStargateRamp, IGateSpawner
 {
 
 	[Net]
-	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 160 );
+	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 70 );
 	public int AmountOfGates => 1;
 
 	public Vector3[] StargatePositionOffset => new Vector3[] {
