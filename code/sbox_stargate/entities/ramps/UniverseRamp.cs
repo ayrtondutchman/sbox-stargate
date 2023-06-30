@@ -7,14 +7,14 @@ using Sandbox;
 public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 {
 	[Net]
-	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 0 );
+	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 60 );
 	public int AmountOfGates => 1;
 
 	public List<PointLightEntity> Lights = new();
 	public PointLightEntity CenterLight;
 
 	public Vector3[] StargatePositionOffset => new Vector3[] {
-		new Vector3( -108.75f, 0, 135 )
+		new Vector3( 0, 0, 90 )
 	};
 
 	public Angles[] StargateRotationOffset => new Angles[] {
@@ -22,6 +22,8 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 	};
 
 	public List<Stargate> Gate { get; set; } = new();
+
+	public Color LightColor => Color.FromBytes( 230, 215, 240 ) * 0.3f;
 
 	public override void Spawn()
 	{
@@ -41,15 +43,15 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 		await GameTask.NextPhysicsFrame();
 
 		Transform t;
-		CapsuleLightEntity light;
+		RectangleLightEntity light;
 
-		for (var i = 1; i <= 4; i++)
+		for ( var i = 1; i <= 4; i++ )
 		{
 			t = (Transform)GetAttachment( $"light{i}" );
-			light = new CapsuleLightEntity();
-			light.Color = Color.FromBytes( 230, 215, 240 ) * 0.2f;
-			light.CapsuleLength = 48;
-			light.LightSize = 0.05f;
+			light = new RectangleLightEntity();
+			light.Color = LightColor;
+			light.PlaneHeight = 38;
+			light.LightSize = 0.5f;
 			light.Position = t.Position;
 			light.Rotation = t.Rotation;
 			light.Brightness = 0;
@@ -60,10 +62,10 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 		for ( var i = 5; i <= 8; i++ )
 		{
 			t = (Transform)GetAttachment( $"light{i}" );
-			light = new CapsuleLightEntity();
-			light.Color = Color.FromBytes( 230, 215, 240 ) * 0.2f;
-			light.CapsuleLength = 22;
-			light.LightSize = 0.05f;
+			light = new RectangleLightEntity();
+			light.Color = LightColor;
+			light.PlaneHeight = 18;
+			light.LightSize = 0.5f;
 			light.Position = t.Position;
 			light.Rotation = t.Rotation;
 			light.Brightness = 0;
@@ -74,7 +76,7 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 		// center ramp light
 		var t_c = (Transform)GetAttachment( $"light9" );
 		var light_c = new PointLightEntity();
-		light_c.Color = Color.FromBytes(230, 215, 240) * 0.2f;
+		light_c.Color = LightColor;
 		light_c.LightSize = 0.2f;
 		light_c.Position = t_c.Position;
 		light_c.Rotation = t_c.Rotation;
@@ -103,14 +105,16 @@ public partial class UniverseRamp : Prop, IStargateRamp, IGateSpawner
 		foreach ( var light in Lights )
 		{
 			light.Brightness = light.Brightness.LerpTo( shouldGlow ? 0.1f : 0f, Time.Delta * (shouldGlow ? 4 : 16) );
+			light.Color = LightColor;
 		}
 
 		if ( CenterLight.IsValid() )
 		{
 			CenterLight.Brightness = CenterLight.Brightness.LerpTo( shouldCenterGlow ? 0.1f : 0f, Time.Delta * (shouldCenterGlow ? 4 : 16) );
+			CenterLight.Color = LightColor;
 		}
 
-		SetMaterialGroup( shouldGlow ? (shouldCenterGlow ? 2 : 1) : 0 );
+		SetMaterialGroup( shouldCenterGlow ? 2 : 0 );
 	}
 
 	public void FromJson( JsonElement data )

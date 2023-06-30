@@ -139,8 +139,8 @@
 						_class = "Attachment"
 						name = "light1"
 						parent_bone = ""
-						relative_origin = [ 124.0, 70.5, 30.0 ]
-						relative_angles = [ 17.0, 0.0, 0.0 ]
+						relative_origin = [ 233.5, 70.5, -39.0 ]
+						relative_angles = [ -73.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -148,8 +148,8 @@
 						_class = "Attachment"
 						name = "light2"
 						parent_bone = ""
-						relative_origin = [ 124.0, -70.5, 30.0 ]
-						relative_angles = [ 17.0, 0.0, 0.0 ]
+						relative_origin = [ 233.5, -70.5, -39.0 ]
+						relative_angles = [ -73.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -157,8 +157,8 @@
 						_class = "Attachment"
 						name = "light3"
 						parent_bone = ""
-						relative_origin = [ 15.0, 70.5, 64.0 ]
-						relative_angles = [ 17.0, 0.0, 0.0 ]
+						relative_origin = [ 124.5, 70.5, -5.5 ]
+						relative_angles = [ -73.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -166,8 +166,8 @@
 						_class = "Attachment"
 						name = "light4"
 						parent_bone = ""
-						relative_origin = [ 15.0, -70.5, 64.0 ]
-						relative_angles = [ 17.0, 0.0, 0.0 ]
+						relative_origin = [ 124.5, -70.5, -5.5 ]
+						relative_angles = [ -73.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -175,8 +175,8 @@
 						_class = "Attachment"
 						name = "light5"
 						parent_bone = ""
-						relative_origin = [ -74.699997, 143.0, 14.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
+						relative_origin = [ 35.0, 142.5, -55.5 ]
+						relative_angles = [ -45.0, 90.0, 90.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -184,8 +184,8 @@
 						_class = "Attachment"
 						name = "light6"
 						parent_bone = ""
-						relative_origin = [ -74.699997, -143.0, 14.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
+						relative_origin = [ 35.0, -142.5, -55.5 ]
+						relative_angles = [ -45.0, -90.0, 90.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -193,8 +193,8 @@
 						_class = "Attachment"
 						name = "light7"
 						parent_bone = ""
-						relative_origin = [ -144.0, 143.0, 14.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
+						relative_origin = [ -35.0, 142.5, -55.5 ]
+						relative_angles = [ -45.0, 90.0, 90.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -202,8 +202,8 @@
 						_class = "Attachment"
 						name = "light8"
 						parent_bone = ""
-						relative_origin = [ -144.0, -143.0, 14.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
+						relative_origin = [ -35.0, -142.5, -55.5 ]
+						relative_angles = [ -45.0, -90.0, 90.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -211,10 +211,25 @@
 						_class = "Attachment"
 						name = "light9"
 						parent_bone = ""
-						relative_origin = [ -74.0, 0.0, 70.0 ]
+						relative_origin = [ 35.0, 0.0, 0.5 ]
 						relative_angles = [ -90.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
+					},
+				]
+			},
+			{
+				_class = "ModelModifierList"
+				children = 
+				[
+					{
+						_class = "ModelModifier_ScaleAndMirror"
+						scale = 0.8
+						mirror_x = false
+						mirror_y = false
+						mirror_z = false
+						flip_bone_forward = false
+						swap_left_and_right_bones = false
 					},
 				]
 			},
