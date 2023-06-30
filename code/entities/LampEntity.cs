@@ -10,6 +10,8 @@ public partial class LampEntity : SpotLightEntity, IUse
 
 		SetModel( "models/torch/torch.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
+
+		Tags.Add( "solid", "undoable" );
 	}
 
 	public bool IsUsable( Entity user )

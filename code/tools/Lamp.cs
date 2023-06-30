@@ -5,7 +5,7 @@
 	{
 		PreviewEntity previewModel;
 
-		private string Model => "models/torch/torch.vmdl";
+		private string Model => Cloud.Model( "facepunch.studio_light_projector" ).Name;
 
 		protected override bool IsPreviewTraceValid( TraceResult tr )
 		{

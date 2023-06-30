@@ -7,7 +7,7 @@ namespace Sandbox.Tools
 	{
 		PreviewEntity previewModel;
 
-		private string Model => "models/light/light_tubular.vmdl";
+		private string Model => Cloud.Model( "facepunch.ceiling_light" ).Name;
 
 		protected override bool IsPreviewTraceValid( TraceResult tr )
 		{
