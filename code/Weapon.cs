@@ -145,7 +145,7 @@ public partial class Weapon : BaseWeapon, IUse
 
 		var trace = Trace.Ray( start, end )
 				.UseHitboxes()
-				.WithAnyTags( "solid", "player", "npc", "glass", "eventhorizon" )
+				.WithAnyTags( "solid", "player", "npc", "glass", StargateTags.EventHorizon )
 				.Ignore( this )
 				.Size( radius );
 
