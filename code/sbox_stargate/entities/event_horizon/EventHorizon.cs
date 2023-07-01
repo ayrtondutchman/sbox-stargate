@@ -207,7 +207,12 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !this.IsValid() || !ent.IsValid() ) return false;
 
 		// lets hope this is less buggy than checking the pos/masscenter
-		return ent.Tags.Has( StargateTags.BehindGate ) && !ent.Tags.Has( StargateTags.BeforeGate );
+		if ( ent is Player )
+			return ent.Tags.Has( StargateTags.BehindGate ) && !ent.Tags.Has( StargateTags.BeforeGate );
+
+		var model = (ent as ModelEntity);
+		if ( !model.PhysicsBody.IsValid() ) return false;
+		return IsPointBehindEventHorizon( model.PhysicsBody.MassCenter ); // check masscenter instead
 	}
 
 	public bool IsCameraBehindEventHorizon()
@@ -923,6 +928,23 @@ public partial class EventHorizon : AnimatedEntity
 			else
 				EntityPositionsPrevious.TryAdd( ent, prevPos );
 		}
-		
+
+	}
+
+	//[GameEvent.Client.Frame]
+	public void DrawEntPositions()
+	{
+		foreach ( var ent in All.OfType<ModelEntity>().Where( x => x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) )
+		{
+			if ( !Stargate.IsAllowedForGateTeleport( ent ) ) continue;
+
+			var mdl = (ModelEntity) ent;
+
+			if ( mdl.IsValid() )
+			{
+				DebugOverlay.Sphere( mdl.Position, 8f, Color.Red, depthTest: false );
+				DebugOverlay.Sphere( mdl.CollisionWorldSpaceCenter, 8f, Color.Blue, depthTest: false );
+			}
+		}
 	}
 }
