@@ -205,9 +205,9 @@ public partial class EventHorizon : AnimatedEntity
 	public bool IsEntityBehindEventHorizon( Entity ent )
 	{
 		if ( !this.IsValid() || !ent.IsValid() ) return false;
-		var model = (ent as ModelEntity);
-		if ( !model.PhysicsBody.IsValid() ) return false;
-		return IsPointBehindEventHorizon( model.PhysicsBody.MassCenter ); // check masscenter instead
+
+		// lets hope this is less buggy than checking the pos/masscenter
+		return ent.Tags.Has( StargateTags.BehindGate ) && !ent.Tags.Has( StargateTags.BeforeGate );
 	}
 
 	public bool IsPawnBehindEventHorizon( Entity pawn )
@@ -455,6 +455,13 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void DissolveEntity( Entity ent )
 	{
+		// remove ent from both EH buffers (just in case something fucks up)
+		BufferFront.Remove( ent );
+		BufferBack.Remove( ent );
+
+		GetOther()?.BufferFront.Remove( ent );
+		GetOther()?.BufferBack.Remove( ent );
+
 		if ( ent is SandboxPlayer ply )
 		{
 			ply.Health = 1;
@@ -526,6 +533,10 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void OnEntityFullyEntered( ModelEntity ent, bool fromBack = false )
 	{
+		// don't try to teleport a dead player
+		if ( ent is Player ply && ply.Health <= 0 )
+			return;
+
 		if ( fromBack )
 		{
 			BufferBack.Remove( ent );
