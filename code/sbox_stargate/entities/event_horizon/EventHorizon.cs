@@ -210,12 +210,9 @@ public partial class EventHorizon : AnimatedEntity
 		return ent.Tags.Has( StargateTags.BehindGate ) && !ent.Tags.Has( StargateTags.BeforeGate );
 	}
 
-	public bool IsPawnBehindEventHorizon( Entity pawn )
+	public bool IsCameraBehindEventHorizon()
 	{
-		if ( !this.IsValid() || !pawn.IsValid() ) return false;
-
-		var ply = pawn as Player;
-		if ( !ply.IsValid() ) return false;
+		if ( !this.IsValid()  ) return false;
 
 		return (Camera.Position - Position).Dot( Rotation.Forward ) < 0;
 	}
@@ -320,8 +317,7 @@ public partial class EventHorizon : AnimatedEntity
 	public void ClientAlphaRenderLogic()
 	{
 		// draw the EH at 0.6 alpha when looking at it from behind
-		var pawn = Game.LocalPawn;
-		if ( pawn.IsValid() ) RenderColor = RenderColor.WithAlpha( IsPawnBehindEventHorizon( pawn ) ? 0.6f : 1f );
+		RenderColor = RenderColor.WithAlpha( IsCameraBehindEventHorizon() ? 0.6f : 1f );
 	}
 
 	// CLIENT LOGIC
