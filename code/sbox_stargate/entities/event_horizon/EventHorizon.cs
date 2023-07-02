@@ -411,12 +411,17 @@ public partial class EventHorizon : AnimatedEntity
 		var localVelNorm = Transform.NormalToLocal( ent.Velocity.Normal );
 		var otherVelNorm = otherEH.Transform.NormalToWorld( localVelNorm.WithX( -localVelNorm.x ).WithY( -localVelNorm.y ) );
 
-		var scaleDiff = otherEH.Scale / Scale;
-		var localPos = Transform.PointToLocal( ent.Position );
-		var otherPos = otherEH.Transform.PointToWorld( localPos.WithY( -localPos.y ) * scaleDiff );
+		var center = (ent as ModelEntity)?.CollisionWorldSpaceCenter ?? ent.Position;
+		var otherTransformRotated = otherEH.Transform.RotateAround( otherEH.Position, Rotation.FromAxis( otherEH.Rotation.Up, 180 ) );
+
+		var localCenter = Transform.PointToLocal( center );
+		var otherCenter = otherTransformRotated.PointToWorld( localCenter.WithX( -localCenter.x ) );
 
 		var localRot = Transform.RotationToLocal( ent.Rotation );
-		var otherRot = otherEH.Transform.RotationToWorld( localRot.RotateAroundAxis( localRot.Up, 180f ) );
+		var otherRot = otherTransformRotated.RotationToWorld( localRot );
+
+		var entPosCenterDiff = ent.Transform.PointToLocal( ent.Position ) - ent.Transform.PointToLocal( center );
+		var otherPos = otherCenter + otherRot.Forward * entPosCenterDiff.x + otherRot.Right * entPosCenterDiff.y + otherRot.Up * entPosCenterDiff.z;
 
 		if ( ent is SandboxPlayer ply )
 		{
@@ -853,7 +858,7 @@ public partial class EventHorizon : AnimatedEntity
 			EntityTimeSinceTeleported.Add( ent, lastTime );
 	}
 
-	[GameEvent.Physics.PostStep]
+	//[GameEvent.Physics.PostStep]
 	private static void HandleFastMovingEntities() // fix for fast moving objects
 	{
 		if ( !Game.IsServer )
@@ -929,22 +934,5 @@ public partial class EventHorizon : AnimatedEntity
 				EntityPositionsPrevious.TryAdd( ent, prevPos );
 		}
 
-	}
-
-	//[GameEvent.Client.Frame]
-	public void DrawEntPositions()
-	{
-		foreach ( var ent in All.OfType<ModelEntity>().Where( x => x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) )
-		{
-			if ( !Stargate.IsAllowedForGateTeleport( ent ) ) continue;
-
-			var mdl = (ModelEntity) ent;
-
-			if ( mdl.IsValid() )
-			{
-				DebugOverlay.Sphere( mdl.Position, 8f, Color.Red, depthTest: false );
-				DebugOverlay.Sphere( mdl.CollisionWorldSpaceCenter, 8f, Color.Blue, depthTest: false );
-			}
-		}
 	}
 }
