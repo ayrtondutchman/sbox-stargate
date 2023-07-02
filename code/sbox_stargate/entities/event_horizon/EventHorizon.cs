@@ -207,8 +207,8 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !this.IsValid() || !ent.IsValid() ) return false;
 
 		// lets hope this is less buggy than checking the pos/masscenter
-		if ( ent is Player )
-			return ent.Tags.Has( StargateTags.BehindGate ) && !ent.Tags.Has( StargateTags.BeforeGate );
+		//if ( ent is Player )
+		//	return ent.Tags.Has( StargateTags.BehindGate ) && !ent.Tags.Has( StargateTags.BeforeGate );
 
 		var model = (ent as ModelEntity);
 		if ( !model.PhysicsBody.IsValid() ) return false;
