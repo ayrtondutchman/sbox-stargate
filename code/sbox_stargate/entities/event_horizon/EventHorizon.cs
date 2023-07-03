@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -213,6 +214,21 @@ public partial class EventHorizon : AnimatedEntity
 		var model = (ent as ModelEntity);
 		if ( !model.PhysicsBody.IsValid() ) return false;
 		return IsPointBehindEventHorizon( model.PhysicsBody.MassCenter ); // check masscenter instead
+	}
+
+	// velocity based checking if entity was just behind the EH or not
+	public bool WasEntityJustComingFromBehindEventHorizon( Entity ent )
+	{
+		if ( !this.IsValid() || !ent.IsValid() ) return false;
+
+		var model = (ent as ModelEntity);
+		if ( !model.PhysicsBody.IsValid() ) return false;
+
+		var vel = model.Velocity;
+		var start = model.CollisionWorldSpaceCenter - vel.Normal * 1024;
+		var end = model.CollisionWorldSpaceCenter + vel.Normal * 1024;
+
+		return (IsPointBehindEventHorizon( start ) && !IsPointBehindEventHorizon( end ));
 	}
 
 	public bool IsCameraBehindEventHorizon()
@@ -661,7 +677,7 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.StartTouch( other );
 
-		StartTouchEH( other, IsEntityBehindEventHorizon( other ) );
+		StartTouchEH( other, WasEntityJustComingFromBehindEventHorizon( other ) );
 	}
 
 	public void StartTouchEH( Entity other, bool fromBack )
@@ -858,7 +874,7 @@ public partial class EventHorizon : AnimatedEntity
 			EntityTimeSinceTeleported.Add( ent, lastTime );
 	}
 
-	//[GameEvent.Physics.PostStep]
+	[GameEvent.Physics.PostStep]
 	private static void HandleFastMovingEntities() // fix for fast moving objects
 	{
 		if ( !Game.IsServer )
@@ -866,22 +882,24 @@ public partial class EventHorizon : AnimatedEntity
 
 		foreach ( var ent in All.OfType<ModelEntity>().Where( x => x is not Player && (x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) && Stargate.IsAllowedForGateTeleport( x ) ) )
 		{
+			var shouldTeleport = true;
+
 			if ( ent.Tags.Has( StargateTags.ExittingFromEventHorizon ) )
-				continue;
+				shouldTeleport = false;
 
 			if ( EntityPositionsPrevious.ContainsKey( ent ) )
 			{
 				if ( !ent.PhysicsBody.IsValid() )
-					continue;
+					shouldTeleport = false;
 
 				if ( ent.Velocity.LengthSquared < FastMovingVelocityThresholdSqr )
-					continue;
+					shouldTeleport = false;
 
 				var oldPos = EntityPositionsPrevious[ent];
-				var newPos = ent.PhysicsBody.MassCenter;
+				var newPos = ent.CollisionWorldSpaceCenter;
 
-				// dont do nothing if we arent moving
-				if (oldPos != newPos)
+				// dont do nothing if we arent moving or if we shouldnt teleport
+				if ( shouldTeleport && (oldPos != newPos) )
 				{
 					// trace between old and new position to check if we passed through the EH
 					var tr = Trace.Ray( oldPos, newPos ).WithTag( StargateTags.EventHorizon ).Run();
@@ -895,39 +913,48 @@ public partial class EventHorizon : AnimatedEntity
 						{
 							var eh = tr.Entity as EventHorizon;
 							if ( eh.CurrentTeleportingEntity == ent || eh.BufferBack.Contains(ent) || eh.BufferFront.Contains(ent) ) // if we already touched the EH, dont do anything
-								continue;
-
-							var fromBack = Stargate.IsPointBehindEventHorizon( oldPos, eh.Gate );
-							var gate = eh.Gate;
-							if ( !fromBack && gate.IsValid() && !gate.Inbound )
 							{
-								async void tpFunc()
+								shouldTeleport = false;
+							}
+
+							// at this point we should be fine to teleport
+							if (shouldTeleport)
+							{
+								var fromBack = Stargate.IsPointBehindEventHorizon( oldPos, eh.Gate );
+								var gate = eh.Gate;
+								if ( !gate.IsValid() )
+									continue;
+
+								if ( !fromBack && gate.IsValid() && !gate.Inbound )
 								{
-									ent.EnableDrawing = false;
-									ent.Tags.Add( StargateTags.ExittingFromEventHorizon );
-									eh.TeleportEntity( ent );
+									async void tpFunc()
+									{
+										ent.EnableDrawing = false;
+										ent.Tags.Add( StargateTags.ExittingFromEventHorizon );
+										eh.TeleportEntity( ent );
 
-									await GameTask.NextPhysicsFrame(); // cheap trick to avoid seeing the entity on the wrong side of the EH for a few frames
-									if ( !eh.IsValid() )
-										return;
+										await GameTask.NextPhysicsFrame(); // cheap trick to avoid seeing the entity on the wrong side of the EH for a few frames
+										if ( !eh.IsValid() )
+											return;
 
-									ent.EnableDrawing = true;
+										ent.EnableDrawing = true;
+									}
+
+									eh.TeleportLogic( ent, () => tpFunc(), true );
+								}
+								else
+								{
+									eh.DissolveEntity( ent );
 								}
 
-								eh.TeleportLogic( ent, () => tpFunc(), true );
+								eh.PlayTeleportSound();
 							}
-							else
-							{
-								eh.DissolveEntity( ent );
-							}
-
-							eh.PlayTeleportSound();
 						}
 					}
 				}
 			}
 
-			var prevPos = ent.PhysicsBody.IsValid() ? ent.PhysicsBody.MassCenter : ent.Position;
+			var prevPos = ent.PhysicsBody.IsValid() ? ent.CollisionWorldSpaceCenter : ent.Position;
 			if ( EntityPositionsPrevious.ContainsKey( ent ) )
 				EntityPositionsPrevious[ent] = prevPos;
 			else
