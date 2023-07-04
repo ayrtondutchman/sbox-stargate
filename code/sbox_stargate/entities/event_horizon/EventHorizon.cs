@@ -493,13 +493,13 @@ public partial class EventHorizon : AnimatedEntity
 			ply.TakeDamage( dmg );
 
 			RemoveDeathRagdoll( To.Single( ply ), ply );
-
-			PlayTeleportSound();
 		}
 		else
 		{
 			ent.Delete();
 		}
+
+		PlayTeleportSound();
 	}
 
 	public void OnEntityEntered( ModelEntity ent, bool fromBack = false )
@@ -586,7 +586,7 @@ public partial class EventHorizon : AnimatedEntity
 				ent.EnableDrawing = true;
 			}
 
-			TeleportLogic( ent, () => tpFunc(), true );
+			TeleportLogic( ent, () => tpFunc(), fromBack );
 		}
 
 		PlayTeleportSound(); // event horizon always plays sound if something entered it
@@ -625,9 +625,9 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
-	public void TeleportLogic( Entity other, Action teleportFunc, bool skipSideChecks = false )
+	public void TeleportLogic( Entity other, Action teleportFunc, bool fromBack )
 	{
-		if ( !IsEntityBehindEventHorizon( other ) && Gate.IsIrisClosed() ) // if we try to enter any gate from front and it has an active iris, do nothing
+		if ( !fromBack && Gate.IsIrisClosed() ) // if we try to enter any gate from front and it has an active iris, do nothing
 			return;
 
 		if ( Gate.Inbound || !IsFullyFormed ) // if we entered inbound gate from any direction, dissolve
@@ -636,7 +636,7 @@ public partial class EventHorizon : AnimatedEntity
 		}
 		else // we entered a good gate
 		{
-			if ( !skipSideChecks && IsEntityBehindEventHorizon( other ) ) // check if we entered from the back and if yes, dissolve
+			if ( fromBack ) // check if we entered from the back and if yes, dissolve
 			{
 				DissolveEntity( other );
 			}
@@ -677,7 +677,7 @@ public partial class EventHorizon : AnimatedEntity
 	{
 		base.StartTouch( other );
 
-		StartTouchEH( other, WasEntityJustComingFromBehindEventHorizon( other ) );
+		StartTouchEH( other, Gate.IsIrisClosed() ? IsEntityBehindEventHorizon( other ) : WasEntityJustComingFromBehindEventHorizon( other ) );
 	}
 
 	public void StartTouchEH( Entity other, bool fromBack )
@@ -688,6 +688,9 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !Stargate.IsAllowedForGateTeleport( other ) )
 			return;
 
+		if ( !fromBack && Gate.IsIrisClosed() )
+			return;
+
 		if ( !IsFullyFormed )
 		{
 			DissolveEntity( other );
@@ -695,7 +698,7 @@ public partial class EventHorizon : AnimatedEntity
 
 		if ( ShouldTeleportInstantly( other ) ) // players, projectiles and whatnot should get teleported instantly on EH touch
 		{
-			TeleportLogic( other, () => TeleportEntity( other ) );
+			TeleportLogic( other, () => TeleportEntity( other ), fromBack );
 		}
 		else if ( other is ModelEntity modelEnt ) // props get handled differently (aka model clipping)
 		{
@@ -724,6 +727,9 @@ public partial class EventHorizon : AnimatedEntity
 			Gate.OtherGate.EventHorizon.CurrentTeleportingEntity = null;
 			return;
 		}
+
+		if ( !BufferFront.Concat( BufferBack ).Contains( other ) )
+			return;
 
 		if ( !fromBack ) // entered from front
 		{
@@ -922,10 +928,11 @@ public partial class EventHorizon : AnimatedEntity
 							{
 								var fromBack = Stargate.IsPointBehindEventHorizon( oldPos, eh.Gate );
 								var gate = eh.Gate;
-								if ( !gate.IsValid() )
+
+								if ( gate.IsIrisClosed() && !fromBack )
 									continue;
 
-								if ( !fromBack && gate.IsValid() && !gate.Inbound )
+								if ( gate.IsValid() )
 								{
 									async void tpFunc()
 									{
@@ -940,14 +947,8 @@ public partial class EventHorizon : AnimatedEntity
 										ent.EnableDrawing = true;
 									}
 
-									eh.TeleportLogic( ent, () => tpFunc(), true );
+									eh.TeleportLogic( ent, () => tpFunc(), fromBack );
 								}
-								else
-								{
-									eh.DissolveEntity( ent );
-								}
-
-								eh.PlayTeleportSound();
 							}
 						}
 					}
