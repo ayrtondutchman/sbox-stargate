@@ -178,7 +178,7 @@ public partial class EventHorizon : AnimatedEntity
 		await GameTask.DelaySeconds( 1f );
 		if ( !this.IsValid() ) return;
 
-		foreach ( var ent in BufferFront.Concat( BufferBack ) )
+		foreach ( var ent in BufferFront.Concat( BufferBack ).Reverse() )
 		{
 			DissolveEntity( ent );
 		}
