@@ -918,7 +918,7 @@ public partial class EventHorizon : AnimatedEntity
 						if ( timeSinceTp > 0.1 || timeSinceTp == -1 )
 						{
 							var eh = tr.Entity as EventHorizon;
-							if ( eh.CurrentTeleportingEntity == ent || eh.BufferBack.Contains(ent) || eh.BufferFront.Contains(ent) ) // if we already touched the EH, dont do anything
+							if ( eh.CurrentTeleportingEntity == ent || eh.BufferFront.Concat( eh.BufferBack ).Contains( ent ) ) // if we already touched the EH, dont do anything
 							{
 								shouldTeleport = false;
 							}
