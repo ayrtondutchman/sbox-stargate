@@ -799,12 +799,12 @@ public partial class EventHorizon : AnimatedEntity
 
 	private Plane ClipPlaneFront
 	{
-		get => new Plane( Position - Camera.Position, Rotation.Forward.Normal );
+		get => new Plane( Position - Camera.Position + Rotation.Forward * 0.75f, Rotation.Forward.Normal );
 	}
 
 	private Plane ClipPlaneBack
 	{
-		get => new Plane( Position - Camera.Position, -Rotation.Forward.Normal );
+		get => new Plane( Position - Camera.Position - Rotation.Forward * 0.75f, -Rotation.Forward.Normal );
 	}
 
 	[ClientRpc]
