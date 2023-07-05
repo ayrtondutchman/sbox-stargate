@@ -414,12 +414,20 @@ partial class SandboxGame : GameManager
 
 				if ( action == "drop" )
 				{
-					Prop modelEntity2 = new Prop();
-					modelEntity2.SetModel( meta );
-					modelEntity2.Position = hitPosition + GetBoundsOffset( dragSceneObject.LocalBounds, traceResult.Normal );
-					modelEntity2.Rotation = rotation;
-					modelEntity2.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
-					modelEntity2.Tags.Add( "undoable" );
+					try
+					{
+						Prop modelEntity2 = new Prop();
+						modelEntity2.SetModel( meta );
+						modelEntity2.Position = hitPosition + GetBoundsOffset( dragSceneObject.LocalBounds, traceResult.Normal );
+						modelEntity2.Rotation = rotation;
+						modelEntity2.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+						modelEntity2.Tags.Add( "undoable" );
+					}
+					catch
+					{
+						Log.Warning( "Failed to spawn cloud model, model probably not yet downloaded" );
+					}
+
 				}
 
 				return true;
