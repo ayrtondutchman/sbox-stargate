@@ -33,16 +33,16 @@
 				[
 					{
 						_class = "DefaultMaterialGroup"
-						name = "off"
+						name = "mw"
 						remaps = 
 						[
 							{
 								from = "buttons_sg1_off.vmat"
-								to = "models/sbox_stargate/dhd/dhd_buttons_sg1_off.vmat"
+								to = "models/sbox_stargate/dhd/dhd_buttons_mw.vmat"
 							},
 							{
 								from = "top_sg1.vmat"
-								to = "models/sbox_stargate/dhd/dhd_top.vmat"
+								to = "models/sbox_stargate/dhd/dhd_mw.vmat"
 							},
 						]
 						use_global_default = false
@@ -50,42 +50,16 @@
 					},
 					{
 						_class = "MaterialGroup"
-						name = "on"
+						name = "peg"
 						remaps = 
 						[
 							{
-								from = "models/sbox_stargate/dhd/dhd_buttons_sg1_off.vmat"
-								to = "models/sbox_stargate/dhd/dhd_buttons_sg1_on.vmat"
-							},
-						]
-					},
-					{
-						_class = "MaterialGroup"
-						name = "off_sga"
-						remaps = 
-						[
-							{
-								from = "models/sbox_stargate/dhd/dhd_buttons_sg1_off.vmat"
-								to = "models/sbox_stargate/dhd/dhd_buttons_sga_off.vmat"
+								from = "models/sbox_stargate/dhd/dhd_buttons_mw.vmat"
+								to = "models/sbox_stargate/dhd/dhd_buttons_peg.vmat"
 							},
 							{
-								from = "models/sbox_stargate/dhd/dhd_top.vmat"
-								to = "models/sbox_stargate/dhd/dhd_top_sga.vmat"
-							},
-						]
-					},
-					{
-						_class = "MaterialGroup"
-						name = "on_sga"
-						remaps = 
-						[
-							{
-								from = "models/sbox_stargate/dhd/dhd_buttons_sg1_off.vmat"
-								to = "models/sbox_stargate/dhd/dhd_buttons_sga_on.vmat"
-							},
-							{
-								from = "models/sbox_stargate/dhd/dhd_top.vmat"
-								to = "models/sbox_stargate/dhd/dhd_top_sga.vmat"
+								from = "models/sbox_stargate/dhd/dhd_mw.vmat"
+								to = "models/sbox_stargate/dhd/dhd_peg.vmat"
 							},
 						]
 					},

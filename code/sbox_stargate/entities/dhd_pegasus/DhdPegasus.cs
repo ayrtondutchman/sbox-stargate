@@ -10,7 +10,7 @@ public partial class DhdPegasus : Dhd
 
 	public DhdPegasus()
 	{
-		Data = new( 2, 3, "dhd.atlantis.press", "dhd.press_dial" );
+		Data = new( 1, 1, "dhd.atlantis.press", "dhd.press_dial" );
 	}
 
 	public override void Spawn()
@@ -25,5 +25,10 @@ public partial class DhdPegasus : Dhd
 		SetMaterialGroup( 1 );
 
 		CreateButtons();
+
+		foreach (var button in Buttons.Values )
+		{
+			button.SetMaterialGroup( "peg" );
+		}
 	}
 }

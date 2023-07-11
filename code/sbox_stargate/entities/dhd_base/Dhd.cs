@@ -40,7 +40,7 @@ public abstract partial class Dhd : Prop
 	protected bool IsDialLocking = false;
 
 	[Net]
-	public IList<int> ButtonSkins { get; set; } = new List<int> { 0, 1 };
+	public IList<int> ButtonSkins { get; set; } = new List<int> { 0, 0 };
 
 	// Button positions for DhdWorldPanel
 	protected virtual Dictionary<string, Vector3> ButtonPositions => new()
@@ -238,18 +238,6 @@ public abstract partial class Dhd : Prop
 	public void DisableAllButtons()
 	{
 		foreach ( DhdButton b in Buttons.Values ) SetButtonState( b, false );
-	}
-
-	// TOUCH
-	public override void StartTouch( Entity other )
-	{
-		base.StartTouch( other );
-
-		if (other is Stargate gate)
-		{
-			Gate = gate;
-			PlaySound( "balloon_pop_cute" );
-		}
 	}
 
 	// BUTTON PRESS LOGIC

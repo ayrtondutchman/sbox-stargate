@@ -18,5 +18,10 @@ public partial class DhdMilkyWay : Dhd
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
 		CreateButtons();
+
+		foreach ( var button in Buttons.Values )
+		{
+			button.SetMaterialGroup( "mw" );
+		}
 	}
 }

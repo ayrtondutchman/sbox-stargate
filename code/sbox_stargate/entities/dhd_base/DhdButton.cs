@@ -14,6 +14,8 @@ public partial class DhdButton : AnimatedEntity, IUse
 	[Net]
 	public bool Disabled { get; set; } = false;
 
+	float GlowScale = 0;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -43,12 +45,15 @@ public partial class DhdButton : AnimatedEntity, IUse
 		if ( Health <= 0 ) Delete();
 	}
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void ButtonGlowLogic()
 	{
-		if (DHD.IsValid())
-		{
-			SetMaterialGroup( On ? DHD.Data.ButtonSkinOn : DHD.Data.ButtonSkinOff );
-		}
+		var so = SceneObject;
+		if ( !so.IsValid() ) return;
+
+		GlowScale = GlowScale.LerpTo( On ? 1 : 0, Time.Delta * (On ? 2f : 20f) );
+
+		so.Batchable = false;
+		so.Attributes.Set( "selfillumscale", GlowScale );
 	}
 }

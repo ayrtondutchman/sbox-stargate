@@ -73,25 +73,9 @@
 				[
 					{
 						_class = "DefaultMaterialGroup"
-						name = "sg1"
+						name = "mw"
 						remaps = 
 						[
-							{
-								from = "bottom_sg1.vmat"
-								to = "models/sbox_stargate/dhd/dhd_bottom.vmat"
-							},
-							{
-								from = "core.vmat"
-								to = "models/sbox_stargate/dhd/dhd_core.vmat"
-							},
-							{
-								from = "mid_sg1.vmat"
-								to = "models/sbox_stargate/dhd/dhd_mid.vmat"
-							},
-							{
-								from = "top_sg1.vmat"
-								to = "models/sbox_stargate/dhd/dhd_top.vmat"
-							},
 							{
 								from = "crystal_yellow.vmat"
 								to = "models/sbox_stargate/dhd/dhd_crystal_yellow.vmat"
@@ -108,26 +92,22 @@
 								from = "crystal_blue.vmat"
 								to = "models/sbox_stargate/dhd/dhd_crystal_blue.vmat"
 							},
+							{
+								from = "dhd.vmat"
+								to = "models/sbox_stargate/dhd/dhd_mw.vmat"
+							},
 						]
 						use_global_default = false
 						global_default_material = ""
 					},
 					{
 						_class = "MaterialGroup"
-						name = "sga"
+						name = "peg"
 						remaps = 
 						[
 							{
-								from = "models/sbox_stargate/dhd/dhd_bottom.vmat"
-								to = "models/sbox_stargate/dhd/dhd_bottom_sga.vmat"
-							},
-							{
-								from = "models/sbox_stargate/dhd/dhd_mid.vmat"
-								to = "models/sbox_stargate/dhd/dhd_mid_sga.vmat"
-							},
-							{
-								from = "models/sbox_stargate/dhd/dhd_top.vmat"
-								to = "models/sbox_stargate/dhd/dhd_top_sga.vmat"
+								from = "models/sbox_stargate/dhd/dhd_mw.vmat"
+								to = "models/sbox_stargate/dhd/dhd_peg.vmat"
 							},
 						]
 					},
@@ -141,7 +121,7 @@
 						_class = "PhysicsHullFromRender"
 						parent_bone = ""
 						surface_prop = "metal"
-						collision_prop = "default"
+						collision_tags = "solid"
 						faceMergeAngle = 25.639999
 						maxHullVertices = 30
 					},
@@ -221,5 +201,6 @@
 		model_archetype = "physics_prop_model"
 		primary_associated_entity = "prop_physics"
 		anim_graph_name = ""
+		base_model_name = ""
 	}
 }
