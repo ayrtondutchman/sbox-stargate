@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sandbox;
 
 [Category( "Stargates" )]
@@ -130,7 +131,36 @@ public abstract partial class Dhd : Prop
 		await GameTask.NextPhysicsFrame();
 		if ( !this.IsValid() ) return;
 
-		Gate = Stargate.FindNearestGate( this, 1024 );
+		TryAssignGate( Stargate.FindNearestGate( this, 1024 ) );
+	}
+
+	/// <summary>
+	/// Assigns a Gate to this DHD, if no other DHD has this Gate assigned.
+	/// </summary>
+	/// <returns>Whether assignment was successful or not.</returns>
+	public bool TryAssignGate( Stargate gate )
+	{
+		if ( !gate.IsValid() )
+			return false;
+
+		foreach ( var dhd in All.OfType<Dhd>().Where( x => x != this ) )
+		{
+			if ( dhd.Gate == gate )
+				return false;
+		}
+
+		Gate = gate;
+
+		if (!Gate.Idle)
+		{
+			PressedActions.Clear();
+			foreach (var sym in Gate.DialingAddress)
+			{
+				PressedActions.Add( sym.ToString() );
+			}
+		}
+
+		return true;
 	}
 
 	public virtual void CreateSingleButton( string model, string action, bool disabled = false) // visible model of buttons that turn on/off and animate
@@ -347,23 +377,8 @@ public abstract partial class Dhd : Prop
 
 			if ( symbol != '#' && PressedActions.Contains( "#" ) ) return; // if # is pressed, and we try to depress other symbol, do nothing
 
-			if ( PressedActions.Contains( action ) ) // if symbol was pressed before already, deactivate it
-			{
-				Gate.DoDHDChevronUnlock( symbol );
-
-				if ( PressedActions.Count == 1 ) // if we are deactivating last symbol, stop dialing and go back to idle
-				{
-					Gate.ResetGateVariablesToIdle();
-				}
-
-				IsDialLocking = false;
-
-				PressedActions.Remove( action );
-				PlayButtonPressAnim( button );
-
-				Gate.TimeSinceDHDAction = 0;
-			}
-			else // otherwise activate it
+			// if symbol was already pressed, do nothing, can't deactivate, can only abort the whole sequence with center button
+			if ( !PressedActions.Contains( action ) ) // symbol wasnt pressed, go press it
 			{
 				if ( !Gate.Dialing ) // if gate wasnt dialing, begin dialing
 				{
@@ -397,7 +412,10 @@ public abstract partial class Dhd : Prop
 		if ( ((!Gate.IsValid()) || (Gate.IsValid() && Gate.Idle)) && PressedActions.Count != 0 )
 		{
 			PressedActions.Clear();
-		} 
+		}
+
+		if ( !Gate.IsValid() )
+			TryAssignGate( Stargate.FindNearestGate( this, 1024 ) );
 	}
 
 	[Event.Client.Frame]
