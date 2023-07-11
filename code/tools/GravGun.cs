@@ -108,6 +108,13 @@ public partial class GravGun : Carriable
 			if ( !modelEnt.IsValid() )
 				return;
 
+			// Dont allow touching GateSpawner entities
+			if ( GateSpawner.GateSpawnerEntites.Contains( modelEnt ) )
+				return;
+
+			if ( modelEnt.Tags.Has( "protected" ) )
+				return;
+
 			var body = tr.Body;
 
 			if ( Input.Pressed( InputButton.PrimaryAttack ) )

@@ -10,7 +10,7 @@ using Sandbox.UI;
 [Category( "Stargates" )]
 public abstract partial class Stargate : Prop, IUse
 {
-	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 90 );
+	[Net] public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 95 );
 
 	[Net]
 	public IList<Chevron> Chevrons { get; set; } = new();

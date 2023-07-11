@@ -22,8 +22,8 @@
       "Local": true,
       "OnRamp": false,
       "EntityName": "StargateMilkyWay",
-      "Position": "1902.504,1959.156,1.977",
-      "Rotation": "0,0,0.5660809,0.8243497"
+      "Position": "1902.504,1959.156,6",
+      "Rotation": "0,0,0.5684535,0.8227154"
     },
     {
       "MovieDialingType": true,
@@ -36,8 +36,8 @@
       "Local": false,
       "OnRamp": false,
       "EntityName": "StargateMovie",
-      "Position": "-3682,94.6243,146",
-      "Rotation": "0,-0,-0.9248703,0.3802828"
+      "Position": "-3682,94.6243,152",
+      "Rotation": "0,-0,-0.9260685,0.3773552"
     },
     {
       "Address": "3145",
@@ -75,7 +75,7 @@
     {
       "EntityName": "BrickRamp",
       "Position": "-1502.111,2959.028,62",
-      "Rotation": "0.000007492201,0.000002218869,-0.7085811,0.7056293"
+      "Rotation": "0.000007492202,0.000002218871,-0.7085811,0.7056295"
     },
     {
       "MovieDialingType": false,
@@ -88,8 +88,8 @@
       "Local": false,
       "OnRamp": true,
       "EntityName": "StargateMilkyWay",
-      "Position": "-1502.112,2959.027,152",
-      "Rotation": "0.000007498831,0.000002216163,-0.7090055,0.7052029"
+      "Position": "-1502.111,2959.026,157",
+      "Rotation": "0.000007492202,0.000002218871,-0.7085811,0.7056295"
     },
     {
       "EntityName": "DhdMilkyWay",
@@ -99,7 +99,7 @@
     {
       "EntityName": "BrickRamp",
       "Position": "1034,-3824,-76.5",
-      "Rotation": "-0.0000005079788,-0.000001388287,0.7097262,0.7044777"
+      "Rotation": "-0.0000005079789,-0.000001388287,0.7097262,0.7044777"
     },
     {
       "Name": "Waterway",
@@ -110,8 +110,8 @@
       "Local": true,
       "OnRamp": true,
       "EntityName": "StargatePegasus",
-      "Position": "1034,-3824,13.5",
-      "Rotation": "-0.0000005070343,-0.000001390549,0.7104608,0.7037367"
+      "Position": "1034,-3824,18.5",
+      "Rotation": "-0.0000005079793,-0.000001388288,0.7097262,0.7044777"
     }
   ]
 }

@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using Editor;
 using System.Text.Json;
 
-[HammerEntity, SupportsSolid, EditorModel( "models/sbox_stargate/ramps/sgc_ramp/sgc_ramp.vmdl" )]
+[HammerEntity, SupportsSolid, EditorModel( MODEL )]
 [Title( "SGC Ramp" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class SGCRamp : Prop, IStargateRamp, IGateSpawner
 {
 	[Net]
 	public Vector3 SpawnOffset { get; private set; } = new( 0, 0, 148 );
+	public const string MODEL = "models/sbox_stargate/ramps/sgc_ramp/sgc_ramp.vmdl";
 
 	public int AmountOfGates => 1;
 
@@ -31,8 +32,10 @@ public partial class SGCRamp : Prop, IStargateRamp, IGateSpawner
 
 		Transmit = TransmitType.Default;
 
-		SetModel("models/sbox_stargate/ramps/sgc_ramp/sgc_ramp.vmdl");
+		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
+
+		PhysicsBody.MotionEnabled = false;
 
 		Tags.Add( "solid" );
 	}

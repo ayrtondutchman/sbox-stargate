@@ -213,6 +213,9 @@ public partial class PhysGun : Carriable
 		if ( GateSpawner.GateSpawnerEntites.Contains( body.GetEntity() ) )
 			return;
 
+		if ( body.GetEntity().Tags.Has( "protected" ) )
+			return;
+
 		// Unfreeze
 		if ( body.BodyType == PhysicsBodyType.Static )
 		{
