@@ -7,6 +7,7 @@ public class ViewModel : BaseViewModel
 	protected float MaxOffsetLength => 10.0f;
 	protected float BobCycleTime => 7;
 	protected Vector3 BobDirection => new Vector3( 0.0f, 1.0f, 0.5f );
+	protected float InertiaDamping => 20.0f;
 
 	private Vector3 swingOffset;
 	private float lastPitch;
@@ -51,8 +52,11 @@ public class ViewModel : BaseViewModel
 		var newPitch = Rotation.Pitch();
 		var newYaw = Rotation.Yaw();
 
-		PitchInertia = Angles.NormalizeAngle( newPitch - lastPitch );
-		YawInertia = Angles.NormalizeAngle( lastYaw - newYaw );
+		var pitchDelta = Angles.NormalizeAngle( newPitch - lastPitch );
+		var yawDelta = Angles.NormalizeAngle( lastYaw - newYaw );
+
+		PitchInertia += pitchDelta;
+		YawInertia += yawDelta;
 
 		if ( EnableSwingAndBob )
 		{
@@ -69,9 +73,8 @@ public class ViewModel : BaseViewModel
 
 			var verticalDelta = playerVelocity.z * Time.Delta;
 			var viewDown = Rotation.FromPitch( newPitch ).Up * -1.0f;
-			verticalDelta *= (1.0f - System.MathF.Abs( viewDown.Cross( Vector3.Down ).y ));
-			var pitchDelta = PitchInertia - verticalDelta * 1;
-			var yawDelta = YawInertia;
+			verticalDelta *= 1.0f - System.MathF.Abs( viewDown.Cross( Vector3.Down ).y );
+			pitchDelta -= verticalDelta * 1.0f;
 
 			var offset = CalcSwingOffset( pitchDelta, yawDelta );
 			offset += CalcBobbingOffset( playerVelocity );
@@ -86,6 +89,9 @@ public class ViewModel : BaseViewModel
 
 		lastPitch = newPitch;
 		lastYaw = newYaw;
+
+		YawInertia = YawInertia.LerpTo( 0, Time.Delta * InertiaDamping );
+		PitchInertia = PitchInertia.LerpTo( 0, Time.Delta * InertiaDamping );
 	}
 
 	protected Vector3 CalcSwingOffset( float pitchDelta, float yawDelta )
