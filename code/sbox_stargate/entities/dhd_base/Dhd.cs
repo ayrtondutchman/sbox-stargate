@@ -336,8 +336,6 @@ public abstract partial class Dhd : Prop
 			else // try dial
 			{
 				var sequence = GetPressedActions();
-				Log.Info( $"Address for dial = {sequence}" );
-
 				PlayButtonPressAnim( button );
 
 				var target = Stargate.FindDestinationGateByDialingAddress( Gate, sequence );
