@@ -67,6 +67,19 @@ partial class Pistol : Weapon
 		ShootBullet( 0.01f, 1.5f, 9.0f, 3.0f );
 	}
 
+
+	[ClientRpc]
+	protected override void ShootEffects()
+	{
+		Game.AssertClient();
+
+		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
+		var shell = Particles.Create( "particles/sbox_stargate/shell_eject.vpcf", EffectEntity, "eject" );
+		shell.Set( "shellsize", 0.5f );
+
+		ViewModelEntity?.SetAnimParameter( "fire", true );
+	}
+
 	private void Discharge()
 	{
 		if ( TimeSinceDischarge < 0.5f )
