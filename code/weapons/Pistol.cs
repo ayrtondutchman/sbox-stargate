@@ -12,6 +12,9 @@ partial class Pistol : Weapon
 
 	public AnimatedEntity ViewModelArms { get; set; }
 
+	Vector3 ViewModelOffset = Vector3.Zero;
+	Vector3 AimPos => new Vector3( 1, -4.75f, 1.45f );
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -106,4 +109,20 @@ partial class Pistol : Weapon
 		}
 	}
 
+	[GameEvent.Client.Frame]
+	public void HandleWeaponAimingPos()
+	{
+		if ( !ViewModelEntity.IsValid() ) return;
+
+		var ads = Input.Down( "attack2" );
+
+
+		ViewModelOffset = ViewModelOffset.LerpTo( ads ? AimPos : Vector3.Zero, Time.Delta * 10f );
+
+		var vm = ViewModelEntity as ViewModel;
+		vm.Position = vm.Position + vm.Rotation.Forward * ViewModelOffset.x + vm.Rotation.Right * ViewModelOffset.y + vm.Rotation.Up * ViewModelOffset.z;
+
+		vm.SwingInfluence = vm.SwingInfluence.LerpTo( ads ? 0.0025f : 0.05f, Time.Delta * 2f );
+		vm.BobInfluence = vm.BobInfluence.LerpTo( ads ? 0.1f : 1f, Time.Delta * 2f );
+	}
 }

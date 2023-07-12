@@ -2,7 +2,8 @@
 
 public class ViewModel : BaseViewModel
 {
-	protected float SwingInfluence => 0.05f;
+	public float SwingInfluence = 0.05f;
+	public float BobInfluence = 1f;
 	protected float ReturnSpeed => 5.0f;
 	protected float MaxOffsetLength => 10.0f;
 	protected float BobCycleTime => 7;
@@ -122,7 +123,7 @@ public class ViewModel : BaseViewModel
 
 		var speed = new Vector2( velocity.x, velocity.y ).Length;
 		speed = speed > 10.0 ? speed : 0.0f;
-		var offset = BobDirection * (speed * 0.005f) * System.MathF.Cos( bobAnim );
+		var offset = BobDirection * (speed * 0.005f) * System.MathF.Cos( bobAnim ) * BobInfluence;
 		offset = offset.WithZ( -System.MathF.Abs( offset.z ) );
 
 		return offset;
