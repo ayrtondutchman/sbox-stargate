@@ -10,6 +10,8 @@ public partial class RingPanelButton : AnimatedEntity, IUse
 	[Net]
 	public bool On { get; set; } = false;
 
+	float GlowScale = 0;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -36,7 +38,13 @@ public partial class RingPanelButton : AnimatedEntity, IUse
 
 	public void ButtonGlowLogic()
 	{
-		SetMaterialGroup( On ? 1 : 0 );
+		var so = SceneObject;
+		if ( !so.IsValid() ) return;
+
+		GlowScale = GlowScale.LerpTo( On ? 1 : 0, Time.Delta * (On ? 20f : 10f) );
+
+		so.Batchable = false;
+		so.Attributes.Set( "selfillumscale", GlowScale );
 	}
 
 	private void DrawButtonActions() // doing anything with world panels is fucking trash, cant position stuff properly, keep debugoverlay for now
@@ -45,7 +53,7 @@ public partial class RingPanelButton : AnimatedEntity, IUse
 		DebugOverlay.Text( Action, pos, Color.White, 0, 86 );
 	}
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void Think()
 	{
 		ButtonGlowLogic();
