@@ -96,7 +96,7 @@ public partial class Stargate : Prop, IUse
 		var rem = StargateActions.RemoveAll( task => task.TaskCategory == category );
 	}
 
-	[Event.Tick.Server]
+	[GameEvent.Tick.Server]
 	private void TaskThink() // dont mind the retarded checks, it prevents ArgumentOutOfRangeException if actions get deleted while the loop runs, probably thread related stuff
 	{
 		if (StargateActions.Count > 0)
