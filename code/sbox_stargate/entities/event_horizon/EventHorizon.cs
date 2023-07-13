@@ -594,6 +594,8 @@ public partial class EventHorizon : AnimatedEntity
 
 	public void OnEntityTriggerStartTouch( EventHorizonTrigger trigger, Entity ent )
 	{
+		if ( !Stargate.IsAllowedForGateTeleport( ent ) ) return;
+
 		if ( trigger == BackTrigger && !BufferFront.Contains( ent ) )
 		{
 			InTriggerBack.Add( ent );
@@ -613,6 +615,8 @@ public partial class EventHorizon : AnimatedEntity
 	}
 	public void OnEntityTriggerEndTouch( EventHorizonTrigger trigger, Entity ent )
 	{
+		if ( !Stargate.IsAllowedForGateTeleport( ent ) ) return;
+
 		if ( trigger == BackTrigger )
 		{
 			InTriggerBack.Remove( ent );
