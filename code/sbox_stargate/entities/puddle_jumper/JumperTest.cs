@@ -64,7 +64,7 @@ public partial class JumperTest : Prop, IUse
 		PhysicsBody.UseController = false;
 	}
 
-	[Event.Physics.PreStep]
+	[GameEvent.Physics.PreStep]
 	public void PhysicsSimulate()
 	{
 		if ( !Game.IsServer )
@@ -222,7 +222,7 @@ public partial class JumperTest : Prop, IUse
 		}
 	}
 
-	[Event.Tick.Server]
+	[GameEvent.Tick.Server]
 	protected void PlayerAliveCheck()
 	{
 		if ( Driver is SandboxPlayer player && player.LifeState != LifeState.Alive )

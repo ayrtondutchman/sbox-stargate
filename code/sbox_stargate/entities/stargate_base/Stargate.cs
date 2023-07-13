@@ -549,7 +549,7 @@ public abstract partial class Stargate : Prop, IUse
 		}
 	}
 
-	[Event( "server.tick" )]
+	[GameEvent.Tick.Server]
 	public void StargateTick()
 	{
 		AutoCloseThink();
@@ -558,7 +558,7 @@ public abstract partial class Stargate : Prop, IUse
 	}
 
 	/*
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	private void WorldPanelThink()
 	{
 		var isNearGate = Position.DistanceSquared( Camera.Position ) < (512 * 512);

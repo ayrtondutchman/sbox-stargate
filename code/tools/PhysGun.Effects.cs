@@ -15,7 +15,7 @@ public partial class PhysGun
 	Color GrabColor => Color.FromBytes( 15, 190, 215 ) * 0.2f;
 	Color IdleColor => Color.FromBytes( 4, 20, 70 ) * 0.2f;
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void OnFrame()
 	{
 		UpdateEffects();

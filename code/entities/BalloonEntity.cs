@@ -23,7 +23,7 @@ public partial class BalloonEntity : Prop
 		PlaySound( "balloon_pop_cute" );
 	}
 
-	[Event.Physics.PostStep]
+	[GameEvent.Physics.PostStep]
 	protected void UpdateGravity()
 	{
 		if ( !this.IsValid() )

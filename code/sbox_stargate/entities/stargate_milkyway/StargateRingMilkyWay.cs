@@ -329,7 +329,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		//Log.Info( DesiredRingAngleDifference );
 	}
 
-	[Event.Tick.Server]
+	[GameEvent.Tick.Server]
 	public void Think()
 	{
 		RingRotationThink();
@@ -357,7 +357,7 @@ public partial class StargateRingMilkyWay : StargatePlatformEntity
 		DebugOverlay.Text( CurRingSymbol.ToString(), Position, Color.White, 0, 512 );
 	}
 
-	//[Event.Client.Frame]
+	//[GameEvent.Client.Frame]
 	public void RingSymbolsDebug()
 	{
 		DrawSymbols();

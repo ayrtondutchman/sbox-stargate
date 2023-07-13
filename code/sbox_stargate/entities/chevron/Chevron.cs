@@ -116,7 +116,7 @@ public partial class Chevron : AnimatedEntity
 		SetOpen( false, delay );
 	}
 
-	[Event( "server.tick" )]
+	[GameEvent.Tick.Server]
 	public void ChevronThink( )
 	{
 		var group = ChevronStateSkins.GetValueOrDefault(On ? "On" : "Off", 0);
@@ -124,7 +124,7 @@ public partial class Chevron : AnimatedEntity
 		if ( Light.IsValid() ) Light.Enabled = UsesDynamicLight && On;
 	}
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void LightLogic()
 	{
 		selfillumscale = selfillumscale.Approach( On ? 1 : 0, Time.Delta * 5 );

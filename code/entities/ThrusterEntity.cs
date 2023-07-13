@@ -10,7 +10,7 @@ public partial class ThrusterEntity : Prop, IUse
 	[Net]
 	public bool Enabled { get; set; } = true;
 
-	[Event.Physics.PostStep]
+	[GameEvent.Physics.PostStep]
 	protected void ApplyForces()
 	{
 		if ( Game.IsServer && Enabled )

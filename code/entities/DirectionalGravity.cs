@@ -38,7 +38,7 @@ public partial class DirectionalGravity : Prop
 		enabled = false;
 	}
 
-	[Event.Tick]
+	[GameEvent.Tick]
 	protected void UpdateGravity()
 	{
 		if ( !Game.IsServer )

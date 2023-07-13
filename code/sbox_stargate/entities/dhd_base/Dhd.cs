@@ -390,7 +390,7 @@ public abstract partial class Dhd : Prop
 		}
 	}
 
-	[Event.Tick.Server]
+	[GameEvent.Tick.Server]
 	public void ButtonThink()
 	{
 		EnableButtonsForDialingAddress();
@@ -404,7 +404,7 @@ public abstract partial class Dhd : Prop
 			TryAssignGate( Stargate.FindNearestGate( this, 1024 ) );
 	}
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	private void WorldPanelThink()
 	{
 		var isNearDhd = Position.DistanceSquared( Camera.Position ) < (128 * 128);

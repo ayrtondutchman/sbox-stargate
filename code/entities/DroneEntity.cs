@@ -38,7 +38,7 @@ public partial class DroneEntity : Prop
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 	}
 
-	[Event.Physics.PostStep]
+	[GameEvent.Physics.PostStep]
 	protected void ApplyForces()
 	{
 		if ( !PhysicsBody.IsValid() )
@@ -131,7 +131,7 @@ public partial class DroneEntity : Prop
 
 	private float spinAngle;
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void OnFrame()
 	{
 		spinAngle += 10000.0f * Time.Delta;

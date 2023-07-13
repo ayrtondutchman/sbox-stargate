@@ -148,7 +148,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 		monitor.OnUse( monitor.CurrentUser );
 	}
 
-	[Event.Tick.Server]
+	[GameEvent.Tick.Server]
 	private void CurrentUserThink()
 	{
 		if ((!CurrentUser.IsValid() || CurrentUser.Health <= 0 || CurrentUser.Position.DistanceSquared(Position) > 120*120) && CurrentUser != null )
@@ -218,7 +218,7 @@ public partial class SGCMonitor : ModelEntity, IUse
 		return false;
 	}
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	private void RenderLogic()
 	{
 		if ( !WorldPanel.IsValid() )

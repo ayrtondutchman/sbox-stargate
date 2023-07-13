@@ -342,7 +342,7 @@ public partial class EventHorizon : AnimatedEntity
 	}
 
 	// CLIENT LOGIC
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void EventHorizonClientTick()
 	{
 		ClientAnimLogic();
@@ -767,7 +767,7 @@ public partial class EventHorizon : AnimatedEntity
 		KawooshTrigger?.Delete();
 	}
 
-	[Event( "server.tick" )]
+	[GameEvent.Tick.Server]
 	public void EventHorizonTick()
 	{
 		if ( Gate.IsValid() && Scale != Gate.Scale ) Scale = Gate.Scale; // always keep the same scale as gate
@@ -856,7 +856,7 @@ public partial class EventHorizon : AnimatedEntity
 		}
 	}
 
-	[Event.Client.Frame]
+	[GameEvent.Client.Frame]
 	public void Draw()
 	{
 		foreach ( var e in BufferFront )

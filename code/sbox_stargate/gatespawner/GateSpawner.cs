@@ -143,7 +143,7 @@ public partial class GateSpawner
 		}
 	}
 
-	[Event.Entity.PostSpawn]
+	[GameEvent.Entity.PostSpawn]
 	private static void PostSpawn()
 	{
 		LoadGateSpawner();

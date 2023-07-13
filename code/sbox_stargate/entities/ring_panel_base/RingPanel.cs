@@ -87,7 +87,7 @@ public partial class RingPanel : Prop
 		if ( TimeSinceButtonPressed > 5 && ComposedAddress != "" ) ResetAddress();
 	}
 
-	[Event.Tick.Server]
+	[GameEvent.Tick.Server]
 	public void Think()
 	{
 		ButtonResetThink();
