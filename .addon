@@ -362,6 +362,19 @@
           "GroupName": "Other"
         }
       ]
-    }
+    },
+    "TickRate": 50,
+    "LaunchConfigs": [
+      {
+        "Name": "Square",
+        "GameIdent": "katka.sbox_stargate#local",
+        "MapName": "facepunch.square",
+        "MaxPlayers": 1,
+        "GameSettings": {},
+        "Addons": "katka.lensflare#local",
+        "PreLaunchCommand": "",
+        "PostLaunchCommand": ""
+      }
+    ]
   }
 }
