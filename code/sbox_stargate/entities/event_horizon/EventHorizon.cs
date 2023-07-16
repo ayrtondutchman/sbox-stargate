@@ -890,7 +890,7 @@ public partial class EventHorizon : AnimatedEntity
 		if ( !Game.IsServer )
 			return;
 
-		foreach ( var ent in All.OfType<ModelEntity>().Where( x => x is not Player && (x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) && Stargate.IsAllowedForGateTeleport( x ) ) )
+		foreach ( var ent in All.OfType<ModelEntity>().Where( x => x is not Player && x is not Stargate && (x.Tags.Has( StargateTags.BeforeGate ) || x.Tags.Has( StargateTags.BehindGate ) ) && Stargate.IsAllowedForGateTeleport( x ) ) )
 		{
 			var shouldTeleport = true;
 
