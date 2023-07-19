@@ -41,7 +41,7 @@ public partial class StargatePegasus : Stargate
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
-		SetModel( "models/sbox_stargate/gate_atlantis/gate_atlantis.vmdl" );
+		SetModel( "models/sbox_stargate/sg_peg/sg_peg_gate.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
@@ -75,17 +75,12 @@ public partial class StargatePegasus : Stargate
 	public virtual Chevron CreateChevron( int n )
 	{
 		var chev = new Chevron();
+		chev.SetModel( "models/sbox_stargate/sg_peg/sg_peg_chevron.vmdl" );
 		chev.Position = Position;
 		chev.Rotation = Rotation.Angles().WithRoll( -ChevronAngles[n-1] ).ToRotation();
 		chev.SetParent( this );
 		chev.Transmit = TransmitType.Always;
 		chev.Gate = this;
-
-		chev.ChevronStateSkins = new()
-		{
-			{ "Off", 3 },
-			{ "On", 4 },
-		};
 
 		//chev.Light.SetLightColor( Color.Parse( "#00A9FF" ).GetValueOrDefault() );
 
@@ -543,5 +538,4 @@ public partial class StargatePegasus : Stargate
 			if ( !c.On ) Ring.ResetSymbol( Ring.GetSymbolNumFromChevron( GetChevronOrderOnGateFromChevronIndex( Chevrons.IndexOf( c ) + 1 ) ), true );
 		}
 	}
-
 }

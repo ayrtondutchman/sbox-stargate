@@ -27,7 +27,7 @@ public partial class StargateRingPegasus : ModelEntity
 		base.Spawn();
 		Transmit = TransmitType.Always;
 
-		SetModel( "models/sbox_stargate/gate_atlantis/ring_atlantis.vmdl" );
+		SetModel( "models/sbox_stargate/sg_peg/sg_peg_ring.vmdl" );
 		EnableAllCollisions = false;
 
 		CreateSymbolParts();
@@ -50,8 +50,8 @@ public partial class StargateRingPegasus : ModelEntity
 
 	public void CreateSymbolParts()
 	{
-		AddSymbolPart( "models/sbox_stargate/gate_atlantis/ring_atlantis_symbols_1_18.vmdl" );
-		AddSymbolPart( "models/sbox_stargate/gate_atlantis/ring_atlantis_symbols_19_36.vmdl" );
+		AddSymbolPart( "models/sbox_stargate/sg_peg/sg_peg_glyphs_1_18.vmdl" );
+		AddSymbolPart( "models/sbox_stargate/sg_peg/sg_peg_glyphs_19_36.vmdl" );
 	}
 
 	protected override void OnDestroy()
