@@ -45,7 +45,7 @@ Layer0
 	g_flSelfIllumBrightness "10.000"
 	g_flSelfIllumScale "1.000"
 	g_vSelfIllumScrollSpeed "[0.000 0.000]"
-	g_vSelfIllumTint "[0.815686 0.960784 1.000000 0.000000]"
+	g_vSelfIllumTint "[0.321569 0.996078 1.000000 0.000000]"
 	TextureSelfIllumMask "models/sbox_stargate/sg_peg/src/tex/sg_peg_glyphs_trans.tga"
 
 	//---- Texture Coordinates ----
