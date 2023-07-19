@@ -262,7 +262,11 @@ public partial class StargatePegasus : Stargate
 
 		try
 		{
-			if ( Dialing ) DoStargateReset();
+			if ( Dialing )
+			{
+				OtherGate?.StopDialing();
+				DoStargateReset();
+			}
 
 			CurGateState = GateState.ACTIVE;
 			Inbound = true;
