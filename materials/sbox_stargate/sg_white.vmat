@@ -33,8 +33,8 @@ Layer0
 	TextureNormal "materials/default/default_normal.tga"
 
 	//---- Roughness ----
-	g_flRoughnessScaleFactor "0.000"
-	TextureRoughness "materials/default/default_rough.tga"
+	g_flRoughnessScaleFactor "1.000"
+	TextureRoughness "[1.000000 1.000000 1.000000 0.000000]"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
