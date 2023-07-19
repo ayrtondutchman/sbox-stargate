@@ -218,8 +218,6 @@ public partial class StargateRingPegasus : ModelEntity
 		{
 			ResetSymbols();
 
-			SetRingState( false );
-
 			var chevCount = address.Length;
 
 			var dataSymbols7 = new int[7, 2] { { 35, 32 }, { 3, 40 }, { 7, 32 }, { 11, 48 }, { 23, 32 }, { 27, 40 }, { 31, 32 } };
@@ -248,6 +246,9 @@ public partial class StargateRingPegasus : ModelEntity
 
 				Gate.AddTask( rollSoundTaskTime, () => PlayRollSound(), Stargate.TimedTaskCategory.DIALING );
 				Gate.AddTask( symTaskTime, () => RollSymbol( startPos, symSteps, i_copy % 2 == 0, symRollTime ), Stargate.TimedTaskCategory.DIALING );
+
+				if ( i_copy == 0 )
+					Gate.AddTask( symTaskTime, () => SetRingState( false ), Stargate.TimedTaskCategory.DIALING );
 
 				void chevTask()
 				{
