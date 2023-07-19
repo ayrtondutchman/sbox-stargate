@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
@@ -15,6 +16,7 @@ public partial class StargateRingPegasus : ModelEntity
 
 	public string RingSymbols { get; private set; } = "?0JKNTR3MBZX*H69IGPL#@QFS1E4AU85OCW72YVD";
 
+	[Net]
 	public List<ModelEntity> SymbolParts { get; private set; } = new();
 
 	public List<int> DialSequenceActiveSymbols { get; private set; } = new();
@@ -31,6 +33,8 @@ public partial class StargateRingPegasus : ModelEntity
 		EnableAllCollisions = false;
 
 		CreateSymbolParts();
+
+		SetRingState( true );
 	}
 
 	// create symbols
@@ -79,12 +83,23 @@ public partial class StargateRingPegasus : ModelEntity
 		if (delay > 0)
 		{
 			await GameTask.DelaySeconds( delay );
-			if ( this.IsValid() ) return;
+			if ( !this.IsValid() ) return;
 		}
 
-		num = num.UnsignedMod( 36 );
+		num = (num + 1).UnsignedMod( 36 );
 		var isPart1 = num < 18;
 		SymbolParts[isPart1 ? 0 : 1].SetBodyGroup( (isPart1 ? num : num - 18), state ? 1 : 0 );
+	}
+
+	public async void SetRingState(bool state, float delay = 0)
+	{
+		if ( delay > 0 )
+		{
+			await GameTask.DelaySeconds( delay );
+			if ( !this.IsValid() ) return;
+		}
+
+		SetBodyGroup(1, state ? 1 : 0);
 	}
 
 	public void RollSymbol(int start, int count, bool counterclockwise = false, float time = 2.0f)
@@ -203,6 +218,8 @@ public partial class StargateRingPegasus : ModelEntity
 		{
 			ResetSymbols();
 
+			SetRingState( false );
+
 			var chevCount = address.Length;
 
 			var dataSymbols7 = new int[7, 2] { { 35, 32 }, { 3, 40 }, { 7, 32 }, { 11, 48 }, { 23, 32 }, { 27, 40 }, { 31, 32 } };
@@ -267,6 +284,8 @@ public partial class StargateRingPegasus : ModelEntity
 		{
 			ResetSymbols();
 
+			SetRingState( false );
+
 			PlayRollSound( true );
 
 			var chevCount = address.Length;
@@ -317,6 +336,8 @@ public partial class StargateRingPegasus : ModelEntity
 	{
 		try
 		{
+			SetRingState( false );
+
 			var dataSymbols7 = new List<int>() { 27, 19, 35, 35, 15, 7, 23 };
 			var dataSymbols8 = new List<int>() { 27, 19, 35, 35, 15, 7, 3, 11 };
 			var dataSymbols9 = new List<int>() { 27, 19, 35, 35, 15, 7, 3, 31, 23 };

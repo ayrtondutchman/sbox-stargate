@@ -30,7 +30,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym1"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_2.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_1.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -47,7 +47,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym2"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_3.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_2.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -64,7 +64,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym3"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_4.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_3.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -81,7 +81,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym4"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_5.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_4.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -98,7 +98,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym5"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_6.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_5.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -115,7 +115,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym6"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_7.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_6.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -132,7 +132,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym7"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_8.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_7.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -149,7 +149,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym8"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_9.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_8.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -166,7 +166,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym9"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_10.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_9.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -183,7 +183,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym10"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_11.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_10.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -200,7 +200,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym11"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_12.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_11.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -217,7 +217,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym12"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_13.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_12.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -234,7 +234,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym13"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_14.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_13.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -251,7 +251,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym14"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_15.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_14.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -268,7 +268,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym15"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_16.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_15.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -285,7 +285,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym16"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_17.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_16.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -302,7 +302,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym17"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_18.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_17.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -319,7 +319,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "sym18"
-						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_19.smd"
+						filename = "models/sbox_stargate/sg_peg/src/glyphs/sg_peg_ring_front_low_glyph_18.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0

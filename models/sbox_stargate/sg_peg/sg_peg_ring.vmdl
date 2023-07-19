@@ -41,6 +41,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
+						name = "ring"
 						filename = "models/sbox_stargate/sg_peg/src/SG_Peg_Ring_Front_Low_Complete.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
@@ -57,6 +58,7 @@
 					},
 					{
 						_class = "RenderMeshFile"
+						name = "glyphs"
 						filename = "models/sbox_stargate/sg_peg/src/SG_Peg_Ring_Front_Low_Glyphs.smd"
 						import_translation = [ -0.05, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
@@ -89,6 +91,31 @@
 							parent_bodygroup_name = ""
 							parent_bodygroup_value = 0
 						}
+					},
+				]
+			},
+			{
+				_class = "BodyGroupList"
+				children = 
+				[
+					{
+						_class = "BodyGroup"
+						name = "glyphs"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = [  ]
+							},
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"glyphs",
+								]
+							},
+						]
+						hidden_in_tools = false
 					},
 				]
 			},

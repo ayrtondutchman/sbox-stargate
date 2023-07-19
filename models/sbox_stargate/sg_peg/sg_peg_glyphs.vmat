@@ -59,4 +59,9 @@ Layer0
 	g_flAlphaTestReference "0.050"
 	g_flAntiAliasedEdgeStrength "0.350"
 	TextureTranslucency "models/sbox_stargate/sg_peg/src/tex/sg_peg_glyphs_trans.tga"
+
+	DynamicParams
+	{
+		g_flSelfIllumBrightness "selfillumbrightness"
+	}
 }

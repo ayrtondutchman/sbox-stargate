@@ -116,6 +116,7 @@ public partial class StargatePegasus : Stargate
 
 		SetChevronsGlowState( false );
 		Ring?.ResetSymbols();
+		Ring?.SetRingState( true );
 	}
 
 	public override void OnStargateBeginOpen()
@@ -143,6 +144,7 @@ public partial class StargatePegasus : Stargate
 
 		SetChevronsGlowState( false );
 		Ring?.ResetSymbols();
+		Ring?.SetRingState( true );
 	}
 
 	public override void DoStargateReset()
@@ -154,6 +156,7 @@ public partial class StargatePegasus : Stargate
 		SetChevronsGlowState( false );
 		Ring?.ResetSymbols();
 		Ring?.StopRollSound();
+		Ring?.SetRingState( true );
 	}
 
 
