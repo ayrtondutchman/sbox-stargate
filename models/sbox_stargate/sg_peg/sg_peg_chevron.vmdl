@@ -14,12 +14,16 @@
 						remaps = 
 						[
 							{
-								from = "sg_mw_chevron.vmat"
+								from = "sg_peg_chevron.vmat"
 								to = "models/sbox_stargate/sg_peg/sg_peg_chevron.vmat"
 							},
 							{
-								from = "sg_mw_chevron_glass_front.vmat"
+								from = "sg_peg_chevron_glass_front.vmat"
 								to = "models/sbox_stargate/sg_peg/sg_peg_chevron_glass_front.vmat"
+							},
+							{
+								from = "sg_peg_chevron_translucent.vmat"
+								to = "models/sbox_stargate/sg_peg/sg_peg_chevron_translucent.vmat"
 							},
 						]
 						use_global_default = false
@@ -33,7 +37,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models/sbox_stargate/sg_mw/src/SG_MW_Chevron_Low_Complete.smd"
+						filename = "models/sbox_stargate/sg_peg/src/SG_Peg_Chevron_Low_Complete.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
