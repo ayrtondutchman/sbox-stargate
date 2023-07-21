@@ -141,11 +141,12 @@ public partial class PhysGun
 		{
 			var muzzle = IsFirstPersonMode && ViewModelEntity.IsValid ? ViewModelEntity.GetAttachment( "muzzle" ) ?? default : GetAttachment( "muzzle" ) ?? default;
 			var pos = muzzle.Position;
+			var endPos = lastBeamPos;
 
-			BeamLight.CapsuleLength = (pos - tr.EndPosition).Length * 0.5f;
+			BeamLight.CapsuleLength = (pos - endPos).Length * 0.5f;
 			BeamLight.LightSize = 0.5f + (MathF.Sin( Time.Now * 10 ) * 0.2f);
-			BeamLight.Position = (pos + tr.EndPosition) * 0.5f;
-			BeamLight.Rotation = Rotation.LookAt( (pos - tr.EndPosition).Normal );
+			BeamLight.Position = (pos + endPos) * 0.5f;
+			BeamLight.Rotation = Rotation.LookAt( (pos - endPos).Normal );
 
 			BeamLight.Color = Color.Lerp( BeamLight.Color, GrabbedEntity.IsValid() ? GrabColor : IdleColor, Time.Delta * 10 );
 		}
