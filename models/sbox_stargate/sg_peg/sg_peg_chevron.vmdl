@@ -25,6 +25,10 @@
 								from = "sg_peg_chevron_translucent.vmat"
 								to = "models/sbox_stargate/sg_peg/sg_peg_chevron_translucent.vmat"
 							},
+							{
+								from = "sg_peg_segment.vmat"
+								to = "models/sbox_stargate/sg_peg/sg_peg_segment.vmat"
+							},
 						]
 						use_global_default = false
 						global_default_material = ""
