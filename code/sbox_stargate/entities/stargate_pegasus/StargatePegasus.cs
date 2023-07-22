@@ -419,6 +419,8 @@ public partial class StargatePegasus : Stargate
 			{
 				var chev = GetChevronBasedOnAddressLength( i, address.Length );
 				ChevronActivate( chev, nosound: true );
+
+				Ring.SetSymbolState( Ring.GetSymbolNumFromChevron( GetChevronOrderOnGateFromChevronIndex( Chevrons.IndexOf( chev ) + 1 ) ), true );
 			}
 
 			PlaySound( this, GetSound( "chevron_lock_inbound" ) );
