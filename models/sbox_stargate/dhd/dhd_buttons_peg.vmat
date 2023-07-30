@@ -29,7 +29,7 @@ Layer0
 	TextureMetalness "models/sbox_stargate/dhd/src/tex/dhd_buttons_peg_metal.tga"
 
 	//---- Normal ----
-	TextureNormal "models/sbox_stargate/dhd/src/tex/dhd_buttons_peg_normal.tga"
+	TextureNormal "models/sbox_stargate/dhd/src/tex/dhd_buttons_peg_normal_upscale.tga"
 
 	//---- Roughness ----
 	g_flRoughnessScaleFactor "1.000"
@@ -41,7 +41,7 @@ Layer0
 	g_flSelfIllumScale "0.000"
 	g_vSelfIllumScrollSpeed "[0.000 0.000]"
 	g_vSelfIllumTint "[0.333333 0.631373 0.784314 0.000000]"
-	TextureSelfIllumMask "models/sbox_stargate/dhd/src/tex/dhd_buttons_peg_selfillum.tga"
+	TextureSelfIllumMask "models/sbox_stargate/dhd/src/tex/dhd_buttons_peg_selfillum_upscale.tga"
 
 	//---- Texture Coordinates ----
 	g_nScaleTexCoordUByModelScaleAxis "0"
