@@ -1,4 +1,6 @@
 ﻿using Sandbox;
+using System;
+using System.Linq;
 
 partial class SandboxPlayer : Player
 {
@@ -57,7 +59,39 @@ partial class SandboxPlayer : Player
 		Inventory.Add( new Flashlight() );
 		Inventory.Add( new Fists() );
 
-		base.Respawn();
+		//base.Respawn();
+
+		Game.AssertServer();
+
+		LifeState = LifeState.Alive;
+		Health = 100;
+		Velocity = Vector3.Zero;
+
+		CreateHull();
+
+		//GameManager.Current?.MoveToSpawnpoint( this );
+
+		var spawnpoint = All
+		.OfType<SpawnPoint>()               // get all SpawnPoint entities
+		.OrderBy( x => Guid.NewGuid() )     // order them by random
+		.FirstOrDefault();                  // take the first one
+
+		if ( spawnpoint == null )
+		{
+			Log.Warning( $"Couldn't find spawnpoint for {this}!" );
+			return;
+		}
+
+		Transform = spawnpoint.Transform;
+		SetPlayerViewAngles( spawnpoint.Rotation.Angles() );
+
+		ResetInterpolation();
+	}
+
+	[ClientRpc]
+	public void SetPlayerViewAngles( Angles ang )
+	{
+		ViewAngles = ang;
 	}
 
 	public override void OnKilled()
