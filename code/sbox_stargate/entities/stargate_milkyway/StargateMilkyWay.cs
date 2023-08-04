@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Editor;
 using Sandbox;
 
+[HammerEntity, SupportsSolid, EditorModel( MODEL )]
 [Title( "Stargate (Milky Way)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateMilkyWay : Stargate
 {
+	public const string MODEL = "models/sbox_stargate/sg_mw/sg_mw_gate.vmdl";
+
 	[Net]
 	public StargateRingMilkyWay Ring { get; set; } = null;
 	public List<Chevron> EncodedChevronsOrdered = new();
@@ -39,7 +43,7 @@ public partial class StargateMilkyWay : Stargate
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
-		SetModel( "models/sbox_stargate/sg_mw/sg_mw_gate.vmdl" );
+		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
@@ -805,4 +809,14 @@ public partial class StargateMilkyWay : Stargate
 
 	//	return false; // aka SIMPLE_USE, not continuously
 	//}
+
+	public static void DrawGizmos( EditorContext context )
+	{
+		Gizmo.Draw.Model( "models/sbox_stargate/sg_mw/sg_mw_ring.vmdl" );
+
+		for ( var i = 0; i < 9; i++ )
+		{
+			Gizmo.Draw.Model( "models/sbox_stargate/sg_mw/sg_mw_chevron.vmdl", new Transform( Vector3.Zero, Rotation.FromRoll( i * 40 ) ) );
+		}
+	}
 }

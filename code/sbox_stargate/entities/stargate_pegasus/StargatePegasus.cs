@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Editor;
 using Sandbox;
 
+[HammerEntity, SupportsSolid, EditorModel( MODEL )]
 [Title( "Stargate (Pegasus)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargatePegasus : Stargate
 {
+	public const string MODEL = "models/sbox_stargate/sg_peg/sg_peg_gate.vmdl";
+
 	public StargateRingPegasus Ring;
 	public List<Chevron> EncodedChevronsOrdered = new ();
 
@@ -41,7 +45,7 @@ public partial class StargatePegasus : Stargate
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
-		SetModel( "models/sbox_stargate/sg_peg/sg_peg_gate.vmdl" );
+		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 
@@ -545,6 +549,16 @@ public partial class StargatePegasus : Stargate
 		foreach (var c in Chevrons )
 		{
 			if ( !c.On ) Ring.ResetSymbol( Ring.GetSymbolNumFromChevron( GetChevronOrderOnGateFromChevronIndex( Chevrons.IndexOf( c ) + 1 ) ), true );
+		}
+	}
+
+	public static void DrawGizmos( EditorContext context )
+	{
+		Gizmo.Draw.Model( "models/sbox_stargate/sg_peg/sg_peg_ring.vmdl" );
+
+		for ( var i = 0; i < 9; i++ )
+		{
+			Gizmo.Draw.Model( "models/sbox_stargate/sg_peg/sg_peg_chevron.vmdl", new Transform( Vector3.Zero, Rotation.FromRoll( i * 40 ) ) );
 		}
 	}
 }

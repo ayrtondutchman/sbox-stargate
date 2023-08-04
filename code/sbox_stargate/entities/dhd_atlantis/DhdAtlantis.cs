@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System;
 using Sandbox;
+using Editor;
 
+[HammerEntity, SupportsSolid, EditorModel( MODEL )]
 [Title( "DHD (Atlantis)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class DhdAtlantis : Dhd
 {
+	public const string MODEL = "models/sbox_stargate/dhd_atlantis/dhd_atlantis.vmdl";
 	protected override string ButtonSymbols => "ABCDEFGHIJKLMNOPQRST123456789UVW0XYZ";
 
 	// Button positions for DhdWorldPanel
@@ -70,7 +73,7 @@ public partial class DhdAtlantis : Dhd
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
-		SetModel( "models/sbox_stargate/dhd_atlantis/dhd_atlantis.vmdl" );
+		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Editor;
 using Sandbox;
 
+[HammerEntity, SupportsSolid, EditorModel( MODEL )]
 [Title( "Stargate (Universe)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateUniverse : Stargate
 {
+	public const string MODEL = "models/sbox_stargate/gate_universe/gate_universe.vmdl";
+
 	[Net]
 	public StargateRingUniverse Ring { get; set; } = null;
 	public List<Chevron> EncodedChevronsOrdered = new ();
@@ -39,7 +43,7 @@ public partial class StargateUniverse : Stargate
 		base.Spawn();
 
 		Transmit = TransmitType.Always;
-		SetModel( "models/sbox_stargate/gate_universe/gate_universe.vmdl" );
+		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 		PhysicsBody.BodyType = PhysicsBodyType.Static;
 		SetBodyGroup( 0, 1 ); // hide the base ent, the gate will be a part of the 'ring' (cant disable drawing because parented objects get fucked)
@@ -602,4 +606,8 @@ public partial class StargateUniverse : Stargate
 		if ( DialingAddress.Length == 0 ) DoStargateReset();
 	}
 
+	public static void DrawGizmos( EditorContext context )
+	{
+		Gizmo.Draw.Model( "models/sbox_stargate/gate_universe/chevrons_universe.vmdl" );
+	}
 }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Editor;
 using Sandbox;
 
+[HammerEntity, SupportsSolid, EditorModel( MODEL )]
 [Title( "Stargate (Movie)" ), Category( "Stargate" ), Icon( "chair" ), Spawnable]
 public partial class StargateMovie : StargateMilkyWay
 {
@@ -61,4 +63,13 @@ public partial class StargateMovie : StargateMilkyWay
 		return chev;
 	}
 
+	public static void DrawGizmos( EditorContext context )
+	{
+		Gizmo.Draw.Model( "models/sbox_stargate/sg_mw/sg_mw_ring.vmdl" );
+
+		for ( var i = 0; i < 9; i++ )
+		{
+			Gizmo.Draw.Model( "models/sbox_stargate/sg_mw/sg_mw_chevron.vmdl", new Transform( Vector3.Zero, Rotation.FromRoll( i * 40 ) ) );
+		}
+	}
 }
