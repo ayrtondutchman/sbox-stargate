@@ -35,8 +35,6 @@ public partial class SGCRamp : Prop, IStargateRamp, IGateSpawner
 		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 
-		PhysicsBody.MotionEnabled = false;
-
 		Tags.Add( "solid" );
 	}
 

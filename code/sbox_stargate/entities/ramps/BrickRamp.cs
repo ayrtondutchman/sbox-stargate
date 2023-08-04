@@ -31,8 +31,6 @@ public partial class BrickRamp : Prop, IStargateRamp, IGateSpawner
 		SetModel( MODEL );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, true );
 
-		PhysicsBody.MotionEnabled = false;
-
 		Tags.Add( "solid" );
 	}
 
