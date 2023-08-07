@@ -374,6 +374,16 @@
         "Addons": "katka.lensflare#local",
         "PreLaunchCommand": "",
         "PostLaunchCommand": ""
+      },
+      {
+        "Name": "Abydos",
+        "GameIdent": "katka.sbox_stargate#local",
+        "MapName": "sg_abydos.vmap",
+        "MaxPlayers": 1,
+        "GameSettings": {},
+        "Addons": "",
+        "PreLaunchCommand": "",
+        "PostLaunchCommand": ""
       }
     ]
   }
