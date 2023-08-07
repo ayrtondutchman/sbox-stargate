@@ -35,6 +35,16 @@ public partial class Rings : AnimatedEntity, IUse
 		get => ChildRings.ToArray().All( x => x.Ready );
 	}
 
+	/// <summary>
+	/// Rings were just activated
+	/// </summary>
+	public Output OnRingsActivated { get; set; }
+
+	/// <summary>
+	/// Rings finished retracting
+	/// </summary>
+	public Output OnRingsRetracted { get; set; }
+
 	public bool RingsDeployed { get; protected set; } = false;
 	// public const string Symbols = "0123456789";
 	public const string Symbols = "12345";
@@ -171,6 +181,8 @@ public partial class Rings : AnimatedEntity, IUse
 		Busy = false;
 		DestinationRings = null;
 		RingsDeployed = false;
+
+		OnRingsRetracted.Fire( this );
 	}
 
 	public Particles PlayTeleportEffect()
@@ -234,7 +246,7 @@ public partial class Rings : AnimatedEntity, IUse
 	public bool IsAbleToExpand()
 	{
 		//TraceResult tr = Trace.Ray( Position + Rotation.Up * 10, Position + Rotation.Up * 150 ).Run();
-		var tr = Trace.Sweep( PhysicsBody, Transform.WithPosition( Position + Rotation.Up * 10 ), Transform.WithPosition( Position + Rotation.Up * 110 ) ).WithoutTags("player").Ignore( this ).Run();
+		var tr = Trace.Sweep( PhysicsBody, Transform.WithPosition( Position + Rotation.Up * 10 ), Transform.WithPosition( Position + Rotation.Up * 110 ) ).WithoutTags("player", "sg_rings_ignore").Ignore( this ).Run();
 
 		// Object too close, impossible to deploy rings
 		if ( tr.Hit && tr.Distance < 100 ) return false;
@@ -257,6 +269,8 @@ public partial class Rings : AnimatedEntity, IUse
 		{
 			DestinationRings.DeployRings();
 		}
+
+		OnRingsActivated.Fire( this );
 
 		ChildRings.Clear();
 
