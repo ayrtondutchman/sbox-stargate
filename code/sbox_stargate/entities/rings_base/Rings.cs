@@ -299,7 +299,7 @@ public partial class Rings : AnimatedEntity, IUse
 			r.RingParent = this;
 			r.SetParent( this );
 			r.isUpsideDown = isUpDown;
-			r.Position = Position + (Rotation.Down * 25);
+			r.Position = Position;
 			r.Rotation = Rotation;
 			if ( r.isUpsideDown ) r.Rotation = Rotation.RotateAroundAxis( Vector3.Left, 180f );
 			r.Scale = Scale;
